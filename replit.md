@@ -92,3 +92,17 @@ The application features:
 - `recharts`: Chart components
 - `framer-motion`: Animations
 - `qrcode.react`: QR code generation for health passport
+
+## Pending Integrations
+
+### Stripe Payments (DEFERRED)
+- User dismissed Stripe connector setup on 2025-12-28
+- When ready to enable payments: Use `connector:ccfg_stripe_01K611P4YQR0SZM11XFRQJC44Y` integration
+- Alternative: Request STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY as secrets
+
+### Firebase Auth (PENDING)
+- Missing secrets: VITE_FIREBASE_API_KEY, VITE_FIREBASE_APP_ID, VITE_FIREBASE_PROJECT_ID
+- Currently using Replit Auth as fallback
+
+### Orbit Staffing (FUTURE)
+- Integration for payroll system - details TBD
