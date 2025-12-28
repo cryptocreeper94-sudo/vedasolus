@@ -127,6 +127,70 @@ export async function registerRoutes(
     }
   });
 
+  // Stripe Payment endpoints
+  app.get("/api/subscription/tiers", async (_req, res) => {
+    try {
+      const { SUBSCRIPTION_TIERS } = await import("./stripe");
+      res.json(SUBSCRIPTION_TIERS);
+    } catch (error) {
+      console.error("Error fetching subscription tiers:", error);
+      res.status(500).json({ message: "Failed to fetch subscription tiers" });
+    }
+  });
+
+  app.post("/api/subscription/checkout", isAuthenticated, async (req: any, res) => {
+    try {
+      const { createCheckoutSession } = await import("./stripe");
+      const userId = req.user.claims.sub;
+      const { tier, billingCycle } = req.body;
+      
+      const origin = req.headers.origin || req.headers.referer?.replace(/\/$/, '') || `https://${process.env.REPLIT_DEV_DOMAIN}`;
+      
+      const successUrl = `${origin}/settings?payment=success`;
+      const cancelUrl = `${origin}/settings?payment=cancelled`;
+      
+      const checkoutUrl = await createCheckoutSession(
+        userId,
+        tier,
+        billingCycle,
+        successUrl,
+        cancelUrl
+      );
+      
+      res.json({ url: checkoutUrl });
+    } catch (error: any) {
+      console.error("Error creating checkout session:", error);
+      res.status(500).json({ message: error.message || "Failed to create checkout session" });
+    }
+  });
+
+  app.post("/api/payment/practitioner", isAuthenticated, async (req: any, res) => {
+    try {
+      const { createPractitionerPayment } = await import("./stripe");
+      const userId = req.user.claims.sub;
+      const { practitionerId, amount, description } = req.body;
+      
+      const origin = req.headers.origin || req.headers.referer?.replace(/\/$/, '') || `https://${process.env.REPLIT_DEV_DOMAIN}`;
+      
+      const successUrl = `${origin}/marketplace?payment=success`;
+      const cancelUrl = `${origin}/marketplace?payment=cancelled`;
+      
+      const checkoutUrl = await createPractitionerPayment(
+        userId,
+        practitionerId,
+        amount,
+        description,
+        successUrl,
+        cancelUrl
+      );
+      
+      res.json({ url: checkoutUrl });
+    } catch (error: any) {
+      console.error("Error creating practitioner payment:", error);
+      res.status(500).json({ message: error.message || "Failed to create payment" });
+    }
+  });
+
   // Notification Preferences endpoints
   app.get("/api/notifications/preferences", isAuthenticated, async (req: any, res) => {
     try {

@@ -93,12 +93,20 @@ The application features:
 - `framer-motion`: Animations
 - `qrcode.react`: QR code generation for health passport
 
-## Pending Integrations
+## Integrations
 
-### Stripe Payments (DEFERRED)
-- User dismissed Stripe connector setup on 2025-12-28
-- When ready to enable payments: Use `connector:ccfg_stripe_01K611P4YQR0SZM11XFRQJC44Y` integration
-- Alternative: Request STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY as secrets
+### Stripe Payments (ACTIVE)
+- **Status**: Configured with STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY
+- **Endpoints**:
+  - `GET /api/subscription/tiers` - Get available subscription tiers
+  - `POST /api/subscription/checkout` - Create subscription checkout session
+  - `POST /api/payment/practitioner` - Create practitioner payment session
+- **Subscription Tiers**:
+  - Seeker (Free): Basic tracking, 3 meditations
+  - Practitioner Path ($9.99/mo): Unlimited tracking, full library
+  - Healer's Circle ($19.99/mo): Marketplace access, consultations
+  - Master's Journey ($39.99/mo): Unlimited consultations, family sharing
+- **File**: `server/stripe.ts` contains all Stripe configuration
 
 ### Firebase Auth (PENDING)
 - Missing secrets: VITE_FIREBASE_API_KEY, VITE_FIREBASE_APP_ID, VITE_FIREBASE_PROJECT_ID

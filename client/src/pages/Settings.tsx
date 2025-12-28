@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { User, Bell, Shield, Wallet } from "lucide-react";
+import { User, Bell, Shield, Wallet, CreditCard } from "lucide-react";
+import { SubscriptionTiers } from "@/components/ui/subscription-tiers";
 import { motion } from "framer-motion";
 import { useProfile } from "@/hooks/use-profile";
 import { useNotificationPreferences } from "@/hooks/use-notifications";
@@ -103,6 +104,7 @@ export default function Settings() {
         <div className="flex flex-wrap gap-3 justify-center">
           {[
             { id: "profile", label: "Profile", icon: User },
+            { id: "subscription", label: "Subscription", icon: CreditCard },
             { id: "notifications", label: "Notifications", icon: Bell },
             { id: "security", label: "Security", icon: Shield },
             { id: "wallet", label: "Wallet", icon: Wallet }
@@ -235,6 +237,18 @@ export default function Settings() {
                       </div>
                     </>
                   )}
+               </div>
+            </motion.div>
+          )}
+
+          {activeTab === "subscription" && (
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="space-y-6"
+            >
+               <div className="p-6 rounded-3xl glass-card border border-white/10">
+                  <SubscriptionTiers />
                </div>
             </motion.div>
           )}
