@@ -35,7 +35,7 @@ export default function Home() {
   const { dietLogs } = useDietTracking();
   const { exerciseLogs } = useExerciseTracking();
 
-  const displayName = user?.firstName || "Seeker";
+  const displayName = profile?.displayName || user?.firstName || "Seeker";
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? "Good Morning" : currentHour < 17 ? "Good Afternoon" : "Good Evening";
   
