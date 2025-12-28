@@ -9,11 +9,13 @@ import Diet from "@/pages/Diet";
 import Exercise from "@/pages/Exercise";
 import Sleep from "@/pages/Sleep";
 import Wisdom from "@/pages/Wisdom";
+import Ayurveda from "@/pages/Ayurveda";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/ayurveda" component={Ayurveda} />
       <Route path="/diet" component={Diet} />
       <Route path="/exercise" component={Exercise} />
       <Route path="/sleep" component={Sleep} />
