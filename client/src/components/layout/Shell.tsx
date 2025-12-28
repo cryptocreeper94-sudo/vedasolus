@@ -21,12 +21,16 @@ import {
   X,
   QrCode,
   ExternalLink,
-  Copyright
+  Copyright,
+  LogIn,
+  LogOut,
+  UserCircle
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { QRCodeSVG } from "qrcode.react";
 import bgImage from "@assets/generated_images/dark_ethereal_fluid_gradient_background_with_glowing_particles.png";
+import { useAuth } from "@/hooks/use-auth";
 
 // Navigation Structure for Hamburger Menu
 const navGroups = [
@@ -89,6 +93,7 @@ const NavItem = ({ href, icon: Icon, label, onClick }: { href: string; icon: any
 export function Shell({ children }: { children: React.ReactNode }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { user, isLoading, isAuthenticated, logout } = useAuth();
 
   // Handle scroll effect for header transparency
   useEffect(() => {
@@ -127,13 +132,34 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <span className="font-serif text-xl font-bold tracking-wide hidden md:block text-white">ZENITH</span>
         </div>
 
-        {/* Right: Hamburger Menu */}
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <button className="p-3 rounded-full hover:bg-white/10 transition-colors border border-transparent hover:border-white/10">
-              <Menu className="w-6 h-6 text-white" />
-            </button>
-          </SheetTrigger>
+        {/* Right: User & Hamburger Menu */}
+        <div className="flex items-center gap-3">
+          {isAuthenticated ? (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <UserCircle className="w-4 h-4 text-primary" />
+              <span className="text-xs text-white hidden sm:inline">{user?.email || user?.firstName || "User"}</span>
+            </div>
+          ) : (
+            !isLoading && (
+              <a 
+                href="/api/login"
+                data-testid="link-login"
+                className="px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Sign In</span>
+              </a>
+            )
+          )}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <button 
+                data-testid="button-menu"
+                className="p-3 rounded-full hover:bg-white/10 transition-colors border border-transparent hover:border-white/10"
+              >
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+            </SheetTrigger>
           <SheetContent side="right" className="w-[320px] bg-black/90 backdrop-blur-2xl border-l border-white/10 p-0 overflow-y-auto">
              <div className="p-6">
                 <div className="flex items-center gap-3 mb-8">
@@ -159,19 +185,33 @@ export function Shell({ children }: { children: React.ReactNode }) {
                     </div>
                   ))}
                   
-                  {/* Config Link */}
-                  <div className="mt-8 pt-6 border-t border-white/10">
+                  {/* Config Link & Auth */}
+                  <div className="mt-8 pt-6 border-t border-white/10 space-y-1">
                     <NavItem 
                       href="/settings" 
                       icon={Settings} 
                       label="Configuration" 
                       onClick={() => setIsOpen(false)}
                     />
+                    {isAuthenticated && (
+                      <button
+                        data-testid="button-logout"
+                        onClick={() => {
+                          setIsOpen(false);
+                          logout();
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all cursor-pointer group mb-1"
+                      >
+                        <LogOut className="w-5 h-5" />
+                        <span className="font-medium text-sm">Sign Out</span>
+                      </button>
+                    )}
                   </div>
                 </div>
              </div>
           </SheetContent>
-        </Sheet>
+          </Sheet>
+        </div>
       </header>
 
       {/* Main Content Area */}
