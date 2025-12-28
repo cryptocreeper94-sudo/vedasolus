@@ -1,11 +1,12 @@
 import { Shell } from "@/components/layout/Shell";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
-import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp } from "lucide-react";
+import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp, Lightbulb } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useSleepTracking, useDietTracking, useExerciseTracking } from "@/hooks/use-health-tracking";
+import { PersonalizedInsights } from "@/components/ui/personalized-insights";
 import sleepBg from "@assets/generated_images/ethereal_bedroom_sleep_sanctuary_with_nebula_projection.png";
 import dietBg from "@assets/generated_images/cyberpunk_healthy_smoothie_bowl_with_neon_lighting.png";
 import zenBg from "@assets/generated_images/futuristic_zen_garden_with_bioluminescent_plants.png";
@@ -48,6 +49,10 @@ export default function Home() {
 
   const currentStreak = 7;
   const vitalityScore = 92;
+  
+  const sleepAverage = sleepLogs.length > 0 
+    ? sleepLogs.reduce((sum, l) => sum + (l.hours || 0), 0) / sleepLogs.length 
+    : undefined;
 
   return (
     <Shell>
@@ -364,6 +369,15 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+        </BentoCard>
+
+        {/* Personalized Insights */}
+        <BentoCard colSpan={3} className="border-primary/10">
+          <PersonalizedInsights 
+            sleepAvg={sleepAverage} 
+            exerciseMinutes={todayExercise || 0}
+            dosha="Pitta"
+          />
         </BentoCard>
       </BentoGrid>
     </Shell>
