@@ -15,7 +15,11 @@ The application features:
 
 ## User Preferences
 
-Preferred communication style: Simple, everyday language.
+- **Owner/Developer**: Jason (dev pin: 0424)
+- **Preferred communication style**: Simple, everyday language
+- **Design**: "Cyberpunk Zen" aesthetic - NO brown/yellow colors, use cyan/pink/emerald pastels
+- **Cards**: All subject-matter cards require full photorealistic backgrounds
+- **UI**: True Bento grid with accordion dropdowns, glassmorphism effects, 3D/glow styling
 
 ## System Architecture
 
