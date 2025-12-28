@@ -11,6 +11,7 @@ import Sleep from "@/pages/Sleep";
 import Wisdom from "@/pages/Wisdom";
 import Ayurveda from "@/pages/Ayurveda";
 import Library from "@/pages/Library";
+import Passport from "@/pages/Passport";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 
 function Router() {
@@ -18,6 +19,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/ayurveda" component={Ayurveda} />
+      <Route path="/passport" component={Passport} />
       <Route path="/library" component={Library} />
       <Route path="/diet" component={Diet} />
       <Route path="/exercise" component={Exercise} />
