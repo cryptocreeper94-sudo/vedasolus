@@ -35,18 +35,20 @@ export function DisclaimerModal() {
           <AlertDialogTitle className="text-2xl font-serif text-center">
             Medical Disclaimer
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-center space-y-4 pt-2 text-muted-foreground">
-            <p>
-              The content provided in <strong>Zenith</strong>, including text, graphics, images, and other materials, is for <strong>informational and educational purposes only</strong>.
-            </p>
-            <p className="font-medium text-foreground">
-              This application does not provide medical advice, diagnosis, or treatment.
-            </p>
-            <p>
-              Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this application.
-            </p>
-            <div className="p-3 bg-amber-900/20 border border-amber-500/20 rounded-lg text-xs text-amber-200/80 mt-4">
-              <p>By continuing, you acknowledge that you understand this disclaimer and agree to our Terms of Service.</p>
+          <AlertDialogDescription asChild className="text-center space-y-4 pt-2 text-muted-foreground">
+            <div>
+              <p>
+                The content provided in <strong>Zenith</strong>, including text, graphics, images, and other materials, is for <strong>informational and educational purposes only</strong>.
+              </p>
+              <p className="font-medium text-foreground">
+                This application does not provide medical advice, diagnosis, or treatment.
+              </p>
+              <p>
+                Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this application.
+              </p>
+              <div className="p-3 bg-amber-900/20 border border-amber-500/20 rounded-lg text-xs text-amber-200/80 mt-4">
+                <p>By continuing, you acknowledge that you understand this disclaimer and agree to our Terms of Service.</p>
+              </div>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
