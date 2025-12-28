@@ -27,10 +27,10 @@ export function DisclaimerModal() {
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogContent className="bg-background/95 backdrop-blur-xl border-white/10 max-w-xl">
+      <AlertDialogContent className="bg-background/95 backdrop-blur-xl border-white/10 max-w-xl max-h-[90vh] overflow-y-auto">
         <AlertDialogHeader>
-          <div className="mx-auto p-3 bg-amber-500/20 rounded-full mb-4">
-            <ShieldAlert className="w-8 h-8 text-amber-500" />
+          <div className="mx-auto p-3 bg-pink-500/20 rounded-full mb-4">
+            <ShieldAlert className="w-8 h-8 text-pink-500" />
           </div>
           <AlertDialogTitle className="text-2xl font-serif text-center">
             Medical Disclaimer
@@ -46,7 +46,7 @@ export function DisclaimerModal() {
               <p>
                 Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this application.
               </p>
-              <div className="p-3 bg-amber-900/20 border border-amber-500/20 rounded-lg text-xs text-amber-200/80 mt-4">
+              <div className="p-3 bg-pink-900/20 border border-pink-500/20 rounded-lg text-xs text-pink-200/80 mt-4">
                 <p>By continuing, you acknowledge that you understand this disclaimer and agree to our Terms of Service.</p>
               </div>
             </div>

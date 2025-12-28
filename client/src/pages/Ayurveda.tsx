@@ -4,14 +4,15 @@ import { motion } from "framer-motion";
 import { Flame, Wind, Droplets, Sun, Moon, Leaf, Sprout } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import alchemyBg from "@assets/generated_images/modern_alchemy_lab_with_glowing_herbal_elixirs.png";
 
 const doshas = [
   {
     name: "Vata",
     element: "Air & Ether",
     icon: Wind,
-    color: "text-blue-300",
-    bg: "bg-blue-500/20",
+    color: "text-cyan-300",
+    bg: "bg-cyan-500/20",
     desc: "The energy of movement. Governs breathing, pulsation, and muscle movement.",
     characteristics: ["Creative", "Quick", "Changeable", "Light", "Dry"]
   },
@@ -19,8 +20,8 @@ const doshas = [
     name: "Pitta",
     element: "Fire & Water",
     icon: Flame,
-    color: "text-orange-300",
-    bg: "bg-orange-500/20",
+    color: "text-pink-300",
+    bg: "bg-pink-500/20",
     desc: "The energy of digestion and metabolism. Governs body temperature and intelligence.",
     characteristics: ["Determined", "Sharp", "Hot", "Oily", "Intense"]
   },
@@ -49,7 +50,7 @@ export default function Ayurveda() {
 
   return (
     <Shell>
-      <div className="mb-8">
+      <div className="mb-8 relative z-10">
         <h1 className="text-4xl font-serif font-medium mb-2">Ayurvedic Wisdom</h1>
         <p className="text-muted-foreground">The science of life (Ayur = Life, Veda = Knowledge). Understanding your unique constitution.</p>
       </div>
@@ -94,41 +95,41 @@ export default function Ayurveda() {
         </BentoCard>
 
         {/* Dinacharya (Daily Routine) Clock */}
-        <BentoCard colSpan={2} rowSpan={2} className="relative overflow-hidden">
+        <BentoCard colSpan={2} rowSpan={2} className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-30" 
+               style={{ backgroundImage: `url(${alchemyBg})` }} />
+          <div className="absolute inset-0 bg-black/60 group-hover:bg-black/50 transition-colors" />
+
           <div className="flex justify-between items-center mb-6 z-10 relative">
-            <h3 className="text-lg font-medium flex items-center gap-2">
+            <h3 className="text-lg font-medium flex items-center gap-2 text-white">
               <Sun className="w-5 h-5 text-amber-400" /> Dinacharya (Daily Rhythm)
             </h3>
-            <span className="text-xs text-muted-foreground">Current Phase: <span className="text-white font-bold">Kapha</span></span>
+            <span className="text-xs text-white/80">Current Phase: <span className="text-white font-bold">Kapha</span></span>
           </div>
 
           <div className="grid gap-2 z-10 relative">
             {dailyRoutine.map((slot, i) => (
-              <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
-                <div className="w-24 font-mono text-xs text-muted-foreground">{slot.time}</div>
+              <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-black/40 backdrop-blur-md hover:bg-black/60 transition-colors border border-white/5">
+                <div className="w-24 font-mono text-xs text-white/70">{slot.time}</div>
                 <div className={cn(
                   "px-2 py-1 rounded text-[10px] uppercase font-bold w-16 text-center",
-                  slot.phase === "Vata" ? "bg-blue-500/20 text-blue-300" :
-                  slot.phase === "Pitta" ? "bg-orange-500/20 text-orange-300" :
+                  slot.phase === "Vata" ? "bg-cyan-500/20 text-cyan-300" :
+                  slot.phase === "Pitta" ? "bg-pink-500/20 text-pink-300" :
                   "bg-emerald-500/20 text-emerald-300"
                 )}>
                   {slot.phase}
                 </div>
-                <div className="text-sm truncate">{slot.activity}</div>
+                <div className="text-sm truncate text-white/90">{slot.activity}</div>
               </div>
             ))}
           </div>
-          
-          {/* Decorative background elements */}
-          <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-64 h-64 rounded-full border-4 border-white/5 z-0" />
-          <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-48 h-48 rounded-full border-4 border-white/5 z-0" />
         </BentoCard>
 
         {/* Agni (Digestive Fire) Status */}
-        <BentoCard className="bg-gradient-to-br from-orange-900/20 to-red-900/20 border-orange-500/20">
+        <BentoCard className="bg-gradient-to-br from-pink-900/20 to-purple-900/20 border-pink-500/20">
            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-orange-500/20 rounded-lg">
-                <Flame className="w-5 h-5 text-orange-400" />
+              <div className="p-2 bg-pink-500/20 rounded-lg">
+                <Flame className="w-5 h-5 text-pink-400" />
               </div>
               <div>
                  <p className="font-medium">Agni Status</p>
@@ -138,19 +139,19 @@ export default function Ayurveda() {
            
            <div className="text-center py-6">
              <div className="inline-block relative">
-               <Flame className="w-16 h-16 text-orange-500 animate-pulse" />
-               <div className="absolute inset-0 bg-orange-500 blur-2xl opacity-20" />
+               <Flame className="w-16 h-16 text-pink-500 animate-pulse" />
+               <div className="absolute inset-0 bg-pink-500 blur-2xl opacity-20" />
              </div>
              <h4 className="text-xl font-serif mt-4">Sama Agni</h4>
-             <p className="text-sm text-orange-200/60 mt-2">Balanced digestion. Maintain regular meal times.</p>
+             <p className="text-sm text-pink-200/60 mt-2">Balanced digestion. Maintain regular meal times.</p>
            </div>
         </BentoCard>
 
         {/* Ojas (Vitality) */}
         <BentoCard>
            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-amber-500/20 rounded-lg">
-                <Sprout className="w-5 h-5 text-amber-400" />
+              <div className="p-2 bg-emerald-500/20 rounded-lg">
+                <Sprout className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
                  <p className="font-medium">Ojas</p>
@@ -163,18 +164,18 @@ export default function Ayurveda() {
            <div className="space-y-2">
              <div className="flex justify-between text-xs">
                <span>Immunity</span>
-               <span className="text-amber-400">High</span>
+               <span className="text-emerald-400">High</span>
              </div>
              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-               <div className="h-full w-[85%] bg-amber-500" />
+               <div className="h-full w-[85%] bg-emerald-500" />
              </div>
              
              <div className="flex justify-between text-xs mt-3">
                <span>Radiance</span>
-               <span className="text-amber-400">Building</span>
+               <span className="text-emerald-400">Building</span>
              </div>
              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-               <div className="h-full w-[60%] bg-amber-500/60" />
+               <div className="h-full w-[60%] bg-emerald-500/60" />
              </div>
            </div>
         </BentoCard>
@@ -183,7 +184,7 @@ export default function Ayurveda() {
         <BentoCard colSpan={3} className="bg-white/5">
            <div className="flex items-start gap-6">
              <div className="hidden md:block p-4 bg-white/5 rounded-2xl">
-               <Leaf className="w-12 h-12 text-green-400" />
+               <Leaf className="w-12 h-12 text-emerald-400" />
              </div>
              <div>
                <h3 className="text-xl font-serif mb-2">Ritucharya (Seasonal Regimen): Hemanta (Late Autumn)</h3>

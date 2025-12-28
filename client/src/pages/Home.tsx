@@ -3,6 +3,9 @@ import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
 import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import sleepBg from "@assets/generated_images/ethereal_bedroom_sleep_sanctuary_with_nebula_projection.png";
+import dietBg from "@assets/generated_images/cyberpunk_healthy_smoothie_bowl_with_neon_lighting.png";
+import zenBg from "@assets/generated_images/futuristic_zen_garden_with_bioluminescent_plants.png";
 
 const data = [
   { name: "Mon", value: 4000 },
@@ -36,8 +39,8 @@ export default function Home() {
 
       <BentoGrid>
         {/* Main Health Score */}
-        <BentoCard colSpan={2} rowSpan={2} className="relative overflow-visible">
-          <div className="flex justify-between items-start mb-4">
+        <BentoCard colSpan={2} rowSpan={2} className="relative overflow-hidden">
+          <div className="flex justify-between items-start mb-4 relative z-10">
             <div>
               <h3 className="text-lg font-medium text-muted-foreground flex items-center gap-2">
                 <Activity className="w-4 h-4 text-primary" /> Vitality Score
@@ -51,7 +54,7 @@ export default function Home() {
             </button>
           </div>
           
-          <div className="h-[200px] w-full mt-auto -mb-6 -mx-6">
+          <div className="h-[200px] w-full mt-auto -mb-6 -mx-6 relative z-10">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data}>
                 <defs>
@@ -80,72 +83,88 @@ export default function Home() {
         </BentoCard>
 
         {/* Daily Wisdom - Eastern */}
-        <BentoCard className="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 border-indigo-500/20">
-          <div className="flex flex-col h-full justify-center text-center p-2">
+        <BentoCard className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-40" 
+               style={{ backgroundImage: `url(${zenBg})` }} />
+          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
+          
+          <div className="flex flex-col h-full justify-center text-center p-2 relative z-10">
             <Wind className="w-8 h-8 text-indigo-400 mx-auto mb-4 opacity-80" />
             <h4 className="text-sm uppercase tracking-widest text-indigo-300 mb-2">Daily Qi</h4>
-            <p className="font-serif italic text-xl leading-relaxed text-indigo-100">
+            <p className="font-serif italic text-xl leading-relaxed text-white">
               "Tension is who you think you should be. Relaxation is who you are."
             </p>
-            <p className="text-xs text-indigo-400 mt-4">— Chinese Proverb</p>
+            <p className="text-xs text-indigo-300 mt-4">— Chinese Proverb</p>
           </div>
         </BentoCard>
 
         {/* Sleep Metric */}
-        <BentoCard className="relative group">
-          <div className="flex justify-between items-start">
-            <h3 className="text-muted-foreground font-medium flex items-center gap-2">
-              <Moon className="w-4 h-4 text-purple-400" /> Sleep
-            </h3>
-            <span className="text-xs px-2 py-1 rounded-full bg-purple-500/10 text-purple-300">Optimal</span>
-          </div>
-          <div className="mt-4">
-            <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-bold text-foreground">7</span>
-              <span className="text-lg text-muted-foreground">h</span>
-              <span className="text-3xl font-bold text-foreground ml-2">42</span>
-              <span className="text-lg text-muted-foreground">m</span>
+        <BentoCard className="relative group overflow-hidden">
+          <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-30" 
+               style={{ backgroundImage: `url(${sleepBg})` }} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+
+          <div className="relative z-10">
+            <div className="flex justify-between items-start">
+              <h3 className="text-white/80 font-medium flex items-center gap-2">
+                <Moon className="w-4 h-4 text-purple-400" /> Sleep
+              </h3>
+              <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-200 backdrop-blur-md">Optimal</span>
             </div>
-            <div className="w-full h-2 bg-white/5 rounded-full mt-4 overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 w-[85%]" />
+            <div className="mt-4">
+              <div className="flex items-baseline gap-1 text-white">
+                <span className="text-3xl font-bold">7</span>
+                <span className="text-lg opacity-70">h</span>
+                <span className="text-3xl font-bold ml-2">42</span>
+                <span className="text-lg opacity-70">m</span>
+              </div>
+              <div className="w-full h-2 bg-white/10 rounded-full mt-4 overflow-hidden backdrop-blur-sm">
+                <div className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 w-[85%]" />
+              </div>
+              <p className="text-xs text-white/60 mt-2">Rem Cycle: 23% (High)</p>
             </div>
-            <p className="text-xs text-muted-foreground mt-2">Rem Cycle: 23% (High)</p>
           </div>
         </BentoCard>
 
         {/* Quick Diet */}
-        <BentoCard>
-          <div className="flex justify-between items-start mb-4">
-             <h3 className="text-muted-foreground font-medium flex items-center gap-2">
-              <Leaf className="w-4 h-4 text-green-400" /> Nutrition
-            </h3>
-          </div>
-          <div className="space-y-3">
-             <div className="flex justify-between items-center p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
-                    <Sun className="w-4 h-4 text-orange-400" />
+        <BentoCard className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-20" 
+               style={{ backgroundImage: `url(${dietBg})` }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80" />
+
+          <div className="relative z-10">
+            <div className="flex justify-between items-start mb-4">
+               <h3 className="text-white/80 font-medium flex items-center gap-2">
+                <Leaf className="w-4 h-4 text-green-400" /> Nutrition
+              </h3>
+            </div>
+            <div className="space-y-3">
+               <div className="flex justify-between items-center p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-md">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+                      <Sun className="w-4 h-4 text-orange-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">Breakfast</p>
+                      <p className="text-xs text-white/60">Oatmeal & Berries</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">Breakfast</p>
-                    <p className="text-xs text-muted-foreground">Oatmeal & Berries</p>
+                  <span className="text-xs font-mono text-green-400">320 kcal</span>
+               </div>
+               
+               <div className="flex justify-between items-center p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-md">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                      <Utensils className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">Lunch</p>
+                      <p className="text-xs text-white/60">Logged 12:30 PM</p>
+                    </div>
                   </div>
-                </div>
-                <span className="text-xs font-mono text-green-400">320 kcal</span>
-             </div>
-             
-             <div className="flex justify-between items-center p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                    <Utensils className="w-4 h-4 text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Lunch</p>
-                    <p className="text-xs text-muted-foreground">Logged 12:30 PM</p>
-                  </div>
-                </div>
-                <span className="text-xs font-mono text-green-400">540 kcal</span>
-             </div>
+                  <span className="text-xs font-mono text-green-400">540 kcal</span>
+               </div>
+            </div>
           </div>
         </BentoCard>
 
