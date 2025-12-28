@@ -22,6 +22,13 @@ export const userProfiles = pgTable("user_profiles", {
 export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({
   id: true,
   updatedAt: true,
+}).extend({
+  displayName: z.string().nullable().optional(),
+  location: z.string().nullable().optional(),
+  heightCm: z.number().nullable().optional(),
+  weightKg: z.number().nullable().optional(),
+  dateOfBirth: z.string().nullable().optional(),
+  doshaType: z.string().nullable().optional(),
 });
 
 export type InsertUserProfile = z.infer<typeof insertUserProfileSchema>;
@@ -41,6 +48,10 @@ export const sleepLogs = pgTable("sleep_logs", {
 export const insertSleepLogSchema = createInsertSchema(sleepLogs).omit({
   id: true,
   createdAt: true,
+}).extend({
+  hoursSlept: z.number().nullable().optional(),
+  quality: z.number().nullable().optional(),
+  notes: z.string().nullable().optional(),
 });
 
 export type InsertSleepLog = z.infer<typeof insertSleepLogSchema>;
@@ -61,6 +72,11 @@ export const dietLogs = pgTable("diet_logs", {
 export const insertDietLogSchema = createInsertSchema(dietLogs).omit({
   id: true,
   createdAt: true,
+}).extend({
+  mealType: z.string().nullable().optional(),
+  items: z.array(z.string()).nullable().optional(),
+  calories: z.number().nullable().optional(),
+  notes: z.string().nullable().optional(),
 });
 
 export type InsertDietLog = z.infer<typeof insertDietLogSchema>;
@@ -81,6 +97,11 @@ export const exerciseLogs = pgTable("exercise_logs", {
 export const insertExerciseLogSchema = createInsertSchema(exerciseLogs).omit({
   id: true,
   createdAt: true,
+}).extend({
+  activityType: z.string().nullable().optional(),
+  durationMinutes: z.number().nullable().optional(),
+  intensity: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
 });
 
 export type InsertExerciseLog = z.infer<typeof insertExerciseLogSchema>;
