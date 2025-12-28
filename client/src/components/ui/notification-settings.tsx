@@ -1,53 +1,77 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Bell, BellOff, Moon, Utensils, Dumbbell, Leaf, MessageCircle, Calendar, Clock, Save, Check } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
+import { useNotificationPreferences } from "@/hooks/use-notifications";
 
-interface NotificationPreference {
-  id: string;
+interface NotificationItem {
+  id: keyof typeof prefKeyMap;
   label: string;
   description: string;
   icon: React.ElementType;
-  enabled: boolean;
   time?: string;
 }
 
+const prefKeyMap = {
+  sleep_reminder: "dailyWisdom",
+  meal_logging: "marketplaceUpdates",
+  exercise_nudge: "systemAlerts",
+  daily_insight: "dailyWisdom",
+  practitioner_messages: "appointmentReminders",
+  appointment_reminders: "appointmentReminders",
+} as const;
+
+const notificationItems: NotificationItem[] = [
+  { id: "sleep_reminder", label: "Sleep Reminder", description: "Reminds you to start winding down", icon: Moon, time: "21:00" },
+  { id: "meal_logging", label: "Meal Logging", description: "Prompts to log your meals", icon: Utensils, time: "12:00" },
+  { id: "exercise_nudge", label: "Movement Nudge", description: "Encourages daily physical activity", icon: Dumbbell, time: "08:00" },
+  { id: "daily_insight", label: "Daily Wisdom", description: "Ayurvedic insights for your dosha", icon: Leaf, time: "07:00" },
+  { id: "practitioner_messages", label: "Practitioner Messages", description: "Messages from your practitioners", icon: MessageCircle },
+  { id: "appointment_reminders", label: "Appointment Reminders", description: "Upcoming session notifications", icon: Calendar },
+];
+
 export function NotificationSettings() {
-  const { toast } = useToast();
-  const [saving, setSaving] = useState(false);
-  const [preferences, setPreferences] = useState<NotificationPreference[]>([
-    { id: "sleep_reminder", label: "Sleep Reminder", description: "Reminds you to start winding down", icon: Moon, enabled: true, time: "21:00" },
-    { id: "meal_logging", label: "Meal Logging", description: "Prompts to log your meals", icon: Utensils, enabled: true, time: "12:00" },
-    { id: "exercise_nudge", label: "Movement Nudge", description: "Encourages daily physical activity", icon: Dumbbell, enabled: true, time: "08:00" },
-    { id: "daily_insight", label: "Daily Wisdom", description: "Ayurvedic insights for your dosha", icon: Leaf, enabled: true, time: "07:00" },
-    { id: "practitioner_messages", label: "Practitioner Messages", description: "Messages from your practitioners", icon: MessageCircle, enabled: true },
-    { id: "appointment_reminders", label: "Appointment Reminders", description: "Upcoming session notifications", icon: Calendar, enabled: true },
-  ]);
+  const { preferences, isLoading, savePreferences, isSaving } = useNotificationPreferences();
+  
+  const [localPrefs, setLocalPrefs] = useState({
+    appointmentReminders: true,
+    dailyWisdom: true,
+    marketplaceUpdates: true,
+    systemAlerts: true,
+  });
 
-  const togglePreference = (id: string) => {
-    setPreferences(prev => prev.map(p => 
-      p.id === id ? { ...p, enabled: !p.enabled } : p
-    ));
+  useEffect(() => {
+    if (preferences) {
+      setLocalPrefs({
+        appointmentReminders: preferences.appointmentReminders ?? true,
+        dailyWisdom: preferences.dailyWisdom ?? true,
+        marketplaceUpdates: preferences.marketplaceUpdates ?? true,
+        systemAlerts: preferences.systemAlerts ?? true,
+      });
+    }
+  }, [preferences]);
+
+  const isEnabled = (itemId: keyof typeof prefKeyMap): boolean => {
+    const prefKey = prefKeyMap[itemId];
+    return localPrefs[prefKey as keyof typeof localPrefs] ?? true;
   };
 
-  const updateTime = (id: string, time: string) => {
-    setPreferences(prev => prev.map(p => 
-      p.id === id ? { ...p, time } : p
-    ));
+  const togglePreference = (itemId: keyof typeof prefKeyMap) => {
+    const prefKey = prefKeyMap[itemId] as keyof typeof localPrefs;
+    const newPrefs = { ...localPrefs, [prefKey]: !localPrefs[prefKey] };
+    setLocalPrefs(newPrefs);
+    savePreferences(newPrefs);
   };
 
-  const handleSave = async () => {
-    setSaving(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setSaving(false);
-    toast({
-      title: "Preferences Saved",
-      description: "Your notification settings have been updated.",
-    });
-  };
+  const enabledCount = Object.values(localPrefs).filter(Boolean).length;
 
-  const enabledCount = preferences.filter(p => p.enabled).length;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -58,65 +82,59 @@ export function NotificationSettings() {
           </div>
           <div>
             <h3 className="font-medium">Notification Preferences</h3>
-            <p className="text-xs text-muted-foreground">{enabledCount} of {preferences.length} enabled</p>
+            <p className="text-xs text-muted-foreground">{enabledCount} of 4 categories enabled</p>
           </div>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleSave}
-          disabled={saving}
-          data-testid="button-save-notifications"
-          className="px-4 py-2 bg-primary/20 hover:bg-primary/30 text-primary rounded-xl text-sm font-medium flex items-center gap-2 transition-colors disabled:opacity-50"
-        >
-          {saving ? <Clock className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          {saving ? "Saving..." : "Save"}
-        </motion.button>
+        {isSaving && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Clock className="w-3 h-3 animate-spin" />
+            Saving...
+          </div>
+        )}
       </div>
 
       <div className="space-y-3">
-        {preferences.map((pref, index) => (
-          <motion.div
-            key={pref.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className={`p-4 rounded-2xl border transition-all ${
-              pref.enabled 
-                ? "bg-white/5 border-white/10" 
-                : "bg-black/20 border-white/5 opacity-60"
-            }`}
-            data-testid={`notification-${pref.id}`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-xl ${pref.enabled ? "bg-primary/20" : "bg-white/5"}`}>
-                  <pref.icon className={`w-4 h-4 ${pref.enabled ? "text-primary" : "text-muted-foreground"}`} />
+        {notificationItems.map((item, index) => {
+          const enabled = isEnabled(item.id);
+          return (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className={`p-4 rounded-2xl border transition-all ${
+                enabled 
+                  ? "bg-white/5 border-white/10" 
+                  : "bg-black/20 border-white/5 opacity-60"
+              }`}
+              data-testid={`notification-${item.id}`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-xl ${enabled ? "bg-primary/20" : "bg-white/5"}`}>
+                    <item.icon className={`w-4 h-4 ${enabled ? "text-primary" : "text-muted-foreground"}`} />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-sm">{item.label}</h4>
+                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-medium text-sm">{pref.label}</h4>
-                  <p className="text-xs text-muted-foreground">{pref.description}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                {pref.time && pref.enabled && (
-                  <input
-                    type="time"
-                    value={pref.time}
-                    onChange={(e) => updateTime(pref.id, e.target.value)}
-                    className="bg-black/30 border border-white/10 rounded-lg px-2 py-1 text-xs text-muted-foreground"
-                    data-testid={`time-${pref.id}`}
+                <div className="flex items-center gap-3">
+                  {item.time && enabled && (
+                    <span className="text-xs text-muted-foreground bg-black/30 px-2 py-1 rounded-lg">
+                      {item.time}
+                    </span>
+                  )}
+                  <Switch
+                    checked={enabled}
+                    onCheckedChange={() => togglePreference(item.id)}
+                    data-testid={`switch-${item.id}`}
                   />
-                )}
-                <Switch
-                  checked={pref.enabled}
-                  onCheckedChange={() => togglePreference(pref.id)}
-                  data-testid={`switch-${pref.id}`}
-                />
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          );
+        })}
       </div>
 
       <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-cyan-500/10 border border-primary/20">

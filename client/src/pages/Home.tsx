@@ -6,6 +6,7 @@ import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "rec
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useSleepTracking, useDietTracking, useExerciseTracking } from "@/hooks/use-health-tracking";
+import { useProfile } from "@/hooks/use-profile";
 import { PersonalizedInsights } from "@/components/ui/personalized-insights";
 import sleepBg from "@assets/generated_images/ethereal_bedroom_sleep_sanctuary_with_nebula_projection.png";
 import dietBg from "@assets/generated_images/cyberpunk_healthy_smoothie_bowl_with_neon_lighting.png";
@@ -29,6 +30,7 @@ const dailyQuotes = [
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
+  const { profile } = useProfile();
   const { sleepLogs } = useSleepTracking();
   const { dietLogs } = useDietTracking();
   const { exerciseLogs } = useExerciseTracking();
@@ -376,7 +378,7 @@ export default function Home() {
           <PersonalizedInsights 
             sleepAvg={sleepAverage} 
             exerciseMinutes={todayExercise || 0}
-            dosha="Pitta"
+            dosha={profile?.doshaType?.split("-")[0] || "Pitta"}
           />
         </BentoCard>
       </BentoGrid>
