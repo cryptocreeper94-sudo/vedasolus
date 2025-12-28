@@ -191,6 +191,30 @@ export async function registerRoutes(
     }
   });
 
+  // AI Wellness Coach endpoints
+  app.post("/api/wellness-chat", async (req: any, res) => {
+    try {
+      const { getWellnessResponse, textToSpeech } = await import("./elevenlabs");
+      const { messages } = req.body;
+      
+      const response = await getWellnessResponse(messages);
+      
+      let audioUrl = null;
+      try {
+        const audioBuffer = await textToSpeech(response);
+        const base64Audio = audioBuffer.toString("base64");
+        audioUrl = `data:audio/mpeg;base64,${base64Audio}`;
+      } catch (audioError) {
+        console.error("TTS error (continuing without audio):", audioError);
+      }
+      
+      res.json({ response, audioUrl });
+    } catch (error: any) {
+      console.error("Error in wellness chat:", error);
+      res.status(500).json({ message: error.message || "Failed to get wellness response" });
+    }
+  });
+
   // Notification Preferences endpoints
   app.get("/api/notifications/preferences", isAuthenticated, async (req: any, res) => {
     try {

@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSleepTracking, useDietTracking, useExerciseTracking } from "@/hooks/use-health-tracking";
 import { useProfile } from "@/hooks/use-profile";
 import { PersonalizedInsights } from "@/components/ui/personalized-insights";
+import { AIWellnessCoach } from "@/components/ui/ai-wellness-coach";
 import sleepBg from "@assets/generated_images/ethereal_bedroom_sleep_sanctuary_with_nebula_projection.png";
 import dietBg from "@assets/generated_images/cyberpunk_healthy_smoothie_bowl_with_neon_lighting.png";
 import zenBg from "@assets/generated_images/futuristic_zen_garden_with_bioluminescent_plants.png";
@@ -53,7 +54,7 @@ export default function Home() {
   const vitalityScore = 92;
   
   const sleepAverage = sleepLogs.length > 0 
-    ? sleepLogs.reduce((sum, l) => sum + (l.hours || 0), 0) / sleepLogs.length 
+    ? sleepLogs.reduce((sum, l) => sum + (l.hoursSlept || 0), 0) / sleepLogs.length 
     : undefined;
 
   return (
@@ -380,6 +381,11 @@ export default function Home() {
             exerciseMinutes={todayExercise || 0}
             dosha={profile?.doshaType?.split("-")[0] || "Pitta"}
           />
+        </BentoCard>
+
+        {/* AI Wellness Coach */}
+        <BentoCard colSpan={3} className="p-0 overflow-hidden">
+          <AIWellnessCoach />
         </BentoCard>
       </BentoGrid>
     </Shell>
