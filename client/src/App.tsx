@@ -18,6 +18,9 @@ import Settings from "@/pages/Settings";
 import DeveloperDashboard from "@/pages/Developer";
 import PractitionerDashboard from "@/pages/Practitioner";
 import AdminDashboard from "@/pages/Admin";
+import Meditation from "@/pages/Meditation";
+import Messages from "@/pages/Messages";
+import HealthRecords from "@/pages/HealthRecords";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 
 function Router() {
@@ -37,6 +40,9 @@ function Router() {
       <Route path="/exercise" component={Exercise} />
       <Route path="/sleep" component={Sleep} />
       <Route path="/wisdom" component={Wisdom} />
+      <Route path="/meditation" component={Meditation} />
+      <Route path="/messages" component={Messages} />
+      <Route path="/records" component={HealthRecords} />
       <Route component={NotFound} />
     </Switch>
   );

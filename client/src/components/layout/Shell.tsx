@@ -24,7 +24,10 @@ import {
   Copyright,
   LogIn,
   LogOut,
-  UserCircle
+  UserCircle,
+  Wind,
+  MessageCircle,
+  FileText
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -39,6 +42,7 @@ const navGroups = [
     items: [
       { href: "/", icon: LayoutGrid, label: "Dashboard" },
       { href: "/passport", icon: Fingerprint, label: "Health Passport" },
+      { href: "/records", icon: FileText, label: "Health Records" },
     ]
   },
   {
@@ -49,6 +53,7 @@ const navGroups = [
       { href: "/diet", icon: Utensils, label: "Diet & Nutrition" },
       { href: "/exercise", icon: Activity, label: "Movement" },
       { href: "/sleep", icon: Moon, label: "Sleep" },
+      { href: "/meditation", icon: Wind, label: "Stillness" },
       { href: "/wisdom", icon: Brain, label: "Synthesis" },
     ]
   },
@@ -57,6 +62,7 @@ const navGroups = [
     items: [
       { href: "/marketplace", icon: Store, label: "The Bazaar" },
       { href: "/community", icon: Users, label: "Tribes" },
+      { href: "/messages", icon: MessageCircle, label: "Messages" },
     ]
   },
   {

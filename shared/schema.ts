@@ -126,5 +126,145 @@ export const insertNotificationPreferencesSchema = createInsertSchema(notificati
 export type InsertNotificationPreferences = z.infer<typeof insertNotificationPreferencesSchema>;
 export type NotificationPreferences = typeof notificationPreferences.$inferSelect;
 
+// Practitioners for marketplace
+export const practitioners = pgTable("practitioners", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  title: text("title").notNull(),
+  specialty: text("specialty").notNull(),
+  location: text("location"),
+  bio: text("bio"),
+  modalities: text("modalities").array(),
+  verified: boolean("verified").default(false),
+  rating: integer("rating").default(0),
+  reviewCount: integer("review_count").default(0),
+  hourlyRate: integer("hourly_rate"),
+  availableRemote: boolean("available_remote").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertPractitionerSchema = createInsertSchema(practitioners).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertPractitioner = z.infer<typeof insertPractitionerSchema>;
+export type Practitioner = typeof practitioners.$inferSelect;
+
+// Appointments/Bookings
+export const appointments = pgTable("appointments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  practitionerId: varchar("practitioner_id").notNull().references(() => practitioners.id, { onDelete: "cascade" }),
+  date: date("date").notNull(),
+  time: text("time").notNull(),
+  duration: integer("duration").default(60),
+  status: text("status").default("pending"),
+  notes: text("notes"),
+  paymentStatus: text("payment_status").default("pending"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertAppointmentSchema = createInsertSchema(appointments).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
+export type Appointment = typeof appointments.$inferSelect;
+
+// User Achievements
+export const achievements = pgTable("achievements", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  type: text("type").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  earnedAt: timestamp("earned_at").defaultNow(),
+  progress: integer("progress").default(0),
+  target: integer("target").default(1),
+});
+
+export const insertAchievementSchema = createInsertSchema(achievements).omit({
+  id: true,
+  earnedAt: true,
+});
+
+export type InsertAchievement = z.infer<typeof insertAchievementSchema>;
+export type Achievement = typeof achievements.$inferSelect;
+
+// User Streaks
+export const streaks = pgTable("streaks", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  type: text("type").notNull(),
+  currentStreak: integer("current_streak").default(0),
+  longestStreak: integer("longest_streak").default(0),
+  lastActivityDate: date("last_activity_date"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertStreakSchema = createInsertSchema(streaks).omit({
+  id: true,
+  updatedAt: true,
+});
+
+export type InsertStreak = z.infer<typeof insertStreakSchema>;
+export type Streak = typeof streaks.$inferSelect;
+
+// Messages
+export const messages = pgTable("messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  senderId: varchar("sender_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  receiverId: varchar("receiver_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  read: boolean("read").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertMessageSchema = createInsertSchema(messages).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type Message = typeof messages.$inferSelect;
+
+// Meditation Sessions
+export const meditationSessions = pgTable("meditation_sessions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  type: text("type").notNull(),
+  durationMinutes: integer("duration_minutes").notNull(),
+  completedAt: timestamp("completed_at").defaultNow(),
+});
+
+export const insertMeditationSessionSchema = createInsertSchema(meditationSessions).omit({
+  id: true,
+  completedAt: true,
+});
+
+export type InsertMeditationSession = z.infer<typeof insertMeditationSessionSchema>;
+export type MeditationSession = typeof meditationSessions.$inferSelect;
+
+// Health Records (for ingestion)
+export const healthRecords = pgTable("health_records", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  type: text("type").notNull(),
+  source: text("source"),
+  data: jsonb("data"),
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+export const insertHealthRecordSchema = createInsertSchema(healthRecords).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export type InsertHealthRecord = z.infer<typeof insertHealthRecordSchema>;
+export type HealthRecord = typeof healthRecords.$inferSelect;
+
 // Import users from auth models for references
 import { users } from "./models/auth";

@@ -1,8 +1,11 @@
 import { Shell } from "@/components/layout/Shell";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
-import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils } from "lucide-react";
+import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { Link } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { useSleepTracking, useDietTracking, useExerciseTracking } from "@/hooks/use-health-tracking";
 import sleepBg from "@assets/generated_images/ethereal_bedroom_sleep_sanctuary_with_nebula_projection.png";
 import dietBg from "@assets/generated_images/cyberpunk_healthy_smoothie_bowl_with_neon_lighting.png";
 import zenBg from "@assets/generated_images/futuristic_zen_garden_with_bioluminescent_plants.png";
@@ -17,7 +20,35 @@ const data = [
   { name: "Sun", value: 3490 },
 ];
 
+const dailyQuotes = [
+  { text: "Tension is who you think you should be. Relaxation is who you are.", source: "Chinese Proverb" },
+  { text: "The part can never be well unless the whole is well.", source: "Plato" },
+  { text: "When diet is wrong, medicine is of no use. When diet is correct, medicine is of no need.", source: "Ayurvedic Proverb" },
+];
+
 export default function Home() {
+  const { user, isAuthenticated } = useAuth();
+  const { sleepLogs } = useSleepTracking();
+  const { dietLogs } = useDietTracking();
+  const { exerciseLogs } = useExerciseTracking();
+
+  const displayName = user?.firstName || "Seeker";
+  const currentHour = new Date().getHours();
+  const greeting = currentHour < 12 ? "Good Morning" : currentHour < 17 ? "Good Afternoon" : "Good Evening";
+  
+  const randomQuote = dailyQuotes[Math.floor(Date.now() / 86400000) % dailyQuotes.length];
+
+  const latestSleep = sleepLogs[0];
+  const todayCalories = dietLogs
+    .filter(l => l.date === new Date().toISOString().split('T')[0])
+    .reduce((sum, l) => sum + (l.calories || 0), 0);
+  const todayExercise = exerciseLogs
+    .filter(l => l.date === new Date().toISOString().split('T')[0])
+    .reduce((sum, l) => sum + (l.durationMinutes || 0), 0);
+
+  const currentStreak = 7;
+  const vitalityScore = 92;
+
   return (
     <Shell>
       <motion.div 
@@ -26,14 +57,22 @@ export default function Home() {
         className="mb-8 flex justify-between items-end"
       >
         <div>
-          <h2 className="text-muted-foreground font-medium mb-1 tracking-wider uppercase text-xs">Dec 28, 2025</h2>
+          <h2 className="text-muted-foreground font-medium mb-1 tracking-wider uppercase text-xs">
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
+          </h2>
           <h1 className="text-4xl md:text-5xl font-serif font-medium text-foreground">
-            Good Evening, <span className="text-primary italic">Alex</span>
+            {greeting}, <span className="text-primary italic">{displayName}</span>
           </h1>
         </div>
-        <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full glass-panel">
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-sm font-medium">System Optimal</span>
+        <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-panel">
+            <Flame className="w-4 h-4 text-orange-400" />
+            <span className="text-sm font-bold text-orange-300">{currentStreak} day streak</span>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-panel">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-sm font-medium">System Optimal</span>
+          </div>
         </div>
       </motion.div>
 
@@ -46,12 +85,14 @@ export default function Home() {
                 <Activity className="w-4 h-4 text-primary" /> Vitality Score
               </h3>
               <p className="text-5xl font-serif mt-2 font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
-                92<span className="text-xl align-top opacity-50">%</span>
+                {vitalityScore}<span className="text-xl align-top opacity-50">%</span>
               </p>
             </div>
-            <button className="p-2 rounded-full hover:bg-white/10 transition-colors">
-              <ArrowUpRight className="w-5 h-5 text-muted-foreground" />
-            </button>
+            <Link href="/passport">
+              <button className="p-2 rounded-full hover:bg-white/10 transition-colors" data-testid="button-view-passport">
+                <ArrowUpRight className="w-5 h-5 text-muted-foreground" />
+              </button>
+            </Link>
           </div>
           
           <div className="h-[200px] w-full mt-auto -mb-6 -mx-6 relative z-10">
@@ -92,92 +133,183 @@ export default function Home() {
             <Wind className="w-8 h-8 text-indigo-400 mx-auto mb-4 opacity-80" />
             <h4 className="text-sm uppercase tracking-widest text-indigo-300 mb-2">Daily Qi</h4>
             <p className="font-serif italic text-xl leading-relaxed text-white">
-              "Tension is who you think you should be. Relaxation is who you are."
+              "{randomQuote.text}"
             </p>
-            <p className="text-xs text-indigo-300 mt-4">— Chinese Proverb</p>
+            <p className="text-xs text-indigo-300 mt-4">— {randomQuote.source}</p>
           </div>
         </BentoCard>
 
         {/* Sleep Metric */}
-        <BentoCard className="relative group overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-30" 
-               style={{ backgroundImage: `url(${sleepBg})` }} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+        <Link href="/sleep">
+          <BentoCard className="relative group overflow-hidden cursor-pointer" data-testid="card-sleep">
+            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-30" 
+                 style={{ backgroundImage: `url(${sleepBg})` }} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
 
-          <div className="relative z-10">
-            <div className="flex justify-between items-start">
-              <h3 className="text-white/80 font-medium flex items-center gap-2">
-                <Moon className="w-4 h-4 text-purple-400" /> Sleep
-              </h3>
-              <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-200 backdrop-blur-md">Optimal</span>
-            </div>
-            <div className="mt-4">
-              <div className="flex items-baseline gap-1 text-white">
-                <span className="text-3xl font-bold">7</span>
-                <span className="text-lg opacity-70">h</span>
-                <span className="text-3xl font-bold ml-2">42</span>
-                <span className="text-lg opacity-70">m</span>
+            <div className="relative z-10">
+              <div className="flex justify-between items-start">
+                <h3 className="text-white/80 font-medium flex items-center gap-2">
+                  <Moon className="w-4 h-4 text-purple-400" /> Sleep
+                </h3>
+                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-200 backdrop-blur-md">
+                  {latestSleep ? `${latestSleep.quality}/5` : "Optimal"}
+                </span>
               </div>
-              <div className="w-full h-2 bg-white/10 rounded-full mt-4 overflow-hidden backdrop-blur-sm">
-                <div className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 w-[85%]" />
+              <div className="mt-4">
+                <div className="flex items-baseline gap-1 text-white">
+                  <span className="text-3xl font-bold">{latestSleep?.hoursSlept || 7}</span>
+                  <span className="text-lg opacity-70">h</span>
+                  <span className="text-3xl font-bold ml-2">{Math.round(((latestSleep?.hoursSlept || 7.7) % 1) * 60)}</span>
+                  <span className="text-lg opacity-70">m</span>
+                </div>
+                <div className="w-full h-2 bg-white/10 rounded-full mt-4 overflow-hidden backdrop-blur-sm">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-purple-500 to-indigo-500"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${((latestSleep?.hoursSlept || 7.7) / 9) * 100}%` }}
+                  />
+                </div>
+                <p className="text-xs text-white/60 mt-2">
+                  {sleepLogs.length > 0 ? `${sleepLogs.length} nights logged` : "Rem Cycle: 23% (High)"}
+                </p>
               </div>
-              <p className="text-xs text-white/60 mt-2">Rem Cycle: 23% (High)</p>
             </div>
-          </div>
-        </BentoCard>
+          </BentoCard>
+        </Link>
 
         {/* Quick Diet */}
-        <BentoCard className="relative overflow-hidden group">
-          <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-20" 
-               style={{ backgroundImage: `url(${dietBg})` }} />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80" />
+        <Link href="/diet">
+          <BentoCard className="relative overflow-hidden group cursor-pointer" data-testid="card-diet">
+            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-20" 
+                 style={{ backgroundImage: `url(${dietBg})` }} />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80" />
 
-          <div className="relative z-10">
-            <div className="flex justify-between items-start mb-4">
-               <h3 className="text-white/80 font-medium flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-green-400" /> Nutrition
-              </h3>
+            <div className="relative z-10">
+              <div className="flex justify-between items-start mb-4">
+                 <h3 className="text-white/80 font-medium flex items-center gap-2">
+                  <Leaf className="w-4 h-4 text-green-400" /> Nutrition
+                </h3>
+                <span className="text-sm font-mono text-green-400">{todayCalories || 860} kcal</span>
+              </div>
+              <div className="space-y-3">
+                 {dietLogs.slice(0, 2).map((log, i) => (
+                   <div key={log.id || i} className="flex justify-between items-center p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-md">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+                          <Utensils className="w-4 h-4 text-orange-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-white capitalize">{log.mealType}</p>
+                          <p className="text-xs text-white/60 truncate max-w-[100px]">{log.items?.[0] || "Logged"}</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono text-green-400">{log.calories} kcal</span>
+                   </div>
+                 ))}
+                 {dietLogs.length === 0 && (
+                   <>
+                     <div className="flex justify-between items-center p-2 rounded-lg bg-white/10 backdrop-blur-md">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+                            <Sun className="w-4 h-4 text-orange-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-white">Breakfast</p>
+                            <p className="text-xs text-white/60">Oatmeal & Berries</p>
+                          </div>
+                        </div>
+                        <span className="text-xs font-mono text-green-400">320 kcal</span>
+                     </div>
+                     <div className="flex justify-between items-center p-2 rounded-lg bg-white/10 backdrop-blur-md">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                            <Utensils className="w-4 h-4 text-blue-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-white">Lunch</p>
+                            <p className="text-xs text-white/60">Logged 12:30 PM</p>
+                          </div>
+                        </div>
+                        <span className="text-xs font-mono text-green-400">540 kcal</span>
+                     </div>
+                   </>
+                 )}
+              </div>
             </div>
-            <div className="space-y-3">
-               <div className="flex justify-between items-center p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-md">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
-                      <Sun className="w-4 h-4 text-orange-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">Breakfast</p>
-                      <p className="text-xs text-white/60">Oatmeal & Berries</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-mono text-green-400">320 kcal</span>
-               </div>
-               
-               <div className="flex justify-between items-center p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-md">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                      <Utensils className="w-4 h-4 text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">Lunch</p>
-                      <p className="text-xs text-white/60">Logged 12:30 PM</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-mono text-green-400">540 kcal</span>
-               </div>
+          </BentoCard>
+        </Link>
+
+        {/* Streak & Achievements */}
+        <BentoCard className="bg-gradient-to-br from-orange-500/10 to-amber-500/5 border-orange-500/20">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 rounded-xl bg-orange-500/20">
+              <Flame className="w-6 h-6 text-orange-400" />
+            </div>
+            <div>
+              <h3 className="font-medium">Current Streak</h3>
+              <p className="text-xs text-muted-foreground">Keep the momentum!</p>
             </div>
           </div>
+          <div className="flex items-end justify-between">
+            <div>
+              <span className="text-4xl font-bold text-orange-300">{currentStreak}</span>
+              <span className="text-lg text-muted-foreground ml-1">days</span>
+            </div>
+            <div className="flex gap-1">
+              {[...Array(7)].map((_, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: i * 0.1 }}
+                  className={`w-3 h-3 rounded-full ${i < currentStreak % 7 || currentStreak >= 7 ? "bg-orange-400" : "bg-white/20"}`}
+                />
+              ))}
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-4">Best: 14 days</p>
         </BentoCard>
 
         {/* Quick Action - Meditate */}
-        <BentoCard className="cursor-pointer bg-primary/5 hover:bg-primary/10 border-primary/20">
-           <div className="h-full flex flex-col items-center justify-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Brain className="w-6 h-6 text-primary" />
+        <Link href="/meditation">
+          <BentoCard className="cursor-pointer bg-primary/5 hover:bg-primary/10 border-primary/20 h-full" data-testid="card-meditation">
+             <div className="h-full flex flex-col items-center justify-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Brain className="w-6 h-6 text-primary" />
+                </div>
+                <p className="font-medium text-primary">Start Meditation</p>
+                <span className="text-xs text-primary/60">15 min • Mindfulness</span>
+             </div>
+          </BentoCard>
+        </Link>
+
+        {/* Today's Activity */}
+        <Link href="/exercise">
+          <BentoCard className="cursor-pointer" data-testid="card-exercise">
+            <div className="flex justify-between items-start">
+              <h3 className="text-muted-foreground font-medium flex items-center gap-2">
+                <Zap className="w-4 h-4 text-cyan-400" /> Activity
+              </h3>
+              <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-300">Today</span>
+            </div>
+            <div className="mt-4">
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-bold text-cyan-300">{todayExercise || 45}</span>
+                <span className="text-lg text-muted-foreground">min</span>
               </div>
-              <p className="font-medium text-primary">Start Meditation</p>
-              <span className="text-xs text-primary/60">15 min • Mindfulness</span>
-           </div>
-        </BentoCard>
+              <div className="w-full h-2 bg-white/10 rounded-full mt-4 overflow-hidden">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-cyan-500 to-blue-500"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min(((todayExercise || 45) / 60) * 100, 100)}%` }}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {exerciseLogs.length > 0 ? `${exerciseLogs.length} workouts logged` : "Goal: 60 minutes"}
+              </p>
+            </div>
+          </BentoCard>
+        </Link>
 
         {/* Heart Rate */}
         <BentoCard>
@@ -195,6 +327,42 @@ export default function Home() {
                 <span className="text-4xl font-bold text-rose-100">58</span>
                 <span className="text-xs block text-rose-400/80 uppercase tracking-widest">BPM</span>
              </div>
+          </div>
+        </BentoCard>
+
+        {/* Achievements Preview */}
+        <BentoCard colSpan={2} className="bg-gradient-to-r from-primary/5 to-cyan-500/5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-medium flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-primary" /> Recent Achievements
+            </h3>
+            <Link href="/settings">
+              <span className="text-xs text-primary hover:underline cursor-pointer">View all</span>
+            </Link>
+          </div>
+          <div className="grid grid-cols-4 gap-3">
+            {[
+              { name: "First Steps", icon: "⭐", earned: true },
+              { name: "Week Warrior", icon: "🔥", earned: true },
+              { name: "Sleep Master", icon: "🌙", earned: false, progress: "3/5" },
+              { name: "Balanced Being", icon: "💚", earned: true },
+            ].map((achievement, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05 }}
+                className={`p-3 rounded-xl text-center transition-all ${
+                  achievement.earned 
+                    ? "bg-primary/10 border border-primary/20" 
+                    : "bg-white/5 border border-white/10 opacity-60"
+                }`}
+              >
+                <span className="text-2xl">{achievement.icon}</span>
+                <p className="text-xs font-medium mt-1 truncate">{achievement.name}</p>
+                {!achievement.earned && achievement.progress && (
+                  <p className="text-[10px] text-muted-foreground">{achievement.progress}</p>
+                )}
+              </motion.div>
+            ))}
           </div>
         </BentoCard>
       </BentoGrid>
