@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "wouter";
+import { useState, useEffect } from "react";
 import { 
   Activity, 
   Utensils, 
@@ -15,36 +16,91 @@ import {
   Users,
   Code,
   Briefcase,
-  ShieldAlert
+  ShieldAlert,
+  Menu,
+  X,
+  QrCode,
+  ExternalLink,
+  Copyright
 } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { QRCodeSVG } from "qrcode.react";
 import bgImage from "@assets/generated_images/dark_ethereal_fluid_gradient_background_with_glowing_particles.png";
 
-const NavItem = ({ href, icon: Icon, label }: { href: string; icon: any; label: string }) => {
+// Navigation Structure for Hamburger Menu
+const navGroups = [
+  {
+    title: "Core",
+    items: [
+      { href: "/", icon: LayoutGrid, label: "Dashboard" },
+      { href: "/passport", icon: Fingerprint, label: "Health Passport" },
+    ]
+  },
+  {
+    title: "Wisdom",
+    items: [
+      { href: "/ayurveda", icon: Sprout, label: "Ayurveda" },
+      { href: "/library", icon: Library, label: "The Codex" },
+      { href: "/diet", icon: Utensils, label: "Diet & Nutrition" },
+      { href: "/exercise", icon: Activity, label: "Movement" },
+      { href: "/sleep", icon: Moon, label: "Sleep" },
+      { href: "/wisdom", icon: Brain, label: "Synthesis" },
+    ]
+  },
+  {
+    title: "Ecosystem",
+    items: [
+      { href: "/marketplace", icon: Store, label: "The Bazaar" },
+      { href: "/community", icon: Users, label: "Tribes" },
+    ]
+  },
+  {
+    title: "Professional",
+    items: [
+      { href: "/practitioner", icon: Briefcase, label: "Practice Hub" },
+      { href: "/developer", icon: Code, label: "Developer Core" },
+      { href: "/admin", icon: ShieldAlert, label: "Admin Console" },
+    ]
+  }
+];
+
+const NavItem = ({ href, icon: Icon, label, onClick }: { href: string; icon: any; label: string; onClick?: () => void }) => {
   const [location] = useLocation();
   const isActive = location === href;
 
   return (
-    <Link href={href}>
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+    <Link href={href} onClick={onClick}>
+      <div
         className={cn(
-          "flex flex-col items-center justify-center p-3 rounded-2xl transition-all cursor-pointer group",
+          "flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer group mb-1",
           isActive 
-            ? "bg-primary/20 text-primary shadow-[0_0_20px_rgba(16,185,129,0.3)]" 
+            ? "bg-primary/20 text-primary border border-primary/20" 
             : "text-muted-foreground hover:text-foreground hover:bg-white/5"
         )}
       >
-        <Icon className={cn("w-6 h-6 mb-1", isActive && "stroke-[2.5px]")} />
-        <span className="text-[10px] font-medium tracking-wider uppercase opacity-80">{label}</span>
-      </motion.div>
+        <Icon className={cn("w-5 h-5", isActive && "stroke-[2.5px]")} />
+        <span className="font-medium text-sm">{label}</span>
+      </div>
     </Link>
   );
 };
 
 export function Shell({ children }: { children: React.ReactNode }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Handle scroll effect for header transparency
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground overflow-hidden font-sans selection:bg-primary/30">
+    <div className="relative min-h-screen w-full bg-background text-foreground overflow-x-hidden font-sans selection:bg-primary/30 pb-20 pt-20">
       {/* Background Layer */}
       <div 
         className="fixed inset-0 z-0 pointer-events-none opacity-40"
@@ -54,58 +110,125 @@ export function Shell({ children }: { children: React.ReactNode }) {
           backgroundPosition: 'center',
         }}
       />
-      
-      {/* Overlay Gradient for depth */}
       <div className="fixed inset-0 z-0 bg-gradient-to-b from-background/80 via-transparent to-background/90 pointer-events-none" />
 
-      <div className="relative z-10 flex h-screen overflow-hidden">
-        {/* Sidebar Navigation - Glassmorphism */}
-        <nav className="hidden md:flex flex-col w-24 h-full glass-panel border-r border-white/5 py-8 px-2 justify-between z-50">
-          <div className="flex flex-col items-center space-y-8">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.4)]">
-              <span className="font-serif text-xl font-bold text-white">Z</span>
-            </div>
+      {/* HEADER - Sticky & Transparent */}
+      <header 
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent px-6 h-20 flex items-center justify-between",
+          isScrolled ? "bg-black/60 backdrop-blur-xl border-white/5" : "bg-transparent"
+        )}
+      >
+        {/* Left: Brand */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+            <span className="font-serif text-lg font-bold text-white">Z</span>
+          </div>
+          <span className="font-serif text-xl font-bold tracking-wide hidden md:block text-white">ZENITH</span>
+        </div>
+
+        {/* Right: Hamburger Menu */}
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <button className="p-3 rounded-full hover:bg-white/10 transition-colors border border-transparent hover:border-white/10">
+              <Menu className="w-6 h-6 text-white" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[320px] bg-black/90 backdrop-blur-2xl border-l border-white/10 p-0 overflow-y-auto">
+             <div className="p-6">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center">
+                    <span className="font-serif font-bold text-white">Z</span>
+                  </div>
+                  <span className="font-serif text-lg font-bold tracking-wide">Navigation</span>
+                </div>
+
+                <div className="space-y-6">
+                  {navGroups.map((group) => (
+                    <div key={group.title}>
+                      <h4 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 px-4">{group.title}</h4>
+                      {group.items.map(item => (
+                        <NavItem 
+                          key={item.href} 
+                          href={item.href} 
+                          icon={item.icon} 
+                          label={item.label} 
+                          onClick={() => setIsOpen(false)}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                  
+                  {/* Config Link */}
+                  <div className="mt-8 pt-6 border-t border-white/10">
+                    <NavItem 
+                      href="/settings" 
+                      icon={Settings} 
+                      label="Configuration" 
+                      onClick={() => setIsOpen(false)}
+                    />
+                  </div>
+                </div>
+             </div>
+          </SheetContent>
+        </Sheet>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="relative z-10 p-4 md:p-8 max-w-7xl mx-auto min-h-[calc(100vh-160px)]">
+         {children}
+      </main>
+
+      {/* FOOTER - Sticky & Transparent */}
+      <footer className="fixed bottom-0 left-0 right-0 z-40 h-16 bg-black/60 backdrop-blur-xl border-t border-white/5 flex items-center justify-between px-6 text-xs text-muted-foreground">
+         <div className="flex items-center gap-1">
+           <Copyright className="w-3 h-3" />
+           <span>Dark Wave Studios LLC 2025</span>
+         </div>
+
+         <div className="flex items-center gap-4">
+            <span className="hidden md:inline font-mono opacity-50">v2.0.4-beta</span>
             
-            <div className="flex flex-col space-y-4 w-full">
-              <NavItem href="/" icon={LayoutGrid} label="Dash" />
-              <NavItem href="/ayurveda" icon={Sprout} label="Ayurveda" />
-              <NavItem href="/passport" icon={Fingerprint} label="Passport" />
-              <NavItem href="/marketplace" icon={Store} label="Bazaar" />
-              <NavItem href="/community" icon={Users} label="Tribes" />
-              <NavItem href="/library" icon={Library} label="Codex" />
-              
-              <div className="w-full h-px bg-white/10 my-2" />
-              <NavItem href="/practitioner" icon={Briefcase} label="Pro" />
-              <NavItem href="/developer" icon={Code} label="Dev" />
-              <NavItem href="/admin" icon={ShieldAlert} label="Admin" />
-              <NavItem href="/diet" icon={Utensils} label="Diet" />
-              <NavItem href="/exercise" icon={Activity} label="Move" />
-              <NavItem href="/sleep" icon={Moon} label="Sleep" />
-              <NavItem href="/wisdom" icon={Brain} label="Wisdom" />
-            </div>
-          </div>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 transition-colors cursor-pointer group">
+                   <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                   <span className="font-mono font-medium">Verified On-Chain</span>
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-black/90 backdrop-blur-2xl border-white/10 max-w-sm">
+                 <div className="flex flex-col items-center text-center p-4">
+                    <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-4">
+                      <QrCode className="w-8 h-8 text-emerald-400" />
+                    </div>
+                    <h3 className="text-xl font-serif font-medium mb-2 text-white">Blockchain Verified</h3>
+                    <p className="text-sm text-muted-foreground mb-6">
+                      This build is cryptographically signed and immutable.
+                    </p>
+                    
+                    <div className="p-4 bg-white/5 rounded-xl border border-white/10 mb-6">
+                      <QRCodeSVG value="https://explorer.zenith.chain/tx/0x9a...2b1" size={150} fgColor="#10b981" bgColor="transparent" />
+                    </div>
 
-          <div className="flex flex-col items-center">
-            <NavItem href="/settings" icon={Settings} label="Config" />
-          </div>
-        </nav>
+                    <div className="w-full space-y-2 font-mono text-xs">
+                       <div className="flex justify-between">
+                         <span className="text-muted-foreground">Contract:</span>
+                         <span className="text-emerald-400">0x71C...9A23</span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span className="text-muted-foreground">Block:</span>
+                         <span className="text-white">#8,921,042</span>
+                       </div>
+                    </div>
 
-        {/* Mobile Navigation - Bottom Bar */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 glass-panel border-t border-white/5 flex items-center justify-around px-4 z-50">
-          <NavItem href="/" icon={LayoutGrid} label="Dash" />
-          <NavItem href="/passport" icon={Fingerprint} label="ID" />
-          <NavItem href="/marketplace" icon={Store} label="Bazaar" />
-          <NavItem href="/ayurveda" icon={Sprout} label="Veda" />
-          <NavItem href="/diet" icon={Utensils} label="Diet" />
-        </nav>
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 scroll-hidden">
-          <div className="max-w-7xl mx-auto h-full flex flex-col">
-             {children}
-          </div>
-        </main>
-      </div>
+                    <button className="w-full mt-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors">
+                      <ExternalLink className="w-4 h-4" /> View in Explorer
+                    </button>
+                 </div>
+              </DialogContent>
+            </Dialog>
+         </div>
+      </footer>
     </div>
   );
 }
