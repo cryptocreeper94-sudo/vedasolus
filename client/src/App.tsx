@@ -14,6 +14,7 @@ import Library from "@/pages/Library";
 import Passport from "@/pages/Passport";
 import Marketplace from "@/pages/Marketplace";
 import Community from "@/pages/Community";
+import Settings from "@/pages/Settings";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 
 function Router() {
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/marketplace" component={Marketplace} />
       <Route path="/community" component={Community} />
       <Route path="/library" component={Library} />
+      <Route path="/settings" component={Settings} />
       <Route path="/diet" component={Diet} />
       <Route path="/exercise" component={Exercise} />
       <Route path="/sleep" component={Sleep} />
