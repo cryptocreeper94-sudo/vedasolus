@@ -12,6 +12,8 @@ import Wisdom from "@/pages/Wisdom";
 import Ayurveda from "@/pages/Ayurveda";
 import Library from "@/pages/Library";
 import Passport from "@/pages/Passport";
+import Marketplace from "@/pages/Marketplace";
+import Community from "@/pages/Community";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 
 function Router() {
@@ -20,6 +22,8 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/ayurveda" component={Ayurveda} />
       <Route path="/passport" component={Passport} />
+      <Route path="/marketplace" component={Marketplace} />
+      <Route path="/community" component={Community} />
       <Route path="/library" component={Library} />
       <Route path="/diet" component={Diet} />
       <Route path="/exercise" component={Exercise} />
