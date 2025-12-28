@@ -8,7 +8,8 @@ import {
   Brain, 
   Settings, 
   LayoutGrid,
-  Sprout
+  Sprout,
+  Library
 } from "lucide-react";
 import bgImage from "@assets/generated_images/dark_ethereal_fluid_gradient_background_with_glowing_particles.png";
 
@@ -62,6 +63,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col space-y-4 w-full">
               <NavItem href="/" icon={LayoutGrid} label="Dash" />
               <NavItem href="/ayurveda" icon={Sprout} label="Ayurveda" />
+              <NavItem href="/library" icon={Library} label="Codex" />
               <NavItem href="/diet" icon={Utensils} label="Diet" />
               <NavItem href="/exercise" icon={Activity} label="Move" />
               <NavItem href="/sleep" icon={Moon} label="Sleep" />
@@ -78,8 +80,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <nav className="md:hidden fixed bottom-0 left-0 right-0 h-20 glass-panel border-t border-white/5 flex items-center justify-around px-4 z-50">
           <NavItem href="/" icon={LayoutGrid} label="Dash" />
           <NavItem href="/ayurveda" icon={Sprout} label="Veda" />
+          <NavItem href="/library" icon={Library} label="Codex" />
           <NavItem href="/diet" icon={Utensils} label="Diet" />
-          <NavItem href="/exercise" icon={Activity} label="Move" />
           <NavItem href="/wisdom" icon={Brain} label="Wisdom" />
         </nav>
 

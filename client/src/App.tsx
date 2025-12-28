@@ -10,12 +10,15 @@ import Exercise from "@/pages/Exercise";
 import Sleep from "@/pages/Sleep";
 import Wisdom from "@/pages/Wisdom";
 import Ayurveda from "@/pages/Ayurveda";
+import Library from "@/pages/Library";
+import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/ayurveda" component={Ayurveda} />
+      <Route path="/library" component={Library} />
       <Route path="/diet" component={Diet} />
       <Route path="/exercise" component={Exercise} />
       <Route path="/sleep" component={Sleep} />
@@ -30,6 +33,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
+        <DisclaimerModal />
         <Router />
       </TooltipProvider>
     </QueryClientProvider>
