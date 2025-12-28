@@ -12,7 +12,10 @@ import {
   Library,
   Fingerprint,
   Store,
-  Users
+  Users,
+  Code,
+  Briefcase,
+  ShieldAlert
 } from "lucide-react";
 import bgImage from "@assets/generated_images/dark_ethereal_fluid_gradient_background_with_glowing_particles.png";
 
@@ -70,6 +73,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <NavItem href="/marketplace" icon={Store} label="Bazaar" />
               <NavItem href="/community" icon={Users} label="Tribes" />
               <NavItem href="/library" icon={Library} label="Codex" />
+              
+              <div className="w-full h-px bg-white/10 my-2" />
+              <NavItem href="/practitioner" icon={Briefcase} label="Pro" />
+              <NavItem href="/developer" icon={Code} label="Dev" />
+              <NavItem href="/admin" icon={ShieldAlert} label="Admin" />
               <NavItem href="/diet" icon={Utensils} label="Diet" />
               <NavItem href="/exercise" icon={Activity} label="Move" />
               <NavItem href="/sleep" icon={Moon} label="Sleep" />

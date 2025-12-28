@@ -15,6 +15,9 @@ import Passport from "@/pages/Passport";
 import Marketplace from "@/pages/Marketplace";
 import Community from "@/pages/Community";
 import Settings from "@/pages/Settings";
+import DeveloperDashboard from "@/pages/Developer";
+import PractitionerDashboard from "@/pages/Practitioner";
+import AdminDashboard from "@/pages/Admin";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 
 function Router() {
@@ -27,6 +30,9 @@ function Router() {
       <Route path="/community" component={Community} />
       <Route path="/library" component={Library} />
       <Route path="/settings" component={Settings} />
+      <Route path="/developer" component={DeveloperDashboard} />
+      <Route path="/practitioner" component={PractitionerDashboard} />
+      <Route path="/admin" component={AdminDashboard} />
       <Route path="/diet" component={Diet} />
       <Route path="/exercise" component={Exercise} />
       <Route path="/sleep" component={Sleep} />
