@@ -19,7 +19,7 @@ const sleepData = [
 export default function Sleep() {
   return (
     <Shell>
-      <div className="mb-8">
+      <div className="mb-8 p-6 rounded-3xl glass-card border border-white/10">
         <h1 className="text-4xl font-serif font-medium mb-2">Restoration</h1>
         <p className="text-muted-foreground">The Yin phase. Where the body repairs and the mind integrates.</p>
       </div>

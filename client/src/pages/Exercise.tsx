@@ -17,7 +17,7 @@ const activityData = [
 export default function Exercise() {
   return (
     <Shell>
-      <div className="mb-8">
+      <div className="mb-8 p-6 rounded-3xl glass-card border border-white/10">
         <h1 className="text-4xl font-serif font-medium mb-2">Movement</h1>
         <p className="text-muted-foreground">Flowing water never stagnates. Keep the Qi moving.</p>
       </div>

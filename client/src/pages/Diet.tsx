@@ -30,7 +30,7 @@ const recipes = [
 export default function Diet() {
   return (
     <Shell>
-      <div className="mb-8">
+      <div className="mb-8 p-6 rounded-3xl glass-card border border-white/10">
         <h1 className="text-4xl font-serif font-medium mb-2">Nourishment</h1>
         <p className="text-muted-foreground">Food as medicine. Balance your internal heat.</p>
       </div>

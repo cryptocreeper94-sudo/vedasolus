@@ -33,7 +33,7 @@ const tribes = [
 export default function Community() {
   return (
     <Shell>
-      <div className="mb-8">
+      <div className="mb-8 p-6 rounded-3xl glass-card border border-white/10">
         <h1 className="text-4xl font-serif font-medium mb-2">The Tribes</h1>
         <p className="text-muted-foreground">
           Healing does not happen in isolation. Find your people, share your wisdom.
