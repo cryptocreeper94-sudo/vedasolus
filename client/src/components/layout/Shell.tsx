@@ -27,10 +27,12 @@ import {
   UserCircle,
   Wind,
   MessageCircle,
-  FileText
+  FileText,
+  Sparkles
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { MissionStatement } from "@/components/ui/mission-statement";
 import { QRCodeSVG } from "qrcode.react";
 import bgImage from "@assets/generated_images/dark_ethereal_fluid_gradient_background_with_glowing_particles.png";
 import { useAuth } from "@/hooks/use-auth";
@@ -191,8 +193,27 @@ export function Shell({ children }: { children: React.ReactNode }) {
                     </div>
                   ))}
                   
+                  {/* Mission Statement */}
+                  <div className="mt-6 pt-6 border-t border-white/10">
+                    <h4 className="text-xs uppercase tracking-widest text-muted-foreground mb-3 px-4">About</h4>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button
+                          data-testid="button-mission-statement"
+                          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all cursor-pointer group mb-1"
+                        >
+                          <Sparkles className="w-5 h-5 text-cyan-400" />
+                          <span className="font-medium text-sm">Our Mission</span>
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="bg-black/95 backdrop-blur-2xl border-cyan-500/20 max-w-lg max-h-[80vh] overflow-hidden p-0">
+                        <MissionStatement />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+
                   {/* Config Link & Auth */}
-                  <div className="mt-8 pt-6 border-t border-white/10 space-y-1">
+                  <div className="mt-4 pt-4 border-t border-white/10 space-y-1">
                     <NavItem 
                       href="/settings" 
                       icon={Settings} 

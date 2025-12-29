@@ -12,6 +12,8 @@ The application features:
 - Community features for health-focused tribes
 - Educational library bridging Eastern and Western health concepts
 - Role-based dashboards (Developer, Practitioner, Admin)
+- AI Wellness Coach with voice interaction (OpenAI + ElevenLabs)
+- Strategic roadmap and business documentation
 
 ## User Preferences
 
@@ -61,8 +63,9 @@ The application features:
 │   │   ├── lib/         # Utilities and query client
 │   │   └── pages/       # Route page components
 ├── server/           # Backend Express application
-│   ├── replit_integrations/  # Replit Auth integration
+│   ├── replit_integrations/  # Replit Auth + OpenAI integrations
 │   ├── routes.ts     # API route definitions
+│   ├── elevenlabs.ts # AI wellness coach with voice
 │   └── storage.ts    # Database access layer
 ├── shared/           # Shared code between client/server
 │   ├── schema.ts     # Drizzle database schemas
@@ -92,6 +95,7 @@ The application features:
 - `recharts`: Chart components
 - `framer-motion`: Animations
 - `qrcode.react`: QR code generation for health passport
+- `openai`: AI chat completions for wellness coach
 
 ## Integrations
 
@@ -108,9 +112,50 @@ The application features:
   - Master's Journey ($39.99/mo): Unlimited consultations, family sharing
 - **File**: `server/stripe.ts` contains all Stripe configuration
 
+### AI Wellness Coach (ACTIVE)
+- **OpenAI**: Via Replit AI Integrations (AI_INTEGRATIONS_OPENAI_API_KEY, AI_INTEGRATIONS_OPENAI_BASE_URL)
+- **ElevenLabs**: Voice synthesis with ELEVENLABS_API_KEY
+- **Endpoint**: `POST /api/wellness-chat` - Get AI wellness guidance with optional voice
+- **File**: `server/elevenlabs.ts` contains wellness coach logic
+
 ### Firebase Auth (PENDING)
 - Missing secrets: VITE_FIREBASE_API_KEY, VITE_FIREBASE_APP_ID, VITE_FIREBASE_PROJECT_ID
 - Currently using Replit Auth as fallback
 
 ### Orbit Staffing (FUTURE)
 - Integration for payroll system - details TBD
+
+### Dark Wave Smart Chain (FUTURE)
+- Blockchain integration for health credentials and NFT verification - details TBD
+
+## Developer Dashboard Features
+
+### Roadmap (4 Phases)
+1. **Foundation** (Q4 2024) - Auth, tracking, payments, AI coach, health passport
+2. **Intelligence & Personalization** (Q1 2025) - Dosha engine, insights, FHIR/HealthKit
+3. **Ecosystem Growth** (Q2 2025) - Marketplace, messaging, tribes, video consultations
+4. **Web3 & Enterprise** (Q3 2025) - Blockchain, Orbit payroll, enterprise API, HIPAA
+
+### Analytics Dashboard
+- User metrics (total, active, growth)
+- Revenue metrics (MRR, subscribers, conversion)
+- Engagement metrics (session time, streaks, logs)
+- AI coach performance (conversations, satisfaction)
+
+### Documentation Hub
+- API Reference
+- Integration Guides (FHIR, HealthKit, Blockchain)
+- Security & Compliance (HIPAA)
+- Database Schema
+- Business Plan
+- Release Notes
+
+## Recent Changes
+
+### December 2024
+- Added AI Wellness Coach with ElevenLabs voice synthesis
+- Created comprehensive Developer Dashboard with Roadmap, Analytics, System, and Docs tabs
+- Added Mission Statement / Executive Summary in hamburger menu
+- Created Business Plan page with market analysis and projections
+- Updated notification preferences system
+- Added personalized insights based on dosha type and time of day
