@@ -200,6 +200,12 @@ Both logos feature:
 ## Recent Changes
 
 ### December 2024
+- **Card Design Overhaul** - All BentoCards now feature photorealistic backgrounds
+  - 9 generated images: vitality, wisdom, nutrition, activity, heart rate, achievements, meditation, insights, AI coach
+  - Fade-to-black gradient overlay (bg-gradient-to-t from-black via-black/60 to-transparent)
+  - Text colors updated to white/light for visibility on image backgrounds
+- **Educational Info Tooltips** on Sleep, Nutrition, Activity, and Heart Rate cards
+- **Heart Rate Tracking** with manual BPM logging, context selection (Resting, Exercise, etc.), and interactive modal
 - Added AI Wellness Coach with ElevenLabs voice synthesis
 - Created comprehensive Developer Dashboard with Roadmap, Analytics, System, and Docs tabs
 - Added Mission Statement / Executive Summary in hamburger menu
