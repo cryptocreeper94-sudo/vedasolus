@@ -186,17 +186,18 @@ export default function PartnerDashboard() {
     <Shell>
       {/* Onboarding Modal */}
       <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
-        <DialogContent className="max-w-2xl bg-slate-950/95 backdrop-blur-xl border-white/10 p-0 overflow-hidden">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-lg bg-slate-950/95 backdrop-blur-xl border-white/10 p-0 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              className="p-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="p-4 sm:p-6"
             >
-              <div className="text-center mb-8">
-                <div className={`w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center border ${
+              <div className="text-center mb-6">
+                <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl mx-auto mb-4 flex items-center justify-center border ${
                   onboardingSlides[currentSlide].color === "cyan" ? "bg-cyan-500/20 border-cyan-500/30" :
                   onboardingSlides[currentSlide].color === "violet" ? "bg-violet-500/20 border-violet-500/30" :
                   onboardingSlides[currentSlide].color === "emerald" ? "bg-emerald-500/20 border-emerald-500/30" :
@@ -205,7 +206,7 @@ export default function PartnerDashboard() {
                 }`}>
                   {(() => {
                     const Icon = onboardingSlides[currentSlide].icon;
-                    return <Icon className={`w-10 h-10 ${
+                    return <Icon className={`w-8 h-8 sm:w-10 sm:h-10 ${
                       onboardingSlides[currentSlide].color === "cyan" ? "text-cyan-400" :
                       onboardingSlides[currentSlide].color === "violet" ? "text-violet-400" :
                       onboardingSlides[currentSlide].color === "emerald" ? "text-emerald-400" :
@@ -214,37 +215,37 @@ export default function PartnerDashboard() {
                     }`} />;
                   })()}
                 </div>
-                <p className="text-xs uppercase tracking-widest text-slate-400 mb-2">
+                <p className="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mb-2">
                   {onboardingSlides[currentSlide].subtitle}
                 </p>
-                <h2 className="text-3xl font-serif font-bold text-white mb-4">
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-white mb-3">
                   {onboardingSlides[currentSlide].title}
                 </h2>
-                <p className="text-slate-300 leading-relaxed max-w-md mx-auto">
+                <p className="text-sm sm:text-base text-slate-300 leading-relaxed px-2">
                   {onboardingSlides[currentSlide].content}
                 </p>
               </div>
 
               {/* Progress dots */}
-              <div className="flex justify-center gap-2 mb-6">
+              <div className="flex justify-center gap-2 mb-4">
                 {onboardingSlides.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentSlide(i)}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      i === currentSlide ? "w-8 bg-cyan-400" : "bg-white/20 hover:bg-white/40"
+                    className={`h-2 rounded-full transition-all ${
+                      i === currentSlide ? "w-6 bg-cyan-400" : "w-2 bg-white/20 hover:bg-white/40"
                     }`}
                   />
                 ))}
               </div>
 
               {/* Navigation */}
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center gap-2">
                 <Button
                   variant="ghost"
                   onClick={() => setCurrentSlide(Math.max(0, currentSlide - 1))}
                   disabled={currentSlide === 0}
-                  className="text-slate-400"
+                  className="text-slate-400 text-sm px-2 sm:px-4"
                 >
                   <ChevronLeft className="w-4 h-4 mr-1" /> Previous
                 </Button>
@@ -252,15 +253,15 @@ export default function PartnerDashboard() {
                 {currentSlide === onboardingSlides.length - 1 ? (
                   <Button
                     onClick={handleCloseOnboarding}
-                    className="bg-gradient-to-r from-cyan-500 to-violet-500"
+                    className="bg-gradient-to-r from-cyan-500 to-violet-500 text-sm px-3 sm:px-4"
                     data-testid="button-start-dashboard"
                   >
-                    Enter Dashboard <ArrowRight className="w-4 h-4 ml-2" />
+                    Enter Dashboard <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 ) : (
                   <Button
                     onClick={() => setCurrentSlide(currentSlide + 1)}
-                    className="bg-white/10 hover:bg-white/20"
+                    className="bg-white/10 hover:bg-white/20 text-sm px-3 sm:px-4"
                   >
                     Next <ChevronRight className="w-4 h-4 ml-1" />
                   </Button>
