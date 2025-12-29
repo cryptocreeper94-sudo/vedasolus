@@ -107,6 +107,29 @@ export const insertExerciseLogSchema = createInsertSchema(exerciseLogs).omit({
 export type InsertExerciseLog = z.infer<typeof insertExerciseLogSchema>;
 export type ExerciseLog = typeof exerciseLogs.$inferSelect;
 
+// Heart Rate Logs
+export const heartRateLogs = pgTable("heart_rate_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  date: date("date").notNull(),
+  bpm: integer("bpm").notNull(),
+  context: text("context"), // resting, active, post-exercise, morning, evening
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertHeartRateLogSchema = createInsertSchema(heartRateLogs).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  bpm: z.number().min(30).max(220),
+  context: z.string().nullable().optional(),
+  notes: z.string().nullable().optional(),
+});
+
+export type InsertHeartRateLog = z.infer<typeof insertHeartRateLogSchema>;
+export type HeartRateLog = typeof heartRateLogs.$inferSelect;
+
 // Notification Preferences
 export const notificationPreferences = pgTable("notification_preferences", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),

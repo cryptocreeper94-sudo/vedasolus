@@ -7,6 +7,7 @@ import {
   insertSleepLogSchema,
   insertDietLogSchema,
   insertExerciseLogSchema,
+  insertHeartRateLogSchema,
   insertNotificationPreferencesSchema,
   insertMedicalDisclaimerSchema
 } from "@shared/schema";
@@ -138,6 +139,34 @@ export async function registerRoutes(
       }
       console.error("Error creating exercise log:", error);
       res.status(500).json({ message: "Failed to create exercise log" });
+    }
+  });
+
+  // Heart Rate Log endpoints
+  app.get("/api/heart-rate", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const limit = req.query.limit ? parseInt(req.query.limit) : 30;
+      const logs = await storage.getHeartRateLogs(userId, limit);
+      res.json(logs);
+    } catch (error) {
+      console.error("Error fetching heart rate logs:", error);
+      res.status(500).json({ message: "Failed to fetch heart rate logs" });
+    }
+  });
+
+  app.post("/api/heart-rate", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const validated = insertHeartRateLogSchema.parse({ ...req.body, userId });
+      const log = await storage.createHeartRateLog(validated);
+      res.json(log);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ message: fromError(error).toString() });
+      }
+      console.error("Error creating heart rate log:", error);
+      res.status(500).json({ message: "Failed to create heart rate log" });
     }
   });
 

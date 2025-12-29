@@ -1,11 +1,16 @@
 import { Shell } from "@/components/layout/Shell";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
-import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp, Lightbulb } from "lucide-react";
+import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp, Lightbulb, Plus } from "lucide-react";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import { useSleepTracking, useDietTracking, useExerciseTracking } from "@/hooks/use-health-tracking";
+import { useSleepTracking, useDietTracking, useExerciseTracking, useHeartRateTracking } from "@/hooks/use-health-tracking";
 import { useProfile } from "@/hooks/use-profile";
 import { PersonalizedInsights } from "@/components/ui/personalized-insights";
 import { AIWellnessCoach } from "@/components/ui/ai-wellness-coach";
@@ -35,6 +40,11 @@ export default function Home() {
   const { sleepLogs } = useSleepTracking();
   const { dietLogs } = useDietTracking();
   const { exerciseLogs } = useExerciseTracking();
+  const { heartRateLogs, createHeartRateLog, isCreating: isCreatingHR } = useHeartRateTracking();
+  
+  const [heartRateOpen, setHeartRateOpen] = useState(false);
+  const [newBpm, setNewBpm] = useState("");
+  const [hrContext, setHrContext] = useState("resting");
 
   const displayName = profile?.displayName || user?.name?.split(' ')[0] || "Seeker";
   const currentHour = new Date().getHours();
@@ -322,23 +332,99 @@ export default function Home() {
         </Link>
 
         {/* Heart Rate */}
-        <BentoCard>
-          <div className="flex justify-between items-start">
-            <h3 className="text-muted-foreground font-medium flex items-center gap-2">
-              <Heart className="w-4 h-4 text-rose-400" /> Resting HR
-            </h3>
-          </div>
-          <div className="flex-1 flex items-center justify-center relative">
-             <div className="absolute inset-0 flex items-center justify-center">
-               <div className="w-24 h-24 rounded-full border-4 border-rose-500/20 animate-ping absolute" />
-               <div className="w-20 h-20 rounded-full border-4 border-rose-500/40" />
-             </div>
-             <div className="relative z-10 text-center">
-                <span className="text-4xl font-bold text-rose-100">58</span>
-                <span className="text-xs block text-rose-400/80 uppercase tracking-widest">BPM</span>
-             </div>
-          </div>
-        </BentoCard>
+        <Dialog open={heartRateOpen} onOpenChange={setHeartRateOpen}>
+          <DialogTrigger asChild>
+            <div>
+              <BentoCard glow="pink" className="cursor-pointer h-full" data-testid="card-heart-rate">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-muted-foreground font-medium flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-rose-400" /> Heart Rate
+                  </h3>
+                  <button className="p-1 rounded-full bg-rose-500/20 hover:bg-rose-500/30 transition-colors">
+                    <Plus className="w-3 h-3 text-rose-400" />
+                  </button>
+                </div>
+                <div className="flex-1 flex items-center justify-center relative">
+                   <div className="absolute inset-0 flex items-center justify-center">
+                     <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-rose-500/20 animate-ping absolute" />
+                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-rose-500/40" />
+                   </div>
+                   <div className="relative z-10 text-center">
+                      <span className="text-3xl sm:text-4xl font-bold text-rose-100">
+                        {heartRateLogs[0]?.bpm || "--"}
+                      </span>
+                      <span className="text-[10px] sm:text-xs block text-rose-400/80 uppercase tracking-widest">BPM</span>
+                   </div>
+                </div>
+                {heartRateLogs.length > 0 && (
+                  <p className="text-[10px] text-center text-rose-400/60 mt-2">
+                    {heartRateLogs.length} readings logged
+                  </p>
+                )}
+              </BentoCard>
+            </div>
+          </DialogTrigger>
+          <DialogContent className="bg-background/95 backdrop-blur-xl border-rose-500/20 max-w-sm">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-rose-400" />
+                Log Heart Rate
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">BPM (Beats per minute)</label>
+                <Input
+                  type="number"
+                  placeholder="e.g., 72"
+                  value={newBpm}
+                  onChange={(e) => setNewBpm(e.target.value)}
+                  min={30}
+                  max={220}
+                  className="text-2xl text-center font-bold"
+                  data-testid="input-heart-rate"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">Context</label>
+                <Select value={hrContext} onValueChange={setHrContext}>
+                  <SelectTrigger data-testid="select-hr-context">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="resting">Resting</SelectItem>
+                    <SelectItem value="morning">Morning</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="post-exercise">Post-Exercise</SelectItem>
+                    <SelectItem value="evening">Evening</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Tip: For resting heart rate, measure after sitting quietly for 5 minutes.
+              </p>
+              <Button
+                onClick={() => {
+                  if (newBpm && parseInt(newBpm) >= 30 && parseInt(newBpm) <= 220) {
+                    createHeartRateLog({
+                      userId: "",
+                      date: new Date().toISOString().split('T')[0],
+                      bpm: parseInt(newBpm),
+                      context: hrContext,
+                    });
+                    setNewBpm("");
+                    setHeartRateOpen(false);
+                  }
+                }}
+                disabled={isCreatingHR || !newBpm}
+                className="w-full bg-rose-500 hover:bg-rose-600"
+                data-testid="button-log-heart-rate"
+              >
+                {isCreatingHR ? "Saving..." : "Log Heart Rate"}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Achievements Preview */}
         <BentoCard colSpan={2} className="bg-gradient-to-r from-primary/5 to-cyan-500/5">

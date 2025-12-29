@@ -1,9 +1,10 @@
 import { 
-  userProfiles, sleepLogs, dietLogs, exerciseLogs, notificationPreferences, medicalDisclaimers,
+  userProfiles, sleepLogs, dietLogs, exerciseLogs, heartRateLogs, notificationPreferences, medicalDisclaimers,
   type UserProfile, type InsertUserProfile,
   type SleepLog, type InsertSleepLog,
   type DietLog, type InsertDietLog,
   type ExerciseLog, type InsertExerciseLog,
+  type HeartRateLog, type InsertHeartRateLog,
   type NotificationPreferences, type InsertNotificationPreferences,
   type MedicalDisclaimer, type InsertMedicalDisclaimer
 } from "@shared/schema";
@@ -26,6 +27,10 @@ export interface IStorage {
   // Exercise Logs
   getExerciseLogs(userId: string, limit?: number): Promise<ExerciseLog[]>;
   createExerciseLog(log: InsertExerciseLog): Promise<ExerciseLog>;
+  
+  // Heart Rate Logs
+  getHeartRateLogs(userId: string, limit?: number): Promise<HeartRateLog[]>;
+  createHeartRateLog(log: InsertHeartRateLog): Promise<HeartRateLog>;
   
   // Notification Preferences
   getNotificationPreferences(userId: string): Promise<NotificationPreferences | undefined>;
@@ -101,6 +106,21 @@ export class DatabaseStorage implements IStorage {
 
   async createExerciseLog(logData: InsertExerciseLog): Promise<ExerciseLog> {
     const [log] = await db.insert(exerciseLogs).values(logData).returning();
+    return log;
+  }
+
+  // Heart Rate Logs
+  async getHeartRateLogs(userId: string, limit: number = 30): Promise<HeartRateLog[]> {
+    return await db
+      .select()
+      .from(heartRateLogs)
+      .where(eq(heartRateLogs.userId, userId))
+      .orderBy(desc(heartRateLogs.date))
+      .limit(limit);
+  }
+
+  async createHeartRateLog(logData: InsertHeartRateLog): Promise<HeartRateLog> {
+    const [log] = await db.insert(heartRateLogs).values(logData).returning();
     return log;
   }
 

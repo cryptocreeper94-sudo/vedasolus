@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { SleepLog, DietLog, ExerciseLog, InsertSleepLog, InsertDietLog, InsertExerciseLog } from "@shared/schema";
+import type { SleepLog, DietLog, ExerciseLog, HeartRateLog, InsertSleepLog, InsertDietLog, InsertExerciseLog, InsertHeartRateLog } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/auth-utils";
 
@@ -227,6 +227,79 @@ export function useExerciseTracking(limit: number = 30) {
     exerciseLogs: exerciseLogs || [],
     isLoading,
     createExerciseLog: createMutation.mutate,
+    isCreating: createMutation.isPending,
+  };
+}
+
+// Heart Rate tracking
+async function fetchHeartRateLogs(limit: number = 30): Promise<HeartRateLog[]> {
+  const response = await fetch(`/api/heart-rate?limit=${limit}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+async function createHeartRateLog(log: InsertHeartRateLog): Promise<HeartRateLog> {
+  const response = await fetch("/api/heart-rate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(log),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`${response.status}: ${error.message || response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export function useHeartRateTracking(limit: number = 30) {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const { data: heartRateLogs, isLoading } = useQuery<HeartRateLog[]>({
+    queryKey: ["/api/heart-rate", limit],
+    queryFn: () => fetchHeartRateLogs(limit),
+    retry: false,
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createHeartRateLog,
+    onSuccess: (newLog) => {
+      queryClient.setQueryData(["/api/heart-rate", limit], (old: HeartRateLog[] = []) => [newLog, ...old]);
+      toast({
+        title: "Heart rate logged",
+        description: `${newLog.bpm} BPM recorded successfully.`,
+      });
+    },
+    onError: (error: Error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "Please sign in to log heart rate.",
+          variant: "destructive",
+        });
+        return;
+      }
+      toast({
+        title: "Error",
+        description: error.message || "Failed to log heart rate",
+        variant: "destructive",
+      });
+    },
+  });
+
+  return {
+    heartRateLogs: heartRateLogs || [],
+    isLoading,
+    createHeartRateLog: createMutation.mutate,
     isCreating: createMutation.isPending,
   };
 }
