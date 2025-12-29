@@ -126,7 +126,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground overflow-x-hidden font-sans selection:bg-primary/30 pb-16 pt-16 sm:pb-20 sm:pt-20">
+    <div className="relative min-h-screen w-full bg-background text-foreground overflow-x-hidden font-sans selection:bg-primary/30 pb-20 pt-20 sm:pb-24 sm:pt-24">
       {/* Background Layer */}
       <div 
         className="fixed inset-0 z-0 pointer-events-none opacity-40"
