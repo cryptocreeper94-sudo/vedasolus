@@ -23,6 +23,17 @@ The application features:
 - **Cards**: All subject-matter cards require full photorealistic backgrounds
 - **UI**: True Bento grid with accordion dropdowns, glassmorphism effects, 3D/glow styling
 
+## Brand Assets
+
+### Logos (stored in attached_assets/)
+- **With Background**: `Copilot_20251228_214224_1766980581672.png` - VedaSolus logo with dark teal gradient background, glowing effect
+- **Alpha Transparent**: `Copilot_20251228_214220_1766980581975.png` - VedaSolus logo with transparent background (for overlays)
+
+Both logos feature:
+- Circular emblem with meditating figure in orange/gold
+- Green leaf/crescent accent wrapping the figure
+- Cyan "VedaSolus" text with subtle glow
+
 ## System Architecture
 
 ### Frontend Architecture
@@ -49,10 +60,11 @@ The application features:
 - **Tables**: users, sessions, user_profiles, sleep_logs, diet_logs, exercise_logs, notification_preferences
 
 ### Authentication Flow
-- Replit Auth provides OIDC-based authentication
+- Firebase Auth provides Google Sign-In authentication (VedaSolus branded, no Replit branding)
+- Backend verifies Firebase ID tokens via firebase-admin SDK
 - Sessions stored in PostgreSQL `sessions` table
 - User data synced to `users` table on login
-- Protected routes use `isAuthenticated` middleware
+- Protected routes use `isFirebaseAuthenticated` middleware
 
 ### Project Structure
 ```

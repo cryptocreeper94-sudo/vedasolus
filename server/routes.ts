@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { isAuthenticated } from "./replit_integrations/auth";
+import { isFirebaseAuthenticated as isAuthenticated } from "./firebase-auth";
 import { 
   insertUserProfileSchema,
   insertSleepLogSchema,

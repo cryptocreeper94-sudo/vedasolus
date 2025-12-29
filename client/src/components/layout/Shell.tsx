@@ -37,7 +37,9 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MissionStatement } from "@/components/ui/mission-statement";
 import { QRCodeSVG } from "qrcode.react";
 import bgImage from "@assets/generated_images/dark_ethereal_fluid_gradient_background_with_glowing_particles.png";
+import logoImage from "@assets/Copilot_20251228_214220_1766980581975.png";
 import { useAuth } from "@/hooks/use-auth";
+import { LoginModal } from "@/components/ui/login-modal";
 
 // Navigation Structure for Hamburger Menu
 const navGroups = [
@@ -111,6 +113,7 @@ const NavItem = ({ href, icon: Icon, label, onClick }: { href: string; icon: any
 export function Shell({ children }: { children: React.ReactNode }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
   const { user, isLoading, isAuthenticated, logout } = useAuth();
 
   // Handle scroll effect for header transparency
@@ -143,11 +146,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
         )}
       >
         {/* Left: Brand */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-            <span className="font-serif text-lg font-bold text-white">Z</span>
-          </div>
-          <span className="font-serif text-xl font-bold tracking-wide hidden md:block text-white">ZENITH</span>
+        <div className="flex items-center gap-2">
+          <img 
+            src={logoImage} 
+            alt="VedaSolus" 
+            className="h-12 w-auto object-contain"
+          />
         </div>
 
         {/* Right: User & Hamburger Menu */}
@@ -155,18 +159,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
           {isAuthenticated ? (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
               <UserCircle className="w-4 h-4 text-primary" />
-              <span className="text-xs text-white hidden sm:inline">{user?.email || user?.firstName || "User"}</span>
+              <span className="text-xs text-white hidden sm:inline">{user?.name || user?.email || "User"}</span>
             </div>
           ) : (
             !isLoading && (
-              <a 
-                href="/api/login"
-                data-testid="link-login"
+              <button 
+                onClick={() => setLoginOpen(true)}
+                data-testid="button-login"
                 className="px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Sign In</span>
-              </a>
+              </button>
             )
           )}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -181,10 +185,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <SheetContent side="right" className="w-[320px] bg-black/90 backdrop-blur-2xl border-l border-white/10 p-0 overflow-y-auto">
              <div className="p-6">
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center">
-                    <span className="font-serif font-bold text-white">Z</span>
-                  </div>
-                  <span className="font-serif text-lg font-bold tracking-wide">Navigation</span>
+                  <img src={logoImage} alt="VedaSolus" className="h-10 w-auto" />
                 </div>
 
                 <div className="space-y-6">
@@ -324,6 +325,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </Dialog>
          </div>
       </footer>
+
+      {/* Login Modal */}
+      <LoginModal open={loginOpen} onOpenChange={setLoginOpen} />
     </div>
   );
 }
