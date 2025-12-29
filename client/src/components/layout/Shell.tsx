@@ -28,7 +28,9 @@ import {
   Wind,
   MessageCircle,
   FileText,
-  Sparkles
+  Sparkles,
+  Handshake,
+  Wallet
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -255,6 +257,24 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
          <div className="flex items-center gap-4">
             <span className="hidden md:inline font-mono opacity-50">v2.0.4-beta</span>
+            
+            <Link href="/partner">
+              <button 
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 hover:bg-violet-500/20 transition-colors cursor-pointer"
+                data-testid="button-partners"
+              >
+                <Handshake className="w-4 h-4" />
+                <span className="font-medium hidden sm:inline">Partners</span>
+              </button>
+            </Link>
+
+            <button 
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/20 transition-colors cursor-pointer"
+              data-testid="button-investors"
+            >
+              <Wallet className="w-4 h-4" />
+              <span className="font-medium hidden sm:inline">Investors</span>
+            </button>
             
             <Dialog>
               <DialogTrigger asChild>

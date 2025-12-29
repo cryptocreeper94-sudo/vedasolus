@@ -194,3 +194,9 @@ The application features:
   - Revenue sync to Financial Hub for royalty calculation
 - Configured Firebase Auth with dynamic config loading
 - Enhanced Practitioner Dashboard with Orbit Staff Management tabs
+- **Added Partner Portal** with pin-based authentication
+  - Jason PIN: 0424, Sidonie PIN: 4444
+  - Full overview access (view-only for code/pricing)
+  - Onboarding slideshow for new partners/employees
+  - Partners button in footer navigation
+  - Google authentication option via Firebase

@@ -509,6 +509,7 @@ export default function DeveloperDashboard() {
                   { title: "Security & Compliance", icon: Shield, desc: "HIPAA, data protection policies", color: "pink", href: null },
                   { title: "Database Schema", icon: Database, desc: "Drizzle ORM models and relations", color: "violet", href: null },
                   { title: "Business Plan", icon: Target, desc: "Strategic overview and projections", color: "orange", href: "/business-plan" },
+                  { title: "Employee Onboarding", icon: Users, desc: "Partner/staff welcome presentation", color: "pink", href: null },
                   { title: "Release Notes", icon: Calendar, desc: "Version history and changelog", color: "slate", href: null },
                 ].map((doc) => {
                   const content = (

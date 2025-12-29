@@ -22,6 +22,7 @@ import Meditation from "@/pages/Meditation";
 import Messages from "@/pages/Messages";
 import HealthRecords from "@/pages/HealthRecords";
 import BusinessPlan from "@/pages/BusinessPlan";
+import Partner from "@/pages/Partner";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 
 function Router() {
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/messages" component={Messages} />
       <Route path="/records" component={HealthRecords} />
       <Route path="/business-plan" component={BusinessPlan} />
+      <Route path="/partner" component={Partner} />
       <Route component={NotFound} />
     </Switch>
   );
