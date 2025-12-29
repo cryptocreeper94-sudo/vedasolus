@@ -155,7 +155,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Right: User & Hamburger Menu */}
-        <div className="flex items-center gap-3 mt-4">
+        <div className="flex items-center gap-3 mt-4 mr-6">
           {isAuthenticated ? (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
               <UserCircle className="w-4 h-4 text-primary" />
@@ -179,7 +179,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 data-testid="button-menu"
                 className="p-3 rounded-full hover:bg-white/10 transition-colors border border-transparent hover:border-white/10"
               >
-                <Menu className="w-6 h-6 text-white" />
+                <Menu className="w-8 h-8 text-white" />
               </button>
             </SheetTrigger>
           <SheetContent side="right" className="w-[320px] bg-black/90 backdrop-blur-2xl border-l border-white/10 p-0 overflow-y-auto">
