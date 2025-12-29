@@ -266,5 +266,30 @@ export const insertHealthRecordSchema = createInsertSchema(healthRecords).omit({
 export type InsertHealthRecord = z.infer<typeof insertHealthRecordSchema>;
 export type HealthRecord = typeof healthRecords.$inferSelect;
 
+// Medical Disclaimer Acknowledgments
+export const medicalDisclaimers = pgTable("medical_disclaimers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id, { onDelete: "set null" }),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  marketingOptIn: boolean("marketing_opt_in").default(false),
+  acknowledgedAt: timestamp("acknowledged_at").defaultNow(),
+  source: text("source").default("web"),
+});
+
+export const insertMedicalDisclaimerSchema = createInsertSchema(medicalDisclaimers).omit({
+  id: true,
+  acknowledgedAt: true,
+}).extend({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Please enter a valid email"),
+  marketingOptIn: z.boolean().optional().default(false),
+  userId: z.string().nullable().optional(),
+  source: z.string().optional(),
+});
+
+export type InsertMedicalDisclaimer = z.infer<typeof insertMedicalDisclaimerSchema>;
+export type MedicalDisclaimer = typeof medicalDisclaimers.$inferSelect;
+
 // Import users from auth models for references
 import { users } from "./models/auth";
