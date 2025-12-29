@@ -94,6 +94,31 @@ const roadmapPhases = [
       { name: "HIPAA Compliance Certification", status: "pending" },
     ]
   },
+  {
+    id: "phase5",
+    title: "Native Mobile Apps",
+    status: "upcoming",
+    quarter: "Q1 2025",
+    progress: 0,
+    color: "orange",
+    milestones: [
+      { name: "Day 1: Expo/React Native project setup", status: "pending" },
+      { name: "Day 2: Navigation & Shell layout", status: "pending" },
+      { name: "Day 3: Dashboard & Home screen", status: "pending" },
+      { name: "Day 4: Health tracking screens (Sleep, Diet, Exercise)", status: "pending" },
+      { name: "Day 5: AI Wellness Coach integration", status: "pending" },
+      { name: "Day 6: Health Passport & QR codes", status: "pending" },
+      { name: "Day 7: Authentication flow (Firebase)", status: "pending" },
+      { name: "Day 8: Stripe native payments", status: "pending" },
+      { name: "Day 9: Push notifications setup", status: "pending" },
+      { name: "Day 10: Practitioner marketplace", status: "pending" },
+      { name: "Day 11: Messages & Community", status: "pending" },
+      { name: "Day 12: Settings & Profile screens", status: "pending" },
+      { name: "Day 13: Testing & bug fixes", status: "pending" },
+      { name: "Day 14: Google Play submission", status: "pending" },
+      { name: "Future: Apple Developer account & iOS build", status: "pending" },
+    ]
+  },
 ];
 
 const analyticsData = {
