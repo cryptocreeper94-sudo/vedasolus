@@ -233,9 +233,9 @@ Both logos feature:
   - Subscribers tab in Developer Dashboard to view/export emails
 
 ### Version 2.1 (December 29, 2024) - Pre-Publish Sweep
-- **White Paper** page added with comprehensive platform documentation
 - **Wellness Hub carousel** on home page with Dosha Balance, Health Passport, Weekly Progress, Hydration, Today's Focus
 - **Health Tracking carousel** - 6 cards (Nutrition, Streak, Activity, Sleep, Meditation, Heart Rate) in horizontal scroll
+- **Our Mission** executive summary in hamburger menu with vision, values, problem/solution, and pricing tiers
 - Updated roadmap phases to reflect Orbit Staffing integration completion
 - Version bumped to v2.1 across platform
 - Fixed broken /profile links (now redirects to Ayurveda page)

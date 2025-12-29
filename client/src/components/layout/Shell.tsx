@@ -85,7 +85,6 @@ const navGroups = [
     items: [
       { href: "/settings", icon: Settings, label: "Settings" },
       { href: "/business-plan", icon: FileText, label: "Business Plan" },
-      { href: "/white-paper", icon: Sparkles, label: "White Paper" },
     ]
   }
 ];
