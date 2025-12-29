@@ -158,11 +158,11 @@ export function AIWellnessCoach() {
               />
             </div>
             <div>
-              <CardTitle className="text-lg text-white flex items-center gap-2">
-                VedaSolus AI Coach
+              <CardTitle className="text-base sm:text-lg text-white flex items-center gap-2">
+                <span className="hidden sm:inline">VedaSolus</span> AI Coach
                 <Sparkles className="w-4 h-4 text-cyan-400" />
               </CardTitle>
-              <p className="text-xs text-cyan-300/70">Eastern Wisdom • Western Science</p>
+              <p className="text-[10px] sm:text-xs text-cyan-300/70">Eastern Wisdom • Western Science</p>
             </div>
           </div>
           
@@ -180,7 +180,7 @@ export function AIWellnessCoach() {
 
       <CardContent className="relative p-0">
         <div ref={scrollContainerRef}>
-        <ScrollArea className="h-[400px] p-4">
+        <ScrollArea className="h-[280px] sm:h-[400px] p-3 sm:p-4">
           <AnimatePresence>
             {messages.map((message) => (
               <motion.div
@@ -263,9 +263,9 @@ export function AIWellnessCoach() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage(input)}
-              placeholder="Ask about your wellness journey..."
+              placeholder="Ask about wellness..."
               disabled={isLoading}
-              className="flex-1 bg-slate-800/50 border border-cyan-500/20 rounded-xl px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30"
+              className="flex-1 min-w-0 bg-slate-800/50 border border-cyan-500/20 rounded-xl px-3 sm:px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30"
               data-testid="input-chat-message"
             />
             

@@ -135,8 +135,8 @@ export default function Home() {
             <h2 className="text-muted-foreground font-medium mb-1 tracking-wider uppercase text-[10px] sm:text-xs">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </h2>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif font-medium text-foreground leading-relaxed pb-1">
-              {greeting}, <span className="text-cyan-400 italic">{displayName}</span>
+            <h1 className="text-xl sm:text-4xl md:text-5xl font-serif font-medium text-foreground leading-tight sm:leading-relaxed pb-1 break-words">
+              {greeting}, <span className="text-cyan-400 italic truncate">{displayName}</span>
             </h1>
           </div>
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
@@ -270,7 +270,7 @@ export default function Home() {
                   </TooltipContent>
                 </UITooltip>
               </h3>
-              <span className="text-sm font-mono text-green-300">{todayCalories || 0} kcal</span>
+              <span className="text-xs sm:text-sm font-mono text-green-300 whitespace-nowrap">{todayCalories || 0} kcal</span>
             </div>
             <div className="space-y-2 mt-auto">
                {dietLogs.slice(0, 2).map((log, i) => (
@@ -281,10 +281,10 @@ export default function Home() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-white capitalize">{log.mealType}</p>
-                        <p className="text-xs text-white/60 truncate max-w-[100px]">{log.items?.[0] || "Logged"}</p>
+                        <p className="text-xs text-white/60 truncate max-w-[80px] sm:max-w-[100px]">{log.items?.[0] || "Logged"}</p>
                       </div>
                     </div>
-                    <span className="text-xs font-mono text-green-300">{log.calories} kcal</span>
+                    <span className="text-xs font-mono text-green-300 whitespace-nowrap">{log.calories} kcal</span>
                  </div>
                ))}
                {dietLogs.length === 0 && (
@@ -327,7 +327,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-white/60 mt-4">{currentStreak > 0 ? `Current best: ${currentStreak} days` : "Start tracking to build your streak!"}</p>
+            <p className="text-xs text-white/60 mt-4 truncate">{currentStreak > 0 ? `Best: ${currentStreak} days` : "Start tracking!"}</p>
           </BentoCard>
         </Link>
 

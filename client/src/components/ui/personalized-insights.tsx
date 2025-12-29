@@ -192,18 +192,18 @@ export function PersonalizedInsights({ sleepAvg, caloriesAvg, exerciseMinutes, d
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Lightbulb className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-medium">Personalized Insights</h3>
+          <h3 className="text-base sm:text-lg font-medium">Insights</h3>
         </div>
         <span className="text-xs text-muted-foreground">Updated just now</span>
       </div>
-      <div className="grid gap-3 md:grid-cols-2">
+      <div className="grid gap-2 sm:gap-3 grid-cols-1 md:grid-cols-2">
         {insights.map((insight, index) => (
           <motion.div
             key={insight.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`p-4 rounded-2xl border ${typeStyles[insight.type]} hover:scale-[1.01] transition-transform cursor-pointer`}
+            className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border ${typeStyles[insight.type]} hover:scale-[1.01] transition-transform cursor-pointer`}
             data-testid={`insight-${insight.id}`}
           >
             <div className="flex items-start gap-3">
@@ -212,7 +212,7 @@ export function PersonalizedInsights({ sleepAvg, caloriesAvg, exerciseMinutes, d
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <h4 className="font-medium">{insight.title}</h4>
+                  <h4 className="font-medium text-sm sm:text-base truncate">{insight.title}</h4>
                   <span className={`text-[10px] uppercase px-1.5 py-0.5 rounded-full ${
                     insight.category === "ayurveda" ? "bg-emerald-500/20 text-emerald-300" :
                     insight.category === "tcm" ? "bg-red-500/20 text-red-300" :
@@ -223,7 +223,7 @@ export function PersonalizedInsights({ sleepAvg, caloriesAvg, exerciseMinutes, d
                     {insight.category === "tcm" ? "TCM" : insight.category}
                   </span>
                 </div>
-                <p className="text-sm text-muted-foreground">{insight.description}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3">{insight.description}</p>
               </div>
             </div>
           </motion.div>

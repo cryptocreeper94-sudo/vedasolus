@@ -61,7 +61,7 @@ export const BentoCard = ({
       transition={{ duration: 0.4, delay: delay * 0.08 }}
       whileHover={{ y: -3, scale: 1.01 }}
       className={cn(
-        "group relative overflow-hidden rounded-2xl sm:rounded-3xl flex flex-col justify-between p-4 sm:p-5 md:p-6",
+        "group relative overflow-hidden rounded-2xl sm:rounded-3xl flex flex-col justify-between p-3 sm:p-5 md:p-6",
         backgroundImage ? "bg-black" : "bg-white/[0.03] backdrop-blur-xl",
         "border border-white/[0.08]",
         "shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]",
