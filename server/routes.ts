@@ -255,5 +255,105 @@ export async function registerRoutes(
     }
   });
 
+  // ============ ORBIT STAFFING INTEGRATION ============
+  
+  // Get Orbit connection status
+  app.get("/api/orbit/status", async (_req, res) => {
+    try {
+      const { getEcosystemStatus, getFinancialHubStatus } = await import("./orbitClient");
+      const [ecosystem, financial] = await Promise.all([
+        getEcosystemStatus().catch(() => ({ status: "unavailable" })),
+        getFinancialHubStatus().catch(() => ({ status: "unavailable" })),
+      ]);
+      res.json({ ecosystem, financial, connected: true });
+    } catch (error: any) {
+      res.json({ connected: false, error: error.message });
+    }
+  });
+
+  // Sync doctors/practitioners to Orbit
+  app.post("/api/orbit/sync/doctors", isAuthenticated, async (req: any, res) => {
+    try {
+      const { syncDoctors } = await import("./orbitClient");
+      const result = await syncDoctors(req.body.doctors);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error syncing doctors to Orbit:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Sync timesheets to Orbit
+  app.post("/api/orbit/sync/timesheets", isAuthenticated, async (req: any, res) => {
+    try {
+      const { syncTimesheets } = await import("./orbitClient");
+      const result = await syncTimesheets(req.body.entries);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error syncing timesheets to Orbit:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Sync 1099 contractors
+  app.post("/api/orbit/sync/contractors", isAuthenticated, async (req: any, res) => {
+    try {
+      const { sync1099Contractors } = await import("./orbitClient");
+      const result = await sync1099Contractors(req.body.contractors);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error syncing contractors to Orbit:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Sync W2 employees
+  app.post("/api/orbit/sync/employees", isAuthenticated, async (req: any, res) => {
+    try {
+      const { syncW2Employees } = await import("./orbitClient");
+      const result = await syncW2Employees(req.body.employees);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error syncing employees to Orbit:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Sync certifications
+  app.post("/api/orbit/sync/certifications", isAuthenticated, async (req: any, res) => {
+    try {
+      const { syncCertifications } = await import("./orbitClient");
+      const result = await syncCertifications(req.body.certifications);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error syncing certifications to Orbit:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Manual revenue sync (for testing)
+  app.post("/api/orbit/sync/revenue", isAuthenticated, async (req: any, res) => {
+    try {
+      const { syncSubscriptionRevenue } = await import("./orbitClient");
+      const result = await syncSubscriptionRevenue(req.body);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error syncing revenue to Orbit:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Stripe webhook handler for automatic revenue sync
+  app.post("/api/webhooks/stripe", async (req, res) => {
+    try {
+      const { handleStripeSubscriptionWebhook } = await import("./orbitClient");
+      await handleStripeSubscriptionWebhook(req.body);
+      res.json({ received: true });
+    } catch (error: any) {
+      console.error("Error processing Stripe webhook:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   return httpServer;
 }
