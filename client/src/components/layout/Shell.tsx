@@ -37,7 +37,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MissionStatement } from "@/components/ui/mission-statement";
 import { QRCodeSVG } from "qrcode.react";
 import bgImage from "@assets/generated_images/dark_ethereal_fluid_gradient_background_with_glowing_particles.png";
-import logoImage from "@assets/Copilot_20251228_214220_1766980581975.png";
+import logoImage from "@assets/Copilot_20251228_214224_1766980581672.png";
 import { useAuth } from "@/hooks/use-auth";
 import { LoginModal } from "@/components/ui/login-modal";
 
@@ -126,7 +126,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground overflow-x-hidden font-sans selection:bg-primary/30 pb-20 pt-20">
+    <div className="relative min-h-screen w-full bg-background text-foreground overflow-x-hidden font-sans selection:bg-primary/30 pb-16 pt-16 sm:pb-20 sm:pt-20">
       {/* Background Layer */}
       <div 
         className="fixed inset-0 z-0 pointer-events-none opacity-40"
@@ -141,16 +141,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
       {/* HEADER - Sticky & Transparent */}
       <header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent px-6 h-20 flex items-center justify-between",
-          isScrolled ? "bg-black/60 backdrop-blur-xl border-white/5" : "bg-transparent"
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between safe-area-pt",
+          isScrolled ? "bg-black/80 backdrop-blur-xl border-white/10" : "bg-transparent"
         )}
       >
         {/* Left: Brand */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <img 
             src={logoImage} 
             alt="VedaSolus" 
-            className="h-12 w-auto object-contain"
+            className="h-10 sm:h-12 w-auto object-contain"
           />
         </div>
 
@@ -253,76 +253,36 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Main Content Area */}
-      <main className="relative z-10 p-4 md:p-8 max-w-7xl mx-auto min-h-[calc(100vh-160px)]">
+      <main className="relative z-10 px-3 py-4 sm:p-4 md:p-8 max-w-7xl mx-auto min-h-[calc(100vh-128px)] sm:min-h-[calc(100vh-160px)]">
          {children}
       </main>
 
-      {/* FOOTER - Sticky & Transparent */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 h-16 bg-black/60 backdrop-blur-xl border-t border-white/5 flex items-center justify-between px-6 text-xs text-muted-foreground">
-         <div className="flex items-center gap-1">
-           <Copyright className="w-3 h-3" />
-           <span>Dark Wave Studios LLC 2025</span>
-         </div>
+      {/* FOOTER - Clean & Mobile-Friendly */}
+      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 safe-area-pb">
+         <div className="flex items-center justify-between px-4 py-3 max-w-7xl mx-auto">
+           <div className="flex items-center gap-2 text-xs text-muted-foreground">
+             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+             <span className="hidden sm:inline">VedaSolus</span>
+             <span className="font-mono opacity-50">v2.0</span>
+           </div>
 
-         <div className="flex items-center gap-4">
-            <span className="hidden md:inline font-mono opacity-50">v2.0.4-beta</span>
-            
-            <Link href="/partner">
-              <button 
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 hover:bg-violet-500/20 transition-colors cursor-pointer"
-                data-testid="button-partners"
-              >
-                <Handshake className="w-4 h-4" />
-                <span className="font-medium hidden sm:inline">Partners</span>
-              </button>
-            </Link>
-
-            <button 
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/20 transition-colors cursor-pointer"
-              data-testid="button-investors"
-            >
-              <Wallet className="w-4 h-4" />
-              <span className="font-medium hidden sm:inline">Investors</span>
-            </button>
-            
-            <Dialog>
-              <DialogTrigger asChild>
-                <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 transition-colors cursor-pointer group">
-                   <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                   <span className="font-mono font-medium">Verified On-Chain</span>
+           <div className="flex items-center gap-2">
+              <Link href="/partner">
+                <button 
+                  className="p-2 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 hover:bg-violet-500/20 transition-colors"
+                  data-testid="button-partners"
+                >
+                  <Handshake className="w-4 h-4" />
                 </button>
-              </DialogTrigger>
-              <DialogContent className="bg-black/90 backdrop-blur-2xl border-white/10 max-w-sm">
-                 <div className="flex flex-col items-center text-center p-4">
-                    <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-4">
-                      <QrCode className="w-8 h-8 text-emerald-400" />
-                    </div>
-                    <h3 className="text-xl font-serif font-medium mb-2 text-white">Blockchain Verified</h3>
-                    <p className="text-sm text-muted-foreground mb-6">
-                      This build is cryptographically signed and immutable.
-                    </p>
-                    
-                    <div className="p-4 bg-white/5 rounded-xl border border-white/10 mb-6">
-                      <QRCodeSVG value="https://explorer.zenith.chain/tx/0x9a...2b1" size={150} fgColor="#10b981" bgColor="transparent" />
-                    </div>
+              </Link>
 
-                    <div className="w-full space-y-2 font-mono text-xs">
-                       <div className="flex justify-between">
-                         <span className="text-muted-foreground">Contract:</span>
-                         <span className="text-emerald-400">0x71C...9A23</span>
-                       </div>
-                       <div className="flex justify-between">
-                         <span className="text-muted-foreground">Block:</span>
-                         <span className="text-white">#8,921,042</span>
-                       </div>
-                    </div>
-
-                    <button className="w-full mt-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors">
-                      <ExternalLink className="w-4 h-4" /> View in Explorer
-                    </button>
-                 </div>
-              </DialogContent>
-            </Dialog>
+              <button 
+                className="p-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/20 transition-colors"
+                data-testid="button-investors"
+              >
+                <Wallet className="w-4 h-4" />
+              </button>
+           </div>
          </div>
       </footer>
 

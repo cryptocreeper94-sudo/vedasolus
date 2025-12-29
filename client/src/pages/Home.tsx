@@ -36,7 +36,7 @@ export default function Home() {
   const { dietLogs } = useDietTracking();
   const { exerciseLogs } = useExerciseTracking();
 
-  const displayName = profile?.displayName || user?.firstName || "Seeker";
+  const displayName = profile?.displayName || user?.name?.split(' ')[0] || "Seeker";
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? "Good Morning" : currentHour < 17 ? "Good Afternoon" : "Good Evening";
   
@@ -62,31 +62,33 @@ export default function Home() {
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-8 flex justify-between items-end"
+        className="mb-6 sm:mb-8"
       >
-        <div>
-          <h2 className="text-muted-foreground font-medium mb-1 tracking-wider uppercase text-xs">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
-          </h2>
-          <h1 className="text-4xl md:text-5xl font-serif font-medium text-foreground">
-            {greeting}, <span className="text-primary italic">{displayName}</span>
-          </h1>
-        </div>
-        <div className="hidden md:flex items-center gap-4">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-panel">
-            <Flame className="w-4 h-4 text-orange-400" />
-            <span className="text-sm font-bold text-orange-300">{currentStreak} day streak</span>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+          <div className="min-w-0">
+            <h2 className="text-muted-foreground font-medium mb-1 tracking-wider uppercase text-[10px] sm:text-xs">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+            </h2>
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif font-medium text-foreground truncate">
+              {greeting}, <span className="text-cyan-400 italic">{displayName}</span>
+            </h1>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full glass-panel">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-sm font-medium">System Optimal</span>
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10">
+              <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-400" />
+              <span className="text-xs sm:text-sm font-bold text-orange-300">{currentStreak}d</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-sm font-medium text-emerald-300">Optimal</span>
+            </div>
           </div>
         </div>
       </motion.div>
 
       <BentoGrid>
         {/* Main Health Score */}
-        <BentoCard colSpan={2} rowSpan={2} className="relative overflow-hidden">
+        <BentoCard colSpan={2} rowSpan={2} glow="emerald" className="relative overflow-hidden">
           <div className="flex justify-between items-start mb-4 relative z-10">
             <div>
               <h3 className="text-lg font-medium text-muted-foreground flex items-center gap-2">
@@ -132,7 +134,7 @@ export default function Home() {
         </BentoCard>
 
         {/* Daily Wisdom - Eastern */}
-        <BentoCard className="relative overflow-hidden group">
+        <BentoCard glow="violet" className="relative overflow-hidden group">
           <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-40" 
                style={{ backgroundImage: `url(${zenBg})` }} />
           <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
@@ -149,7 +151,7 @@ export default function Home() {
 
         {/* Sleep Metric */}
         <Link href="/sleep">
-          <BentoCard className="relative group overflow-hidden cursor-pointer" data-testid="card-sleep">
+          <BentoCard glow="violet" className="relative group overflow-hidden cursor-pointer h-full" data-testid="card-sleep">
             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-30" 
                  style={{ backgroundImage: `url(${sleepBg})` }} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -187,7 +189,7 @@ export default function Home() {
 
         {/* Quick Diet */}
         <Link href="/diet">
-          <BentoCard className="relative overflow-hidden group cursor-pointer" data-testid="card-diet">
+          <BentoCard glow="emerald" className="relative overflow-hidden group cursor-pointer h-full" data-testid="card-diet">
             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-20" 
                  style={{ backgroundImage: `url(${dietBg})` }} />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80" />
@@ -248,7 +250,7 @@ export default function Home() {
         </Link>
 
         {/* Streak & Achievements */}
-        <BentoCard className="bg-gradient-to-br from-orange-500/10 to-amber-500/5 border-orange-500/20">
+        <BentoCard glow="orange">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-xl bg-orange-500/20">
               <Flame className="w-6 h-6 text-orange-400" />
@@ -280,7 +282,7 @@ export default function Home() {
 
         {/* Quick Action - Meditate */}
         <Link href="/meditation">
-          <BentoCard className="cursor-pointer bg-primary/5 hover:bg-primary/10 border-primary/20 h-full" data-testid="card-meditation">
+          <BentoCard glow="pink" className="cursor-pointer h-full" data-testid="card-meditation">
              <div className="h-full flex flex-col items-center justify-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Brain className="w-6 h-6 text-primary" />
@@ -293,7 +295,7 @@ export default function Home() {
 
         {/* Today's Activity */}
         <Link href="/exercise">
-          <BentoCard className="cursor-pointer" data-testid="card-exercise">
+          <BentoCard glow="cyan" className="cursor-pointer h-full" data-testid="card-exercise">
             <div className="flex justify-between items-start">
               <h3 className="text-muted-foreground font-medium flex items-center gap-2">
                 <Zap className="w-4 h-4 text-cyan-400" /> Activity

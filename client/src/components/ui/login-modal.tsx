@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
-import logoImage from "@assets/Copilot_20251228_214220_1766980581975.png";
+import logoImage from "@assets/Copilot_20251228_214224_1766980581672.png";
 
 interface LoginModalProps {
   open: boolean;
