@@ -1,5 +1,7 @@
+import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Leaf, Moon, Sun, Droplets, Wind, Flame, Lightbulb, Clock, Apple, Dumbbell, Brain, AlertCircle } from "lucide-react";
+import { Leaf, Moon, Sun, Droplets, Wind, Flame, Lightbulb, Clock, Apple, Dumbbell, Brain, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
 
 interface InsightData {
   sleepAvg?: number;
@@ -187,47 +189,89 @@ export function PersonalizedInsights({ sleepAvg, caloriesAvg, exerciseMinutes, d
     );
   }
 
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    align: 'start',
+    containScroll: 'trimSnaps',
+    dragFree: true
+  });
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+  }, [emblaApi, onSelect]);
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Lightbulb className="w-5 h-5 text-primary" />
-          <h3 className="text-base sm:text-lg font-medium">Insights</h3>
+          <h3 className="text-base sm:text-lg font-medium text-white">Personalized Insights</h3>
         </div>
-        <span className="text-xs text-muted-foreground">Updated just now</span>
-      </div>
-      <div className="grid gap-2 sm:gap-3 grid-cols-1 md:grid-cols-2">
-        {insights.map((insight, index) => (
-          <motion.div
-            key={insight.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border ${typeStyles[insight.type]} hover:scale-[1.01] transition-transform cursor-pointer`}
-            data-testid={`insight-${insight.id}`}
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={scrollPrev}
+            disabled={!canScrollPrev}
+            className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
-            <div className="flex items-start gap-3">
-              <div className={`p-2 rounded-xl ${iconStyles[insight.type]}`}>
-                <insight.icon className="w-5 h-5" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h4 className="font-medium text-sm sm:text-base truncate">{insight.title}</h4>
-                  <span className={`text-[10px] uppercase px-1.5 py-0.5 rounded-full ${
-                    insight.category === "ayurveda" ? "bg-emerald-500/20 text-emerald-300" :
-                    insight.category === "tcm" ? "bg-red-500/20 text-red-300" :
-                    insight.category === "sleep" ? "bg-indigo-500/20 text-indigo-300" :
-                    insight.category === "diet" ? "bg-orange-500/20 text-orange-300" :
-                    "bg-cyan-500/20 text-cyan-300"
-                  }`}>
-                    {insight.category === "tcm" ? "TCM" : insight.category}
-                  </span>
+            <ChevronLeft className="w-4 h-4 text-white" />
+          </button>
+          <button 
+            onClick={scrollNext}
+            disabled={!canScrollNext}
+            className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronRight className="w-4 h-4 text-white" />
+          </button>
+          <span className="text-xs text-white/60 hidden sm:inline">Updated just now</span>
+        </div>
+      </div>
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex gap-3">
+          {insights.map((insight, index) => (
+            <motion.div
+              key={insight.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className={`flex-none w-[280px] sm:w-[320px] p-3 sm:p-4 rounded-xl sm:rounded-2xl border ${typeStyles[insight.type]} hover:scale-[1.01] transition-transform cursor-pointer`}
+              data-testid={`insight-${insight.id}`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`p-2 rounded-xl flex-shrink-0 ${iconStyles[insight.type]}`}>
+                  <insight.icon className="w-5 h-5" />
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3">{insight.description}</p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <h4 className="font-medium text-sm sm:text-base text-white">{insight.title}</h4>
+                    <span className={`text-[10px] uppercase px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+                      insight.category === "ayurveda" ? "bg-emerald-500/20 text-emerald-300" :
+                      insight.category === "tcm" ? "bg-red-500/20 text-red-300" :
+                      insight.category === "sleep" ? "bg-indigo-500/20 text-indigo-300" :
+                      insight.category === "diet" ? "bg-orange-500/20 text-orange-300" :
+                      "bg-cyan-500/20 text-cyan-300"
+                    }`}>
+                      {insight.category === "tcm" ? "TCM" : insight.category}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-white/70 line-clamp-3">{insight.description}</p>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
