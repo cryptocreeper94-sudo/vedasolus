@@ -141,7 +141,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       {/* HEADER - Sticky & Transparent */}
       <header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between safe-area-pt",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between safe-area-pt -translate-y-4",
           isScrolled ? "bg-black/80 backdrop-blur-xl border-white/10" : "bg-transparent"
         )}
       >
