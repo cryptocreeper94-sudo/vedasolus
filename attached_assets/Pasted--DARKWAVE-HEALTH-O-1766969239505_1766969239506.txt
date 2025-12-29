@@ -1,0 +1,407 @@
+================================================================================
+DARKWAVE HEALTH → ORBIT STAFFING INTEGRATION HANDOFF
+Complete Integration Guide for DarkWave Studios Ecosystem
+================================================================================
+
+APP REGISTRATION
+----------------
+App ID: dw_app_darkwavehealth
+App Name: DarkWave Health
+Status: ✅ REGISTERED & ACTIVE
+
+AUTHENTICATION
+--------------
+Secret Name: DARKWAVEHEALTH_WEBHOOK_SECRET
+Secret Value: b56ad32aba55b64e98621c8282bf4f1d036e4d30ebc4534e7977be720dded8da
+
+Add this to your Replit Secrets as DARKWAVEHEALTH_WEBHOOK_SECRET
+
+All requests must include these headers:
+- X-Orbit-Api-Key: dw_app_darkwavehealth
+- X-Orbit-Signature: HMAC-SHA256(JSON.stringify(body), DARKWAVEHEALTH_WEBHOOK_SECRET)
+
+================================================================================
+PART 1: FINANCIAL HUB - Revenue & Royalty Tracking
+================================================================================
+
+ENDPOINT: POST /api/financial-hub/ingest
+PURPOSE: Sync subscription payments, franchise fees, and revenue for royalty tracking
+
+PAYLOAD STRUCTURE:
+{
+  "sourceSystem": "DarkWave Health",
+  "sourceAppId": "dw_app_darkwavehealth",
+  "eventType": "revenue" | "expense" | "payout",
+  "grossAmount": 299.00,
+  "netAmount": 299.00,
+  "description": "DarkWave Health Pro - Monthly Subscription",
+  "productCode": "darkwavehealth_pro_monthly",
+  "externalRef": "stripe_sub_xxx",
+  "idempotencyKey": "darkwavehealth_sub_123456",
+  "metadata": {
+    "customerId": "cust_xxx",
+    "planType": "pro",
+    "billingCycle": "monthly"
+  }
+}
+
+PRODUCT CODES TO USE:
+- darkwavehealth_starter_monthly
+- darkwavehealth_pro_monthly
+- darkwavehealth_enterprise_monthly
+- darkwavehealth_franchise_fee
+- darkwavehealth_franchise_royalty
+
+RESPONSE:
+{
+  "success": true,
+  "eventId": "evt_xxx",
+  "status": "processed",
+  "royaltySplits": [
+    { "partnerId": "...", "partnerName": "Jason Andrews", "splitPercentage": 50, "netAmount": 149.50 },
+    { "partnerId": "...", "partnerName": "Sidonie Summers", "splitPercentage": 50, "netAmount": 149.50 }
+  ],
+  "message": "Financial event ingested and 2 royalty splits calculated"
+}
+
+================================================================================
+PART 2: ECOSYSTEM HUB - Worker & Payroll Sync (For Doctor Payroll)
+================================================================================
+
+BASE URL: https://orbitstaffing.replit.app (or your deployment URL)
+
+All ecosystem endpoints require the same HMAC authentication headers.
+
+--- SYNC WORKERS (Doctors/Staff) ---
+POST /api/ecosystem/sync/workers
+{
+  "workers": [
+    {
+      "externalId": "doc_12345",
+      "firstName": "John",
+      "lastName": "Smith",
+      "email": "dr.smith@clinic.com",
+      "phone": "555-123-4567",
+      "role": "Physician",
+      "department": "Cardiology",
+      "hireDate": "2024-01-15",
+      "payRate": 150.00,
+      "payType": "hourly",
+      "status": "active"
+    }
+  ]
+}
+
+--- SYNC TIMESHEETS ---
+POST /api/ecosystem/sync/timesheets
+{
+  "timesheets": [
+    {
+      "workerId": "doc_12345",
+      "date": "2025-01-15",
+      "hoursWorked": 8.5,
+      "payRate": 150.00,
+      "jobCode": "CARDIO_CONSULT",
+      "notes": "Patient consultations"
+    }
+  ]
+}
+
+--- SYNC 1099 CONTRACTORS ---
+POST /api/ecosystem/sync/1099
+{
+  "contractors": [
+    {
+      "externalId": "cont_789",
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "email": "jane.doe@consulting.com",
+      "taxId": "XXX-XX-1234",
+      "paymentMethod": "direct_deposit",
+      "status": "active"
+    }
+  ]
+}
+
+--- SYNC W-2 EMPLOYEES ---
+POST /api/ecosystem/sync/w2
+{
+  "employees": [
+    {
+      "externalId": "emp_456",
+      "firstName": "Alice",
+      "lastName": "Johnson",
+      "email": "alice@clinic.com",
+      "ssn": "XXX-XX-5678",
+      "federalWithholding": "single",
+      "stateWithholding": "TN",
+      "status": "active"
+    }
+  ]
+}
+
+--- SYNC CERTIFICATIONS ---
+POST /api/ecosystem/sync/certifications
+{
+  "certifications": [
+    {
+      "workerId": "doc_12345",
+      "certType": "Medical License",
+      "certNumber": "MD-12345-TN",
+      "issueDate": "2020-06-01",
+      "expiryDate": "2026-06-01",
+      "status": "active"
+    }
+  ]
+}
+
+--- GET WORKER DATA ---
+GET /api/ecosystem/shops/{shopId}/workers
+
+--- GET PAYROLL DATA ---
+GET /api/ecosystem/shops/{shopId}/payroll
+
+================================================================================
+PART 3: INTEGRATION CLIENT CODE (Copy & Paste)
+================================================================================
+
+// orbitClient.ts - Full ORBIT Staffing Integration Client
+
+import crypto from 'crypto';
+
+const ORBIT_BASE_URL = process.env.ORBIT_BASE_URL || 'https://orbitstaffing.replit.app';
+const ORBIT_API_KEY = 'dw_app_darkwavehealth';
+const ORBIT_SECRET = process.env.DARKWAVEHEALTH_WEBHOOK_SECRET!;
+
+function generateSignature(payload: string): string {
+  return crypto.createHmac('sha256', ORBIT_SECRET).update(payload).digest('hex');
+}
+
+async function orbitRequest(endpoint: string, data: any): Promise<any> {
+  const body = JSON.stringify(data);
+  const signature = generateSignature(body);
+  
+  const response = await fetch(`${ORBIT_BASE_URL}${endpoint}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Orbit-Api-Key': ORBIT_API_KEY,
+      'X-Orbit-Signature': signature,
+    },
+    body,
+  });
+  
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`ORBIT API Error: ${response.status} - ${error}`);
+  }
+  
+  return response.json();
+}
+
+// ============ FINANCIAL HUB FUNCTIONS ============
+
+export async function syncSubscriptionRevenue(params: {
+  amount: number;
+  description: string;
+  productCode: string;
+  stripeSubscriptionId: string;
+  customerId?: string;
+}): Promise<any> {
+  return orbitRequest('/api/financial-hub/ingest', {
+    sourceSystem: 'DarkWave Health',
+    sourceAppId: 'dw_app_darkwavehealth',
+    eventType: 'revenue',
+    grossAmount: params.amount,
+    netAmount: params.amount,
+    description: params.description,
+    productCode: params.productCode,
+    externalRef: params.stripeSubscriptionId,
+    idempotencyKey: `darkwavehealth_${params.stripeSubscriptionId}_${Date.now()}`,
+    metadata: { customerId: params.customerId },
+  });
+}
+
+export async function syncFranchiseFee(params: {
+  franchiseId: string;
+  amount: number;
+  territory: string;
+}): Promise<any> {
+  return orbitRequest('/api/financial-hub/ingest', {
+    sourceSystem: 'DarkWave Health',
+    sourceAppId: 'dw_app_darkwavehealth',
+    eventType: 'revenue',
+    grossAmount: params.amount,
+    netAmount: params.amount,
+    description: `DarkWave Health Franchise Fee - ${params.territory}`,
+    productCode: 'darkwavehealth_franchise_fee',
+    externalRef: params.franchiseId,
+    idempotencyKey: `darkwavehealth_franchise_${params.franchiseId}`,
+  });
+}
+
+// ============ ECOSYSTEM HUB FUNCTIONS ============
+
+export async function syncDoctors(doctors: Array<{
+  externalId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  specialty?: string;
+  payRate?: number;
+}>): Promise<any> {
+  return orbitRequest('/api/ecosystem/sync/workers', {
+    workers: doctors.map(doc => ({
+      externalId: doc.externalId,
+      firstName: doc.firstName,
+      lastName: doc.lastName,
+      email: doc.email,
+      role: doc.specialty || 'Physician',
+      payRate: doc.payRate,
+      payType: 'hourly',
+      status: 'active',
+    })),
+  });
+}
+
+export async function syncTimesheets(entries: Array<{
+  doctorId: string;
+  date: string;
+  hours: number;
+  payRate: number;
+  procedureCode?: string;
+}>): Promise<any> {
+  return orbitRequest('/api/ecosystem/sync/timesheets', {
+    timesheets: entries.map(entry => ({
+      workerId: entry.doctorId,
+      date: entry.date,
+      hoursWorked: entry.hours,
+      payRate: entry.payRate,
+      jobCode: entry.procedureCode,
+    })),
+  });
+}
+
+export async function sync1099Contractors(contractors: Array<{
+  externalId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  taxId?: string;
+}>): Promise<any> {
+  return orbitRequest('/api/ecosystem/sync/1099', { contractors });
+}
+
+export async function syncW2Employees(employees: Array<{
+  externalId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  ssn?: string;
+}>): Promise<any> {
+  return orbitRequest('/api/ecosystem/sync/w2', { employees });
+}
+
+// ============ STRIPE WEBHOOK HANDLER ============
+
+export async function handleStripeSubscriptionWebhook(event: any): Promise<void> {
+  if (event.type === 'invoice.paid') {
+    const invoice = event.data.object;
+    await syncSubscriptionRevenue({
+      amount: invoice.amount_paid / 100,
+      description: `DarkWave Health Subscription - ${invoice.customer_email}`,
+      productCode: 'darkwavehealth_pro_monthly',
+      stripeSubscriptionId: invoice.subscription,
+      customerId: invoice.customer,
+    });
+  }
+}
+
+================================================================================
+PART 4: FRANCHISE SYSTEM INTEGRATION
+================================================================================
+
+DarkWave Health can use ORBIT's franchise tracking for practitioner licensing:
+
+FRANCHISE PRODUCT CODES:
+- darkwavehealth_franchise_standard (City-level territory)
+- darkwavehealth_franchise_premium (Regional territory)
+- darkwavehealth_franchise_enterprise (State-level with sub-franchise rights)
+
+SYNC FRANCHISE FEES:
+{
+  "sourceSystem": "DarkWave Health",
+  "sourceAppId": "dw_app_darkwavehealth",
+  "eventType": "revenue",
+  "grossAmount": 25000.00,
+  "productCode": "darkwavehealth_franchise_standard",
+  "description": "DarkWave Health Franchise - Nashville Metro",
+  "externalRef": "franchise_nash_001",
+  "metadata": {
+    "territory": "Nashville Metro",
+    "tier": "standard",
+    "franchiseeId": "franchisee_123"
+  }
+}
+
+SYNC MONTHLY ROYALTIES:
+{
+  "sourceSystem": "DarkWave Health",
+  "sourceAppId": "dw_app_darkwavehealth",
+  "eventType": "revenue",
+  "grossAmount": 500.00,
+  "productCode": "darkwavehealth_franchise_royalty",
+  "description": "Monthly Franchise Royalty - Nashville Metro",
+  "externalRef": "royalty_nash_001_202501",
+  "metadata": {
+    "franchiseId": "franchise_nash_001",
+    "period": "2025-01"
+  }
+}
+
+================================================================================
+PART 5: ROYALTY SPLIT STRUCTURE
+================================================================================
+
+All DarkWave Health revenue synced to ORBIT Financial Hub will automatically:
+- Calculate 50/50 split between Jason Andrews and Sidonie Summers
+- Track in the partner ledger
+- Generate monthly statements
+- Enable Stripe Connect payouts to partners
+
+Products covered by 50/50 split:
+- ORBIT Staffing OS
+- PaintPros.io
+- Brew & Board Coffee
+- DarkWave Health (NEW)
+
+================================================================================
+ENVIRONMENT VARIABLES NEEDED IN DARKWAVE HEALTH
+================================================================================
+
+DARKWAVEHEALTH_WEBHOOK_SECRET=b56ad32aba55b64e98621c8282bf4f1d036e4d30ebc4534e7977be720dded8da
+ORBIT_BASE_URL=https://orbitstaffing.replit.app
+
+================================================================================
+TESTING THE INTEGRATION
+================================================================================
+
+Test command (run in DarkWave Health):
+
+curl -X POST https://orbitstaffing.replit.app/api/financial-hub/ingest \
+  -H "Content-Type: application/json" \
+  -H "X-Orbit-Api-Key: dw_app_darkwavehealth" \
+  -H "X-Orbit-Signature: $(echo -n '{"sourceSystem":"DarkWave Health","eventType":"revenue","grossAmount":1.00,"productCode":"test"}' | openssl dgst -sha256 -hmac 'b56ad32aba55b64e98621c8282bf4f1d036e4d30ebc4534e7977be720dded8da' | cut -d' ' -f2)" \
+  -d '{"sourceSystem":"DarkWave Health","eventType":"revenue","grossAmount":1.00,"productCode":"test"}'
+
+================================================================================
+SUPPORT & DOCUMENTATION
+================================================================================
+
+Ecosystem Status: GET /api/ecosystem/status
+Financial Hub Status: GET /api/financial-hub/status
+API Documentation: GET /api/ecosystem/docs
+
+================================================================================
+END OF HANDOFF DOCUMENT
+================================================================================
