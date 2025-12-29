@@ -25,7 +25,10 @@ import {
   ChevronRight,
   Server,
   Cpu,
-  Terminal
+  Terminal,
+  ExternalLink,
+  Video,
+  Smartphone
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
@@ -119,6 +122,51 @@ const roadmapPhases = [
       { name: "Future: Apple Developer account & iOS build", status: "pending" },
     ]
   },
+  {
+    id: "phase6",
+    title: "Video Consultations",
+    status: "upcoming",
+    quarter: "Q2 2025",
+    progress: 0,
+    color: "cyan",
+    milestones: [
+      { name: "Video API integration (ZEGOCLOUD/Daily.co)", status: "pending" },
+      { name: "Booking system with time slot selection", status: "pending" },
+      { name: "Video room page with unique links", status: "pending" },
+      { name: "Practitioner availability calendar", status: "pending" },
+      { name: "Appointment reminders (email/push)", status: "pending" },
+      { name: "In-call chat & file sharing", status: "pending" },
+      { name: "Session recording (optional)", status: "pending" },
+      { name: "Post-consultation notes & follow-up", status: "pending" },
+      { name: "Platform fee integration with Stripe", status: "pending" },
+    ]
+  },
+];
+
+const externalResources = [
+  { category: "Mobile Development", items: [
+    { name: "Expo Documentation", url: "https://docs.expo.dev", desc: "React Native framework" },
+    { name: "React Native", url: "https://reactnative.dev/docs/getting-started", desc: "Core mobile framework" },
+    { name: "Google Play Console", url: "https://play.google.com/console", desc: "Android app publishing" },
+    { name: "Apple Developer", url: "https://developer.apple.com", desc: "iOS app publishing ($99/yr)" },
+  ]},
+  { category: "Video Consultations", items: [
+    { name: "ZEGOCLOUD", url: "https://www.zegocloud.com", desc: "Video/voice API, HIPAA compliant" },
+    { name: "Daily.co", url: "https://www.daily.co", desc: "Video API, 10K free mins/mo" },
+    { name: "VSee", url: "https://vsee.com", desc: "Healthcare-focused video" },
+  ]},
+  { category: "Integrations", items: [
+    { name: "Stripe Dashboard", url: "https://dashboard.stripe.com", desc: "Payment management" },
+    { name: "Firebase Console", url: "https://console.firebase.google.com", desc: "Auth & notifications" },
+    { name: "OpenAI Platform", url: "https://platform.openai.com", desc: "AI wellness coach API" },
+    { name: "ElevenLabs", url: "https://elevenlabs.io", desc: "Voice synthesis" },
+    { name: "Orbit Staffing", url: "https://orbitstaffing.replit.app", desc: "Payroll & invoicing" },
+  ]},
+  { category: "Compliance", items: [
+    { name: "HIPAA Guidelines", url: "https://www.hhs.gov/hipaa", desc: "Health data privacy" },
+    { name: "App Store Guidelines", url: "https://developer.apple.com/app-store/review/guidelines", desc: "Apple submission rules" },
+    { name: "Google Play Policy", url: "https://play.google.com/about/developer-content-policy", desc: "Android submission rules" },
+  ]},
 ];
 
 const analyticsData = {
@@ -584,6 +632,44 @@ export default function DeveloperDashboard() {
                     <div key={doc.title}>{content}</div>
                   );
                 })}
+              </div>
+            </BentoCard>
+
+            <BentoCard colSpan={3} className="bg-gradient-to-br from-cyan-500/5 to-pink-500/5 border-cyan-500/20">
+              <h2 className="text-xl font-semibold text-white flex items-center gap-2 mb-6">
+                <ExternalLink className="w-5 h-5 text-cyan-400" /> External Resources & Links
+              </h2>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                {externalResources.map((section) => (
+                  <div key={section.category} className="space-y-3">
+                    <h3 className="text-sm font-mono text-muted-foreground flex items-center gap-2">
+                      {section.category === "Mobile Development" && <Smartphone className="w-4 h-4 text-orange-400" />}
+                      {section.category === "Video Consultations" && <Video className="w-4 h-4 text-cyan-400" />}
+                      {section.category === "Integrations" && <Zap className="w-4 h-4 text-emerald-400" />}
+                      {section.category === "Compliance" && <Shield className="w-4 h-4 text-pink-400" />}
+                      {section.category}
+                    </h3>
+                    <div className="space-y-2">
+                      {section.items.map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-3 rounded-lg bg-black/20 border border-white/10 hover:border-white/30 transition-all group"
+                          data-testid={`link-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                          <div>
+                            <span className="text-white group-hover:text-cyan-400 transition-colors">{item.name}</span>
+                            <span className="block text-xs text-slate-500">{item.desc}</span>
+                          </div>
+                          <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </BentoCard>
           </BentoGrid>

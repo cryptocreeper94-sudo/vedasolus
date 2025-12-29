@@ -157,11 +157,13 @@ The application features:
 
 ## Developer Dashboard Features
 
-### Roadmap (4 Phases)
-1. **Foundation** (Q4 2024) - Auth, tracking, payments, AI coach, health passport
+### Roadmap (6 Phases)
+1. **Foundation** (Q4 2024) - Auth, tracking, payments, AI coach, health passport ✅
 2. **Intelligence & Personalization** (Q1 2025) - Dosha engine, insights, FHIR/HealthKit
-3. **Ecosystem Growth** (Q2 2025) - Marketplace, messaging, tribes, video consultations
+3. **Ecosystem Growth** (Q2 2025) - Marketplace, messaging, tribes, practitioner verification
 4. **Web3 & Enterprise** (Q3 2025) - Blockchain, Orbit payroll, enterprise API, HIPAA
+5. **Native Mobile Apps** (Q1 2025) - 14-day Expo/React Native plan for Google Play
+6. **Video Consultations** (Q2 2025) - ZEGOCLOUD/Daily.co integration for practitioner telehealth
 
 ### Analytics Dashboard
 - User metrics (total, active, growth)
@@ -173,6 +175,12 @@ The application features:
 - API Reference
 - Integration Guides (FHIR, HealthKit, Blockchain)
 - Security & Compliance (HIPAA)
+
+### External Resources (with clickable links)
+- **Mobile Development**: Expo, React Native, Google Play Console, Apple Developer
+- **Video Consultations**: ZEGOCLOUD, Daily.co, VSee
+- **Integrations**: Stripe Dashboard, Firebase Console, OpenAI, ElevenLabs, Orbit Staffing
+- **Compliance**: HIPAA Guidelines, App Store Guidelines, Google Play Policy
 - Database Schema
 - Business Plan
 - Release Notes
