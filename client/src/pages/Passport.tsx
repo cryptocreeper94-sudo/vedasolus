@@ -44,7 +44,7 @@ const DigitalIDCard = () => {
         x.set(170);
         y.set(100);
       }}
-      className="relative w-full max-w-md mx-auto aspect-[1.586/1] rounded-3xl overflow-hidden shadow-2xl transition-all duration-200 ease-out group cursor-pointer"
+      className="relative w-full max-w-sm mx-auto aspect-[1.6/1] rounded-2xl overflow-hidden shadow-2xl transition-all duration-200 ease-out group cursor-pointer"
     >
       {/* Holographic Background */}
       <div 
@@ -57,30 +57,35 @@ const DigitalIDCard = () => {
       <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
 
       {/* Content Layer */}
-      <div className="relative z-20 h-full p-6 flex flex-col justify-between text-white font-mono" style={{ transform: "translateZ(20px)" }}>
-        <div className="flex justify-between items-start">
-          <div className="flex items-center gap-3">
-             <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center backdrop-blur-md">
-               <Fingerprint className="w-8 h-8 text-emerald-400" />
+      <div className="relative z-20 h-full p-4 sm:p-5 flex flex-col justify-between text-white font-mono" style={{ transform: "translateZ(20px)" }}>
+        <div className="flex justify-between items-start gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center backdrop-blur-md shrink-0">
+               <Fingerprint className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-400" />
              </div>
-             <div>
-               <h3 className="text-sm uppercase tracking-widest opacity-70">Universal Health ID</h3>
-               <p className="text-lg font-bold tracking-wider">ZEN-8921-04X</p>
+             <div className="min-w-0">
+               <h3 className="text-[10px] sm:text-xs uppercase tracking-wider opacity-70 whitespace-nowrap">Universal Health ID</h3>
+               <p className="text-sm sm:text-base font-bold tracking-wide whitespace-nowrap">ZEN-8921-04X</p>
              </div>
           </div>
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[10px] font-bold tracking-wider">
+          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[9px] sm:text-[10px] font-bold tracking-wider shrink-0">
             <ShieldCheck className="w-3 h-3" /> VERIFIED
           </div>
         </div>
 
-        <div className="flex justify-between items-end">
-          <div>
-            <p className="text-[10px] uppercase opacity-50 mb-1">Identity Holder</p>
-            <p className="text-xl font-sans font-medium">Alex Sterling</p>
-            <p className="text-xs opacity-50 mt-1">0x71C...9A23</p>
+        <div className="flex justify-between items-end gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[9px] sm:text-[10px] uppercase opacity-50 mb-0.5">Identity Holder</p>
+            <p className="text-base sm:text-lg font-sans font-medium truncate">Alex Sterling</p>
+            <p className="text-[10px] sm:text-xs opacity-50 mt-0.5">Dark Wave Studios LLC 2025</p>
           </div>
-          <div className="p-2 bg-white rounded-lg shadow-lg">
-            <QRCodeSVG value="https://zenith-health.replit.app/passport/0x71C" size={64} />
+          <div className="p-1.5 sm:p-2 bg-white rounded-lg shadow-lg shrink-0">
+            <QRCodeSVG value="https://zenith-health.replit.app/passport/0x71C" size={48} className="sm:hidden" />
+            <QRCodeSVG value="https://zenith-health.replit.app/passport/0x71C" size={56} className="hidden sm:block" />
+          </div>
+          <div className="text-right shrink-0">
+            <p className="text-[9px] sm:text-[10px] text-emerald-400 font-medium">Verified</p>
+            <p className="text-[9px] sm:text-[10px] text-emerald-300/80">On-Chain</p>
           </div>
         </div>
       </div>
@@ -112,12 +117,12 @@ const ConnectionOption = ({ icon: Icon, title, desc, color }: any) => (
 export default function HealthPassport() {
   return (
     <Shell>
-      <div className="mb-12 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="mb-8 md:mb-12 space-y-6 md:space-y-0 md:flex md:flex-row md:items-center md:justify-between md:gap-8">
         <div className="max-w-xl">
-          <h1 className="text-4xl font-serif font-medium mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
+          <h1 className="text-3xl md:text-4xl font-serif font-medium mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
             Health Passport
           </h1>
-          <p className="text-muted-foreground leading-relaxed">
+          <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
             Your sovereign health identity. All your records, verified on-chain, fully portable, and under your control.
           </p>
         </div>
