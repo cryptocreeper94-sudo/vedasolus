@@ -28,12 +28,18 @@ import {
   Terminal,
   ExternalLink,
   Video,
-  Smartphone
+  Smartphone,
+  Mail,
+  Download,
+  CheckCheck,
+  XCircle
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Area, AreaChart, ResponsiveContainer, BarChart, Bar, Cell, Tooltip, XAxis } from "recharts";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 
 const roadmapPhases = [
   {
@@ -262,6 +268,9 @@ export default function DeveloperDashboard() {
           </TabsTrigger>
           <TabsTrigger value="docs" className="data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400" data-testid="tab-docs">
             <FileText className="w-4 h-4 mr-2" /> Documentation
+          </TabsTrigger>
+          <TabsTrigger value="subscribers" className="data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400" data-testid="tab-subscribers">
+            <Mail className="w-4 h-4 mr-2" /> Subscribers
           </TabsTrigger>
         </TabsList>
 
@@ -674,7 +683,118 @@ export default function DeveloperDashboard() {
             </BentoCard>
           </BentoGrid>
         </TabsContent>
+
+        <SubscribersTab />
       </Tabs>
     </Shell>
+  );
+}
+
+function SubscribersTab() {
+  const { data: disclaimers, isLoading, error } = useQuery({
+    queryKey: ["/api/disclaimers"],
+    queryFn: async () => {
+      const res = await fetch("/api/disclaimers");
+      if (!res.ok) throw new Error("Failed to fetch subscribers");
+      return res.json();
+    },
+  });
+
+  const exportCSV = () => {
+    if (!disclaimers || disclaimers.length === 0) return;
+    
+    const headers = ["Name", "Email", "Marketing Opt-In", "Acknowledged At"];
+    const rows = disclaimers.map((d: any) => [
+      d.name,
+      d.email,
+      d.marketingOptIn ? "Yes" : "No",
+      new Date(d.acknowledgedAt).toLocaleString(),
+    ]);
+    
+    const csv = [headers.join(","), ...rows.map((r: string[]) => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `vedasolus-subscribers-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const optedIn = disclaimers?.filter((d: any) => d.marketingOptIn).length || 0;
+  const total = disclaimers?.length || 0;
+
+  return (
+    <TabsContent value="subscribers" className="space-y-6" data-testid="content-subscribers">
+      <BentoGrid>
+        <BentoCard colSpan={3} className="bg-gradient-to-br from-orange-500/5 to-pink-500/5 border-orange-500/20">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+              <Mail className="w-5 h-5 text-orange-400" /> Email Subscribers
+            </h2>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 text-sm">
+                <span className="text-slate-400">Total: <span className="text-white font-medium">{total}</span></span>
+                <span className="text-slate-400">Opted In: <span className="text-emerald-400 font-medium">{optedIn}</span></span>
+              </div>
+              <Button
+                onClick={exportCSV}
+                disabled={!disclaimers || disclaimers.length === 0}
+                size="sm"
+                variant="outline"
+                className="border-orange-500/30 hover:bg-orange-500/10"
+                data-testid="button-export-csv"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export CSV
+              </Button>
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div className="text-center py-12 text-slate-400">Loading subscribers...</div>
+          ) : error ? (
+            <div className="text-center py-12 text-red-400">
+              Failed to load subscribers. Make sure you're logged in.
+            </div>
+          ) : disclaimers?.length === 0 ? (
+            <div className="text-center py-12 text-slate-400">
+              No subscribers yet. They'll appear here after acknowledging the medical disclaimer.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th className="text-left py-3 px-4 text-xs font-medium text-slate-400 uppercase">Name</th>
+                    <th className="text-left py-3 px-4 text-xs font-medium text-slate-400 uppercase">Email</th>
+                    <th className="text-center py-3 px-4 text-xs font-medium text-slate-400 uppercase">Marketing</th>
+                    <th className="text-left py-3 px-4 text-xs font-medium text-slate-400 uppercase">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {disclaimers?.map((d: any) => (
+                    <tr key={d.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                      <td className="py-3 px-4 text-sm text-white">{d.name}</td>
+                      <td className="py-3 px-4 text-sm text-cyan-400 font-mono">{d.email}</td>
+                      <td className="py-3 px-4 text-center">
+                        {d.marketingOptIn ? (
+                          <CheckCheck className="w-4 h-4 text-emerald-400 mx-auto" />
+                        ) : (
+                          <XCircle className="w-4 h-4 text-slate-500 mx-auto" />
+                        )}
+                      </td>
+                      <td className="py-3 px-4 text-sm text-slate-400">
+                        {new Date(d.acknowledgedAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </BentoCard>
+      </BentoGrid>
+    </TabsContent>
   );
 }

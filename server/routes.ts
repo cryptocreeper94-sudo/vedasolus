@@ -144,7 +144,10 @@ export async function registerRoutes(
   // Medical Disclaimer endpoints
   app.post("/api/disclaimers", async (req: any, res) => {
     try {
-      const userId = req.user?.claims?.sub || null;
+      let userId = null;
+      if (req.user && req.user.claims && req.user.claims.sub) {
+        userId = req.user.claims.sub;
+      }
       const validated = insertMedicalDisclaimerSchema.parse({
         ...req.body,
         email: req.body.email?.toLowerCase(),
