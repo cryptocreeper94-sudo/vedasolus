@@ -1,7 +1,7 @@
 import { Shell } from "@/components/layout/Shell";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
-import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp, Lightbulb, Plus, HelpCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp, Lightbulb, Plus, HelpCircle, ChevronLeft, ChevronRight, Droplet, User, QrCode, Target, BarChart3 } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState, useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
@@ -148,6 +148,39 @@ export default function Home() {
     healthCarouselApi.on('reInit', onHealthSelect);
   }, [healthCarouselApi, onHealthSelect]);
 
+  // Wellness mini carousel (inside card)
+  const [wellnessRef, wellnessApi] = useEmblaCarousel({
+    align: 'start',
+    loop: true,
+    slidesToScroll: 1
+  });
+  const [wellnessIndex, setWellnessIndex] = useState(0);
+
+  const scrollWellnessPrev = useCallback(() => wellnessApi?.scrollPrev(), [wellnessApi]);
+  const scrollWellnessNext = useCallback(() => wellnessApi?.scrollNext(), [wellnessApi]);
+
+  useEffect(() => {
+    if (!wellnessApi) return;
+    wellnessApi.on('select', () => setWellnessIndex(wellnessApi.selectedScrollSnap()));
+  }, [wellnessApi]);
+
+  // Auto-rotate wellness carousel
+  useEffect(() => {
+    if (!wellnessApi) return;
+    const interval = setInterval(() => wellnessApi.scrollNext(), 5000);
+    return () => clearInterval(interval);
+  }, [wellnessApi]);
+
+  // Hydration state
+  const [hydration, setHydration] = useState(0);
+
+  // Weekly stats
+  const weeklyStats = {
+    sleepNights: sleepLogs.length,
+    meals: dietLogs.length,
+    workouts: exerciseLogs.length
+  };
+
   return (
     <Shell>
       <TooltipProvider>
@@ -238,6 +271,85 @@ export default function Home() {
               "{randomQuote.text}"
             </p>
             <p className="text-xs text-indigo-200 mt-3">— {randomQuote.source}</p>
+          </div>
+        </BentoCard>
+
+        {/* Wellness Hub - Mini Carousel */}
+        <BentoCard glow="cyan" className="relative overflow-hidden" data-testid="card-wellness-hub">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-medium text-white/90">Wellness Hub</h4>
+            <div className="flex gap-1">
+              <button onClick={scrollWellnessPrev} className="p-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+                <ChevronLeft className="w-3 h-3 text-white" />
+              </button>
+              <button onClick={scrollWellnessNext} className="p-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+                <ChevronRight className="w-3 h-3 text-white" />
+              </button>
+            </div>
+          </div>
+          <div className="overflow-hidden" ref={wellnessRef}>
+            <div className="flex">
+              {/* Dosha Balance */}
+              <Link href="/profile" className="flex-none w-full">
+                <div className="flex flex-col items-center justify-center py-4 cursor-pointer group">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500/30 to-pink-500/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                    <User className="w-6 h-6 text-orange-300" />
+                  </div>
+                  <p className="text-sm font-medium text-white">Dosha Balance</p>
+                  <p className="text-xs text-cyan-300 capitalize">{profile?.doshaType?.split("-")[0] || "Discover yours"}</p>
+                </div>
+              </Link>
+
+              {/* Health Passport */}
+              <Link href="/passport" className="flex-none w-full">
+                <div className="flex flex-col items-center justify-center py-4 cursor-pointer group">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500/30 to-cyan-500/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                    <QrCode className="w-6 h-6 text-emerald-300" />
+                  </div>
+                  <p className="text-sm font-medium text-white">Health Passport</p>
+                  <p className="text-xs text-emerald-300">Digital Identity</p>
+                </div>
+              </Link>
+
+              {/* Weekly Progress */}
+              <Link href="/settings" className="flex-none w-full">
+                <div className="flex flex-col items-center justify-center py-4 cursor-pointer group">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/30 to-indigo-500/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                    <BarChart3 className="w-6 h-6 text-blue-300" />
+                  </div>
+                  <p className="text-sm font-medium text-white">Weekly Progress</p>
+                  <p className="text-xs text-blue-300">{weeklyStats.sleepNights + weeklyStats.meals + weeklyStats.workouts} logs</p>
+                </div>
+              </Link>
+
+              {/* Hydration */}
+              <div className="flex-none w-full" onClick={() => setHydration(h => Math.min(h + 1, 8))}>
+                <div className="flex flex-col items-center justify-center py-4 cursor-pointer group">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                    <Droplet className="w-6 h-6 text-cyan-300" />
+                  </div>
+                  <p className="text-sm font-medium text-white">Hydration</p>
+                  <p className="text-xs text-cyan-300">{hydration}/8 glasses</p>
+                </div>
+              </div>
+
+              {/* Today's Focus */}
+              <Link href="/meditation" className="flex-none w-full">
+                <div className="flex flex-col items-center justify-center py-4 cursor-pointer group">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500/30 to-purple-500/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                    <Target className="w-6 h-6 text-pink-300" />
+                  </div>
+                  <p className="text-sm font-medium text-white">Today's Focus</p>
+                  <p className="text-xs text-pink-300">Mindfulness</p>
+                </div>
+              </Link>
+            </div>
+          </div>
+          {/* Dot indicators */}
+          <div className="flex justify-center gap-1 mt-2">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${wellnessIndex === i ? 'bg-cyan-400' : 'bg-white/30'}`} />
+            ))}
           </div>
         </BentoCard>
 
