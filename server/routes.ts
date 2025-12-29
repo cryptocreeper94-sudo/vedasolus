@@ -16,6 +16,19 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   
+  // Firebase config endpoint (public - provides client config)
+  app.get("/api/firebase-config", (_req, res) => {
+    res.json({
+      apiKey: process.env.GOOGLE_API_KEY,
+      authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || "darkwave-auth.firebaseapp.com",
+      projectId: process.env.VITE_FIREBASE_PROJECT_ID || "darkwave-auth",
+      storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || "darkwave-auth.firebasestorage.app",
+      messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "41307406912",
+      appId: process.env.VITE_FIREBASE_APP_ID || "1:41307406912:web:37b3bebeb47a73522a55a5",
+      measurementId: process.env.VITE_FIREBASE_MEASUREMENT_ID || "G-KCYD3E2XE5",
+    });
+  });
+
   // User Profile endpoints
   app.get("/api/profile", isAuthenticated, async (req: any, res) => {
     try {
