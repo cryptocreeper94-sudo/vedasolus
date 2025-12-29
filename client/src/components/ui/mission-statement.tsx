@@ -147,7 +147,7 @@ export function MissionStatement({ onClose }: MissionStatementProps) {
               <p className="text-xs text-slate-500 italic">
                 "Where ancient wisdom meets modern science, healing finds its true path."
               </p>
-              <p className="text-xs text-cyan-400/60 mt-2">— Zenith Philosophy</p>
+              <p className="text-xs text-cyan-400/60 mt-2">— VedaSolus Philosophy</p>
             </div>
           </div>
         </ScrollArea>

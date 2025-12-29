@@ -159,7 +159,7 @@ export function AIWellnessCoach() {
             </div>
             <div>
               <CardTitle className="text-lg text-white flex items-center gap-2">
-                Zenith AI Coach
+                VedaSolus AI Coach
                 <Sparkles className="w-4 h-4 text-cyan-400" />
               </CardTitle>
               <p className="text-xs text-cyan-300/70">Eastern Wisdom • Western Science</p>
