@@ -27,7 +27,7 @@ export function DisclaimerModal() {
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogContent className="bg-background/95 backdrop-blur-xl border-white/10 max-w-xl max-h-[90vh] overflow-y-auto">
+      <AlertDialogContent className="bg-background/95 backdrop-blur-xl border-white/10 max-w-xl">
         <AlertDialogHeader>
           <div className="mx-auto p-3 bg-pink-500/20 rounded-full mb-4">
             <ShieldAlert className="w-8 h-8 text-pink-500" />
