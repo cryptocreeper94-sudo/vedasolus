@@ -150,7 +150,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <img 
             src={logoImage} 
             alt="VedaSolus" 
-            className="h-24 sm:h-28 md:h-32 w-auto object-contain -my-4"
+            className="h-24 sm:h-28 md:h-32 w-auto object-contain -ml-5 -mt-2.5 -mb-4"
           />
         </div>
 
