@@ -1,9 +1,10 @@
 import { Shell } from "@/components/layout/Shell";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
-import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp, Lightbulb, Plus, HelpCircle } from "lucide-react";
+import { Activity, Leaf, Moon, Sun, Wind, ArrowUpRight, Heart, Brain, Utensils, Flame, Trophy, Zap, Calendar, TrendingUp, Lightbulb, Plus, HelpCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -122,6 +123,31 @@ export default function Home() {
     });
   })();
 
+  // Health cards carousel
+  const [healthCarouselRef, healthCarouselApi] = useEmblaCarousel({
+    align: 'start',
+    containScroll: 'trimSnaps',
+    slidesToScroll: 1
+  });
+  const [canScrollHealthPrev, setCanScrollHealthPrev] = useState(false);
+  const [canScrollHealthNext, setCanScrollHealthNext] = useState(false);
+
+  const scrollHealthPrev = useCallback(() => healthCarouselApi?.scrollPrev(), [healthCarouselApi]);
+  const scrollHealthNext = useCallback(() => healthCarouselApi?.scrollNext(), [healthCarouselApi]);
+
+  const onHealthSelect = useCallback(() => {
+    if (!healthCarouselApi) return;
+    setCanScrollHealthPrev(healthCarouselApi.canScrollPrev());
+    setCanScrollHealthNext(healthCarouselApi.canScrollNext());
+  }, [healthCarouselApi]);
+
+  useEffect(() => {
+    if (!healthCarouselApi) return;
+    onHealthSelect();
+    healthCarouselApi.on('select', onHealthSelect);
+    healthCarouselApi.on('reInit', onHealthSelect);
+  }, [healthCarouselApi, onHealthSelect]);
+
   return (
     <Shell>
       <TooltipProvider>
@@ -215,271 +241,222 @@ export default function Home() {
           </div>
         </BentoCard>
 
-        {/* Sleep Metric */}
-        <Link href="/sleep">
-          <BentoCard glow="violet" backgroundImage={sleepBg} className="cursor-pointer h-full" data-testid="card-sleep">
-            <div className="flex justify-between items-start">
-              <h3 className="text-white/90 font-medium flex items-center gap-2">
-                <Moon className="w-4 h-4 text-purple-300" /> Sleep
-                <UITooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="w-3.5 h-3.5 text-white/50 hover:text-white/80 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-[200px]">
-                    <p className="text-xs">Adults need 7-9 hours of quality sleep. Track your sleep patterns to optimize recovery and energy.</p>
-                  </TooltipContent>
-                </UITooltip>
-              </h3>
-              <span className="text-xs px-2 py-1 rounded-full bg-purple-500/30 text-purple-100 backdrop-blur-md">
-                {latestSleep ? `${latestSleep.quality}/5` : "Optimal"}
-              </span>
-            </div>
-            <div className="mt-auto">
-              <div className="flex items-baseline gap-1 text-white">
-                <span className="text-3xl font-bold">{latestSleep?.hoursSlept ?? "--"}</span>
-                <span className="text-lg opacity-70">h</span>
-                <span className="text-3xl font-bold ml-2">{latestSleep ? Math.round(((latestSleep.hoursSlept || 0) % 1) * 60) : "--"}</span>
-                <span className="text-lg opacity-70">m</span>
-              </div>
-              <div className="w-full h-2 bg-white/20 rounded-full mt-4 overflow-hidden backdrop-blur-sm">
-                <motion.div 
-                  className="h-full bg-gradient-to-r from-purple-400 to-indigo-400"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${((latestSleep?.hoursSlept || 0) / 9) * 100}%` }}
-                />
-              </div>
-              <p className="text-xs text-white/70 mt-2">
-                {sleepLogs.length > 0 ? `${sleepLogs.length} nights logged` : "No sleep logged yet"}
-              </p>
-            </div>
-          </BentoCard>
-        </Link>
+      </BentoGrid>
 
-        {/* Quick Diet */}
-        <Link href="/diet">
-          <BentoCard glow="emerald" backgroundImage={nutritionBg} className="cursor-pointer h-full" data-testid="card-diet">
-            <div className="flex justify-between items-start mb-4">
-               <h3 className="text-white/90 font-medium flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-green-300" /> Nutrition
-                <UITooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="w-3.5 h-3.5 text-white/50 hover:text-white/80 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-[200px]">
-                    <p className="text-xs">Balance your diet with whole foods. Ayurveda recommends eating according to your dosha for optimal digestion.</p>
-                  </TooltipContent>
-                </UITooltip>
-              </h3>
-              <span className="text-xs sm:text-sm font-mono text-green-300 whitespace-nowrap">{todayCalories || 0} kcal</span>
-            </div>
-            <div className="space-y-2 mt-auto">
-               {dietLogs.slice(0, 2).map((log, i) => (
-                 <div key={log.id || i} className="flex justify-between items-center p-2 rounded-lg bg-black/40 hover:bg-black/50 transition-colors backdrop-blur-md">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-orange-500/30 flex items-center justify-center">
-                        <Utensils className="w-4 h-4 text-orange-300" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-white capitalize">{log.mealType}</p>
-                        <p className="text-xs text-white/60 truncate max-w-[80px] sm:max-w-[100px]">{log.items?.[0] || "Logged"}</p>
-                      </div>
-                    </div>
-                    <span className="text-xs font-mono text-green-300 whitespace-nowrap">{log.calories} kcal</span>
-                 </div>
-               ))}
-               {dietLogs.length === 0 && (
-                 <div className="flex flex-col items-center justify-center py-4 text-center">
-                   <Utensils className="w-8 h-8 text-green-300/50 mb-2" />
-                   <p className="text-sm text-white/60">No meals logged today</p>
-                   <p className="text-xs text-white/40">Tap to log your first meal</p>
-                 </div>
-               )}
-            </div>
-          </BentoCard>
-        </Link>
-
-        {/* Streak & Achievements */}
-        <Link href="/settings">
-          <BentoCard glow="orange" backgroundImage={achievementBg} className="cursor-pointer h-full" data-testid="card-streak">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 rounded-xl bg-orange-500/30 backdrop-blur-sm">
-                <Flame className="w-6 h-6 text-orange-300" />
-              </div>
-              <div>
-                <h3 className="font-medium text-white">Current Streak</h3>
-                <p className="text-xs text-white/60">Keep the momentum!</p>
-              </div>
-            </div>
-            <div className="flex items-end justify-between mt-auto">
-              <div>
-                <span className="text-4xl font-bold text-orange-200">{currentStreak}</span>
-                <span className="text-lg text-white/60 ml-1">days</span>
-              </div>
-              <div className="flex gap-1">
-                {[...Array(7)].map((_, i) => (
-                  <motion.div 
-                    key={i}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: i * 0.1 }}
-                    className={`w-3 h-3 rounded-full ${i < currentStreak % 7 || currentStreak >= 7 ? "bg-orange-300" : "bg-white/30"}`}
-                  />
-                ))}
-              </div>
-            </div>
-            <p className="text-xs text-white/60 mt-4 truncate">{currentStreak > 0 ? `Best: ${currentStreak} days` : "Start tracking!"}</p>
-          </BentoCard>
-        </Link>
-
-        {/* Quick Action - Meditate */}
-        <Link href="/meditation">
-          <BentoCard glow="pink" backgroundImage={meditationBg} className="cursor-pointer h-full" data-testid="card-meditation">
-             <div className="h-full flex flex-col items-center justify-end gap-3 pt-8">
-                <div className="w-12 h-12 rounded-full bg-pink-500/30 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Brain className="w-6 h-6 text-pink-200" />
+      {/* Health Tracking Cards Carousel */}
+      <div className="mt-6 sm:mt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium text-white">Health Tracking</h3>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={scrollHealthPrev}
+              disabled={!canScrollHealthPrev}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4 text-white" />
+            </button>
+            <button 
+              onClick={scrollHealthNext}
+              disabled={!canScrollHealthNext}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight className="w-4 h-4 text-white" />
+            </button>
+          </div>
+        </div>
+        <div className="overflow-hidden" ref={healthCarouselRef}>
+          <div className="flex gap-4">
+            {/* Nutrition Card */}
+            <Link href="/diet" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="emerald" backgroundImage={nutritionBg} className="cursor-pointer h-[200px]" data-testid="card-diet">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-white/90 font-medium flex items-center gap-2">
+                    <Leaf className="w-4 h-4 text-green-300" /> Nutrition
+                  </h3>
+                  <span className="text-xs font-mono text-green-300 whitespace-nowrap">{todayCalories || 0} kcal</span>
                 </div>
-                <p className="font-medium text-white">Start Meditation</p>
-                <span className="text-xs text-white/70">15 min • Mindfulness</span>
-             </div>
-          </BentoCard>
-        </Link>
+                <div className="mt-auto">
+                  {dietLogs.length === 0 ? (
+                    <div className="text-center py-2">
+                      <Utensils className="w-6 h-6 text-green-300/50 mx-auto mb-1" />
+                      <p className="text-xs text-white/60">No meals logged</p>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-white/70">{dietLogs.length} meals logged</p>
+                  )}
+                </div>
+              </BentoCard>
+            </Link>
 
-        {/* Today's Activity */}
-        <Link href="/exercise">
-          <BentoCard glow="cyan" backgroundImage={activityBg} className="cursor-pointer h-full" data-testid="card-exercise">
-            <div className="flex justify-between items-start">
-              <h3 className="text-white/90 font-medium flex items-center gap-2">
-                <Zap className="w-4 h-4 text-cyan-300" /> Activity
-                <UITooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="w-3.5 h-3.5 text-white/50 hover:text-white/80 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-[200px]">
-                    <p className="text-xs">Aim for 150+ minutes of moderate activity weekly. Movement balances energy and supports mental clarity.</p>
-                  </TooltipContent>
-                </UITooltip>
-              </h3>
-              <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/30 text-cyan-200">Today</span>
-            </div>
-            <div className="mt-auto">
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-white">{todayExercise}</span>
-                <span className="text-lg text-white/70">min</span>
-              </div>
-              <div className="w-full h-2 bg-white/20 rounded-full mt-4 overflow-hidden">
-                <motion.div 
-                  className="h-full bg-gradient-to-r from-cyan-400 to-blue-400"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.min((todayExercise / 60) * 100, 100)}%` }}
-                />
-              </div>
-              <p className="text-xs text-white/70 mt-2">
-                {exerciseLogs.length > 0 ? `${exerciseLogs.length} workouts logged` : "Goal: 60 minutes"}
-              </p>
-            </div>
-          </BentoCard>
-        </Link>
+            {/* Streak Card */}
+            <Link href="/settings" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="orange" backgroundImage={achievementBg} className="cursor-pointer h-[200px]" data-testid="card-streak">
+                <div className="flex items-center gap-2 mb-2">
+                  <Flame className="w-5 h-5 text-orange-300" />
+                  <h3 className="font-medium text-white">Current Streak</h3>
+                </div>
+                <div className="flex items-end justify-between mt-auto">
+                  <div>
+                    <span className="text-3xl font-bold text-orange-200">{currentStreak}</span>
+                    <span className="text-sm text-white/60 ml-1">days</span>
+                  </div>
+                  <div className="flex gap-1">
+                    {[...Array(7)].map((_, i) => (
+                      <div key={i} className={`w-2 h-2 rounded-full ${i < currentStreak % 7 || currentStreak >= 7 ? "bg-orange-300" : "bg-white/30"}`} />
+                    ))}
+                  </div>
+                </div>
+              </BentoCard>
+            </Link>
 
-        {/* Heart Rate */}
-        <Dialog open={heartRateOpen} onOpenChange={setHeartRateOpen}>
-          <DialogTrigger asChild>
-            <div>
-              <BentoCard glow="pink" backgroundImage={heartRateBg} className="cursor-pointer h-full" data-testid="card-heart-rate">
+            {/* Activity Card */}
+            <Link href="/exercise" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="cyan" backgroundImage={activityBg} className="cursor-pointer h-[200px]" data-testid="card-exercise">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-white/90 font-medium flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-cyan-300" /> Activity
+                  </h3>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/30 text-cyan-200">Today</span>
+                </div>
+                <div className="mt-auto">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-bold text-white">{todayExercise}</span>
+                    <span className="text-sm text-white/70">min</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-white/20 rounded-full mt-2 overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-gradient-to-r from-cyan-400 to-blue-400"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min((todayExercise / 60) * 100, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              </BentoCard>
+            </Link>
+
+            {/* Sleep Card */}
+            <Link href="/sleep" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="violet" backgroundImage={sleepBg} className="cursor-pointer h-[200px]" data-testid="card-sleep">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-white/90 font-medium flex items-center gap-2">
+                    <Moon className="w-4 h-4 text-purple-300" /> Sleep
+                  </h3>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/30 text-purple-100">
+                    {latestSleep ? `${latestSleep.quality}/5` : "--"}
+                  </span>
+                </div>
+                <div className="mt-auto">
+                  <div className="flex items-baseline gap-1 text-white">
+                    <span className="text-2xl font-bold">{latestSleep?.hoursSlept ?? "--"}</span>
+                    <span className="text-sm opacity-70">h</span>
+                  </div>
+                  <p className="text-xs text-white/70 mt-1">
+                    {sleepLogs.length > 0 ? `${sleepLogs.length} nights logged` : "No sleep logged"}
+                  </p>
+                </div>
+              </BentoCard>
+            </Link>
+
+            {/* Meditation Card */}
+            <Link href="/meditation" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="pink" backgroundImage={meditationBg} className="cursor-pointer h-[200px]" data-testid="card-meditation">
+                <div className="h-full flex flex-col items-center justify-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-pink-500/30 backdrop-blur-sm flex items-center justify-center">
+                    <Brain className="w-5 h-5 text-pink-200" />
+                  </div>
+                  <p className="font-medium text-white text-sm">Start Meditation</p>
+                  <span className="text-xs text-white/70">15 min • Mindfulness</span>
+                </div>
+              </BentoCard>
+            </Link>
+
+            {/* Heart Rate Card */}
+            <div className="flex-none w-full sm:w-[calc(33.333%-11px)]" onClick={() => setHeartRateOpen(true)}>
+              <BentoCard glow="pink" backgroundImage={heartRateBg} className="cursor-pointer h-[200px]" data-testid="card-heart-rate">
                 <div className="flex justify-between items-start">
                   <h3 className="text-white/90 font-medium flex items-center gap-2">
                     <Heart className="w-4 h-4 text-rose-300" /> Heart Rate
-                    <UITooltip>
-                      <TooltipTrigger asChild>
-                        <HelpCircle className="w-3.5 h-3.5 text-white/50 hover:text-white/80 cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-[200px]">
-                        <p className="text-xs">Resting heart rate of 60-80 BPM is healthy. Lower rates often indicate good cardiovascular fitness.</p>
-                      </TooltipContent>
-                    </UITooltip>
                   </h3>
-                  <button className="p-1 rounded-full bg-rose-500/30 hover:bg-rose-500/40 transition-colors backdrop-blur-sm">
+                  <button className="p-1 rounded-full bg-rose-500/30">
                     <Plus className="w-3 h-3 text-rose-200" />
                   </button>
                 </div>
-                <div className="flex-1 flex items-center justify-center relative mt-4">
-                   <div className="relative z-10 text-center">
-                      <span className="text-4xl sm:text-5xl font-bold text-white drop-shadow-lg">
-                        {heartRateLogs[0]?.bpm || "--"}
-                      </span>
-                      <span className="text-xs sm:text-sm block text-rose-200 uppercase tracking-widest mt-1">BPM</span>
-                   </div>
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <span className="text-3xl font-bold text-white">{heartRateLogs[0]?.bpm || "--"}</span>
+                    <span className="text-xs block text-rose-200 uppercase mt-1">BPM</span>
+                  </div>
                 </div>
-                <p className="text-xs text-center text-white/70 mt-auto">
-                  {heartRateLogs.length > 0 ? `${heartRateLogs.length} readings logged` : "Tap to log"}
-                </p>
               </BentoCard>
             </div>
-          </DialogTrigger>
-          <DialogContent className="bg-background/95 backdrop-blur-xl border-rose-500/20 max-w-sm">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-rose-400" />
-                Log Heart Rate
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 mt-4">
-              <div>
-                <label className="text-sm text-muted-foreground mb-2 block">BPM (Beats per minute)</label>
-                <Input
-                  type="number"
-                  placeholder="e.g., 72"
-                  value={newBpm}
-                  onChange={(e) => setNewBpm(e.target.value)}
-                  min={30}
-                  max={220}
-                  className="text-2xl text-center font-bold"
-                  data-testid="input-heart-rate"
-                />
-              </div>
-              <div>
-                <label className="text-sm text-muted-foreground mb-2 block">Context</label>
-                <Select value={hrContext} onValueChange={setHrContext}>
-                  <SelectTrigger data-testid="select-hr-context">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="resting">Resting</SelectItem>
-                    <SelectItem value="morning">Morning</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="post-exercise">Post-Exercise</SelectItem>
-                    <SelectItem value="evening">Evening</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Tip: For resting heart rate, measure after sitting quietly for 5 minutes.
-              </p>
-              <Button
-                onClick={() => {
-                  if (newBpm && parseInt(newBpm) >= 30 && parseInt(newBpm) <= 220) {
-                    createHeartRateLog({
-                      userId: "",
-                      date: new Date().toISOString().split('T')[0],
-                      bpm: parseInt(newBpm),
-                      context: hrContext,
-                    });
-                    setNewBpm("");
-                    setHeartRateOpen(false);
-                  }
-                }}
-                disabled={isCreatingHR || !newBpm}
-                className="w-full bg-rose-500 hover:bg-rose-600"
-                data-testid="button-log-heart-rate"
-              >
-                {isCreatingHR ? "Saving..." : "Log Heart Rate"}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+          </div>
+        </div>
+      </div>
 
-        {/* Achievements Preview */}
-        <div className="sm:col-span-2">
-        <BentoCard colSpan={2} className="bg-gradient-to-r from-primary/5 to-cyan-500/5 h-full">
+      {/* Heart Rate Dialog */}
+      <Dialog open={heartRateOpen} onOpenChange={setHeartRateOpen}>
+        <DialogContent className="bg-background/95 backdrop-blur-xl border-rose-500/20 max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Heart className="w-5 h-5 text-rose-400" />
+              Log Heart Rate
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div>
+              <label className="text-sm text-muted-foreground mb-2 block">BPM (Beats per minute)</label>
+              <Input
+                type="number"
+                placeholder="e.g., 72"
+                value={newBpm}
+                onChange={(e) => setNewBpm(e.target.value)}
+                min={30}
+                max={220}
+                className="text-2xl text-center font-bold"
+                data-testid="input-heart-rate"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground mb-2 block">Context</label>
+              <Select value={hrContext} onValueChange={setHrContext}>
+                <SelectTrigger data-testid="select-hr-context">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="resting">Resting</SelectItem>
+                  <SelectItem value="morning">Morning</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="post-exercise">Post-Exercise</SelectItem>
+                  <SelectItem value="evening">Evening</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button
+              onClick={() => {
+                if (newBpm) {
+                  createHeartRateLog({
+                    date: new Date().toISOString().split('T')[0],
+                    bpm: parseInt(newBpm),
+                    context: hrContext,
+                    userId: "",
+                  });
+                  setNewBpm("");
+                  setHeartRateOpen(false);
+                }
+              }}
+              disabled={!newBpm || isCreatingHR}
+              className="w-full bg-rose-500 hover:bg-rose-600"
+              data-testid="button-save-heart-rate"
+            >
+              {isCreatingHR ? "Saving..." : "Save Reading"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Achievements Preview */}
+      <div className="mt-6 sm:mt-8">
+        <BentoCard colSpan={2} className="bg-gradient-to-r from-primary/5 to-cyan-500/5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-medium flex items-center gap-2">
               <Trophy className="w-5 h-5 text-primary" /> Recent Achievements
@@ -513,26 +490,25 @@ export default function Home() {
             ))}
           </div>
         </BentoCard>
-        </div>
+      </div>
 
-        {/* Personalized Insights */}
-        <div className="sm:col-span-2 lg:col-span-3">
-        <BentoCard colSpan={3} backgroundImage={insightsBg} className="border-primary/10 h-full">
+      {/* Personalized Insights */}
+      <div className="mt-6 sm:mt-8">
+        <BentoCard colSpan={3} backgroundImage={insightsBg} className="border-primary/10">
           <PersonalizedInsights 
             sleepAvg={sleepAverage} 
             exerciseMinutes={todayExercise || 0}
             dosha={profile?.doshaType?.split("-")[0] || "Pitta"}
           />
         </BentoCard>
-        </div>
+      </div>
 
-        {/* AI Wellness Coach */}
-        <div className="sm:col-span-2 lg:col-span-3">
-        <BentoCard colSpan={3} backgroundImage={aiCoachBg} className="p-0 overflow-hidden h-full">
+      {/* AI Wellness Coach */}
+      <div className="mt-6 sm:mt-8">
+        <BentoCard colSpan={3} backgroundImage={aiCoachBg} className="p-0 overflow-hidden">
           <AIWellnessCoach />
         </BentoCard>
-        </div>
-      </BentoGrid>
+      </div>
       </TooltipProvider>
     </Shell>
   );
