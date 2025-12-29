@@ -290,7 +290,7 @@ export default function Home() {
           <div className="overflow-hidden" ref={wellnessRef}>
             <div className="flex">
               {/* Dosha Balance */}
-              <Link href="/profile" className="flex-none w-full">
+              <Link href="/ayurveda" className="flex-none w-full">
                 <div className="flex flex-col items-center justify-center py-4 cursor-pointer group">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500/30 to-pink-500/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                     <User className="w-6 h-6 text-orange-300" />

@@ -85,6 +85,7 @@ const navGroups = [
     items: [
       { href: "/settings", icon: Settings, label: "Settings" },
       { href: "/business-plan", icon: FileText, label: "Business Plan" },
+      { href: "/white-paper", icon: Sparkles, label: "White Paper" },
     ]
   }
 ];
@@ -263,7 +264,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
            <div className="flex items-center gap-2 text-xs text-muted-foreground">
              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
              <span className="hidden sm:inline">VedaSolus</span>
-             <span className="font-mono opacity-50">v2.0</span>
+             <span className="font-mono opacity-50">v2.1</span>
            </div>
 
            <div className="flex items-center gap-2">

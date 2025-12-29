@@ -221,7 +221,7 @@ Both logos feature:
 - Configured Firebase Auth with dynamic config loading
 - Enhanced Practitioner Dashboard with Orbit Staff Management tabs
 - **Added Partner Portal** with pin-based authentication
-  - Jason PIN: 0424, Sidonie PIN: 4444
+  - Jason PIN: 0424, Sidonie PIN: 4444, Investor PIN: 777, Employee PIN: 5555
   - Full overview access (view-only for code/pricing)
   - Onboarding slideshow for new partners/employees
   - Partners button in footer navigation
@@ -231,3 +231,14 @@ Both logos feature:
   - Optional marketing opt-in checkbox with no-spam assurance
   - Stored in medical_disclaimers database table
   - Subscribers tab in Developer Dashboard to view/export emails
+
+### Version 2.1 (December 29, 2024) - Pre-Publish Sweep
+- **White Paper** page added with comprehensive platform documentation
+- **Wellness Hub carousel** on home page with Dosha Balance, Health Passport, Weekly Progress, Hydration, Today's Focus
+- **Health Tracking carousel** - 6 cards (Nutrition, Streak, Activity, Sleep, Meditation, Heart Rate) in horizontal scroll
+- Added investor (777) and employee (5555) PINs to Partner Portal
+- Updated roadmap phases to reflect Orbit Staffing integration completion
+- Version bumped to v2.1 across platform
+- Fixed broken /profile links (now redirects to Ayurveda page)
+- All LSP diagnostics resolved - zero TypeScript errors
+- Database connectivity verified and healthy

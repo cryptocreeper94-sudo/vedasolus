@@ -23,6 +23,7 @@ import Messages from "@/pages/Messages";
 import HealthRecords from "@/pages/HealthRecords";
 import BusinessPlan from "@/pages/BusinessPlan";
 import Partner from "@/pages/Partner";
+import WhitePaper from "@/pages/WhitePaper";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 
 function Router() {
@@ -47,6 +48,7 @@ function Router() {
       <Route path="/records" component={HealthRecords} />
       <Route path="/business-plan" component={BusinessPlan} />
       <Route path="/partner" component={Partner} />
+      <Route path="/white-paper" component={WhitePaper} />
       <Route component={NotFound} />
     </Switch>
   );
