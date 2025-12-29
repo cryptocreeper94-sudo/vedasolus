@@ -109,8 +109,8 @@ export default function Home() {
 
       <BentoGrid>
         {/* Main Health Score */}
-        <Link href="/passport">
-          <BentoCard colSpan={2} rowSpan={2} glow="emerald" backgroundImage={vitalityBg} className="cursor-pointer" data-testid="card-vitality">
+        <Link href="/passport" className="sm:col-span-2 row-span-2">
+          <BentoCard colSpan={2} rowSpan={2} glow="emerald" backgroundImage={vitalityBg} className="cursor-pointer h-full" data-testid="card-vitality">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-lg font-medium text-white/90 flex items-center gap-2">
@@ -450,7 +450,8 @@ export default function Home() {
         </Dialog>
 
         {/* Achievements Preview */}
-        <BentoCard colSpan={2} className="bg-gradient-to-r from-primary/5 to-cyan-500/5">
+        <div className="sm:col-span-2">
+        <BentoCard colSpan={2} className="bg-gradient-to-r from-primary/5 to-cyan-500/5 h-full">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-medium flex items-center gap-2">
               <Trophy className="w-5 h-5 text-primary" /> Recent Achievements
@@ -484,20 +485,25 @@ export default function Home() {
             ))}
           </div>
         </BentoCard>
+        </div>
 
         {/* Personalized Insights */}
-        <BentoCard colSpan={3} backgroundImage={insightsBg} className="border-primary/10">
+        <div className="sm:col-span-2 lg:col-span-3">
+        <BentoCard colSpan={3} backgroundImage={insightsBg} className="border-primary/10 h-full">
           <PersonalizedInsights 
             sleepAvg={sleepAverage} 
             exerciseMinutes={todayExercise || 0}
             dosha={profile?.doshaType?.split("-")[0] || "Pitta"}
           />
         </BentoCard>
+        </div>
 
         {/* AI Wellness Coach */}
-        <BentoCard colSpan={3} backgroundImage={aiCoachBg} className="p-0 overflow-hidden">
+        <div className="sm:col-span-2 lg:col-span-3">
+        <BentoCard colSpan={3} backgroundImage={aiCoachBg} className="p-0 overflow-hidden h-full">
           <AIWellnessCoach />
         </BentoCard>
+        </div>
       </BentoGrid>
       </TooltipProvider>
     </Shell>
