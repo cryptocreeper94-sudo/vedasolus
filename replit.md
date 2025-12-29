@@ -208,3 +208,8 @@ The application features:
   - Onboarding slideshow for new partners/employees
   - Partners button in footer navigation
   - Google authentication option via Firebase
+- **Medical Disclaimer with Email Collection**
+  - Requires name and email to acknowledge disclaimer
+  - Optional marketing opt-in checkbox with no-spam assurance
+  - Stored in medical_disclaimers database table
+  - Subscribers tab in Developer Dashboard to view/export emails
