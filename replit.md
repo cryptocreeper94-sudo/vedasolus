@@ -118,12 +118,39 @@ The application features:
 - **Endpoint**: `POST /api/wellness-chat` - Get AI wellness guidance with optional voice
 - **File**: `server/elevenlabs.ts` contains wellness coach logic
 
-### Firebase Auth (PENDING)
-- Missing secrets: VITE_FIREBASE_API_KEY, VITE_FIREBASE_APP_ID, VITE_FIREBASE_PROJECT_ID
-- Currently using Replit Auth as fallback
+### Firebase Auth (ACTIVE)
+- **Config**: Fetched dynamically from `/api/firebase-config` endpoint
+- **Uses**: GOOGLE_API_KEY (existing secret) for authentication
+- **Project**: darkwave-auth.firebaseapp.com
+- **File**: `client/src/lib/firebase.ts` contains async initialization
 
-### Orbit Staffing (FUTURE)
-- Integration for payroll system - details TBD
+### Orbit Staffing (ACTIVE)
+- **Status**: Fully integrated with HMAC authentication
+- **App ID**: dw_app_darkwavehealth
+- **Base URL**: https://orbitstaffing.replit.app
+- **Secret**: DARKWAVEHEALTH_WEBHOOK_SECRET
+- **File**: `server/orbitClient.ts` contains all Orbit API functions
+
+**Financial Hub Endpoints:**
+- `POST /api/orbit/sync/revenue` - Sync subscription payments for royalty tracking
+- Automatic sync via `POST /api/webhooks/stripe` webhook handler
+
+**Ecosystem Hub Endpoints:**
+- `POST /api/orbit/sync/doctors` - Sync practitioners/physicians
+- `POST /api/orbit/sync/timesheets` - Sync hours worked
+- `POST /api/orbit/sync/contractors` - Sync 1099 contractors
+- `POST /api/orbit/sync/employees` - Sync W-2 employees
+- `POST /api/orbit/sync/certifications` - Sync medical licenses
+- `GET /api/orbit/status` - Check connection status
+
+**Product Codes:**
+- darkwavehealth_starter_monthly
+- darkwavehealth_pro_monthly
+- darkwavehealth_enterprise_monthly
+- darkwavehealth_franchise_fee
+- darkwavehealth_franchise_royalty
+
+**Royalty Split**: 50/50 between Jason Andrews and Sidonie Summers
 
 ### Dark Wave Smart Chain (FUTURE)
 - Blockchain integration for health credentials and NFT verification - details TBD
@@ -159,3 +186,11 @@ The application features:
 - Created Business Plan page with market analysis and projections
 - Updated notification preferences system
 - Added personalized insights based on dosha type and time of day
+- **Integrated Orbit Staffing** for practitioner payroll/invoicing
+  - Staff management (1099, W-2, contractors)
+  - Timesheet tracking with Orbit sync
+  - Payroll processing via Orbit
+  - Certification/license tracking
+  - Revenue sync to Financial Hub for royalty calculation
+- Configured Firebase Auth with dynamic config loading
+- Enhanced Practitioner Dashboard with Orbit Staff Management tabs
