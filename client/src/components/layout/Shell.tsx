@@ -155,7 +155,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Right: User & Hamburger Menu */}
-        <div className="flex items-center gap-3 mt-8 -mr-6">
+        <div className="flex items-center gap-3 mt-8 -mr-2 sm:-mr-6">
           {isAuthenticated ? (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
               <UserCircle className="w-4 h-4 text-primary" />
