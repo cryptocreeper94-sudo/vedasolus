@@ -90,7 +90,7 @@ export default function Home() {
             <h2 className="text-muted-foreground font-medium mb-1 tracking-wider uppercase text-[10px] sm:text-xs">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </h2>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif font-medium text-foreground truncate">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-serif font-medium text-foreground leading-relaxed pb-1">
               {greeting}, <span className="text-cyan-400 italic">{displayName}</span>
             </h1>
           </div>
