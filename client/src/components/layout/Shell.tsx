@@ -75,6 +75,14 @@ const navGroups = [
       { href: "/practitioner", icon: Briefcase, label: "Practice Hub" },
       { href: "/developer", icon: Code, label: "Developer Core" },
       { href: "/admin", icon: ShieldAlert, label: "Admin Console" },
+      { href: "/partner", icon: Handshake, label: "Partner Portal" },
+    ]
+  },
+  {
+    title: "Settings",
+    items: [
+      { href: "/settings", icon: Settings, label: "Settings" },
+      { href: "/business-plan", icon: FileText, label: "Business Plan" },
     ]
   }
 ];
