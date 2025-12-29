@@ -31,8 +31,6 @@ import { useQuery } from "@tanstack/react-query";
 const PARTNER_PINS: Record<string, { name: string; role: string }> = {
   "0424": { name: "Jason", role: "Founder/Developer" },
   "4444": { name: "Sidonie", role: "Partner/Co-Owner" },
-  "777": { name: "Investor", role: "Strategic Advisor" },
-  "5555": { name: "Employee", role: "Team Member" },
 };
 
 const iconMap: Record<string, any> = {
