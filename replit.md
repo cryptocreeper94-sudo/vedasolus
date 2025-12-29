@@ -1,8 +1,8 @@
-# Zenith - Holistic Health Tracker
+# VedaSolus - Holistic Health Platform
 
 ## Overview
 
-Zenith is a holistic health tracking application that blends Eastern wisdom (Ayurveda, Traditional Chinese Medicine) with Western science. The platform enables users to track sleep, diet, and exercise while exploring ancient health philosophies through a modern, visually rich interface.
+VedaSolus is a holistic health tracking application that blends Eastern wisdom (Ayurveda, Traditional Chinese Medicine) with Western science. The platform enables users to track sleep, diet, and exercise while exploring ancient health philosophies through a modern, visually rich interface.
 
 The application features:
 - Personal health tracking (sleep, diet, exercise logs)

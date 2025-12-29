@@ -38,7 +38,7 @@ export function DisclaimerModal() {
           <AlertDialogDescription asChild className="text-center space-y-4 pt-2 text-muted-foreground">
             <div>
               <p>
-                The content provided in <strong>Zenith</strong>, including text, graphics, images, and other materials, is for <strong>informational and educational purposes only</strong>.
+                The content provided in <strong>VedaSolus</strong>, including text, graphics, images, and other materials, is for <strong>informational and educational purposes only</strong>.
               </p>
               <p className="font-medium text-foreground">
                 This application does not provide medical advice, diagnosis, or treatment.

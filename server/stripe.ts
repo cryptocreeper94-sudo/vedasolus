@@ -114,7 +114,7 @@ export async function createCheckoutSession(
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `Zenith ${tierConfig.name}`,
+              name: `VedaSolus ${tierConfig.name}`,
               description: tierConfig.features.slice(0, 3).join(', '),
             },
             unit_amount: unitAmount,

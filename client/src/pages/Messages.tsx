@@ -45,7 +45,7 @@ const conversations: Conversation[] = [
   },
   {
     id: "3",
-    name: "Zenith Support",
+    name: "VedaSolus Support",
     lastMessage: "Thank you for contacting support",
     time: "Dec 26",
     unread: 0,

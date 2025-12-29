@@ -89,7 +89,7 @@ export default function BusinessPlan() {
           </h2>
           <div className="space-y-4 text-sm text-slate-300 leading-relaxed">
             <p>
-              <strong className="text-white">Zenith</strong> is a holistic health platform that bridges ancient Eastern wisdom 
+              <strong className="text-white">VedaSolus</strong> is a holistic health platform that bridges ancient Eastern wisdom 
               (Ayurveda, Traditional Chinese Medicine) with modern Western science, empowering users to achieve 
               optimal wellness through personalized, AI-driven guidance.
             </p>

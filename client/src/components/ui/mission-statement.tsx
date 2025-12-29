@@ -79,7 +79,7 @@ export function MissionStatement({ onClose }: MissionStatementProps) {
                   <p className="text-slate-300 text-sm leading-relaxed">
                     Healthcare is fragmented. Your medical records are scattered across systems 
                     you can't access. Ancient healing traditions are dismissed. Modern wellness 
-                    apps ignore your unique constitution. Zenith changes everything.
+                    apps ignore your unique constitution. VedaSolus changes everything.
                   </p>
                 </div>
               </div>

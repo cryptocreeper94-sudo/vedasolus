@@ -17,7 +17,7 @@ export function AIWellnessCoach() {
     {
       id: "welcome",
       role: "assistant",
-      content: "Namaste! I'm Zenith, your holistic wellness guide. I blend ancient Eastern wisdom with modern science to support your health journey. How can I help you today?",
+      content: "Namaste! I'm VedaSolus, your holistic wellness guide. I blend ancient Eastern wisdom with modern science to support your health journey. How can I help you today?",
       timestamp: new Date(),
     },
   ]);

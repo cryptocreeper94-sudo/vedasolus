@@ -8,9 +8,9 @@ export interface OnboardingSlide {
 
 export const partnerOnboardingSlides: OnboardingSlide[] = [
   {
-    title: "Welcome to Zenith",
+    title: "Welcome to VedaSolus",
     subtitle: "Your Partner Portal",
-    content: "Zenith is a revolutionary holistic health platform that bridges ancient Eastern wisdom with modern Western science. As a partner, you have full visibility into our growing ecosystem.",
+    content: "VedaSolus is a revolutionary holistic health platform that bridges ancient Eastern wisdom with modern Western science. As a partner, you have full visibility into our growing ecosystem.",
     iconName: "Sparkles",
     color: "cyan",
   },
@@ -54,8 +54,8 @@ export const staffOnboardingSlides: OnboardingSlide[] = [
   },
   {
     title: "Our Platform",
-    subtitle: "Zenith Health",
-    content: "Zenith combines Ayurvedic dosha analysis, Traditional Chinese Medicine principles, and Western health tracking into one comprehensive platform for users seeking genuine wellness transformation.",
+    subtitle: "VedaSolus",
+    content: "VedaSolus combines Ayurvedic dosha analysis, Traditional Chinese Medicine principles, and Western health tracking into one comprehensive platform for users seeking genuine wellness transformation.",
     iconName: "Heart",
     color: "pink",
   },
