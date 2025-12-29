@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
-import { ShieldAlert, Loader2, Mail, User } from "lucide-react";
+import { ShieldAlert, Loader2, Mail, User, X } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 
 export function DisclaimerModal() {
@@ -71,6 +71,17 @@ export function DisclaimerModal() {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="bg-background/95 backdrop-blur-xl border-white/10 max-w-xl max-h-[90vh] overflow-y-auto">
+        <button
+          onClick={() => {
+            localStorage.setItem("medical-disclaimer-accepted", "skipped");
+            setOpen(false);
+          }}
+          className="absolute right-4 top-4 p-1.5 rounded-full hover:bg-white/10 transition-colors text-muted-foreground hover:text-foreground"
+          data-testid="button-disclaimer-close"
+          aria-label="Close disclaimer"
+        >
+          <X className="w-5 h-5" />
+        </button>
         <AlertDialogHeader>
           <div className="mx-auto p-3 bg-pink-500/20 rounded-full mb-4">
             <ShieldAlert className="w-8 h-8 text-pink-500" />
