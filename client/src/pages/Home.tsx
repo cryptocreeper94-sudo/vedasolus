@@ -27,7 +27,6 @@ import heartRateBg from "@assets/generated_images/holographic_heart_pulse.png";
 import achievementBg from "@assets/generated_images/achievement_milestone_pathway.png";
 import meditationBg from "@assets/generated_images/bioluminescent_meditation_cave.png";
 import insightsBg from "@assets/generated_images/ai_ayurvedic_insights_visualization.png";
-import aiCoachBg from "@assets/generated_images/holographic_ai_wellness_mentor.png";
 
 
 const dailyQuotes = [
@@ -615,12 +614,25 @@ export default function Home() {
         </BentoCard>
       </div>
 
-      {/* AI Wellness Coach */}
-      <div className="mt-6 sm:mt-8">
-        <BentoCard colSpan={3} backgroundImage={aiCoachBg} className="p-0 overflow-hidden">
+      {/* AI Wellness Coach Floating Button */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-cyan-500 to-emerald-500 shadow-lg shadow-cyan-500/30 flex items-center justify-center hover:shadow-cyan-500/50 transition-shadow"
+            data-testid="button-ai-coach"
+          >
+            <Brain className="w-7 h-7 text-white" />
+          </motion.button>
+        </DialogTrigger>
+        <DialogContent className="bg-black/95 backdrop-blur-2xl border-cyan-500/20 max-w-2xl max-h-[80vh] overflow-hidden p-0">
           <AIWellnessCoach />
-        </BentoCard>
-      </div>
+        </DialogContent>
+      </Dialog>
       </TooltipProvider>
     </Shell>
   );
