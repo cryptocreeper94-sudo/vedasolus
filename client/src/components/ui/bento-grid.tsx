@@ -28,6 +28,7 @@ export const BentoCard = ({
   rowSpan = 1,
   delay = 0,
   glow = "cyan",
+  backgroundImage,
 }: {
   className?: string;
   children: React.ReactNode;
@@ -35,6 +36,7 @@ export const BentoCard = ({
   rowSpan?: number;
   delay?: number;
   glow?: "cyan" | "pink" | "emerald" | "violet" | "orange";
+  backgroundImage?: string;
 }) => {
   const glowColors = {
     cyan: "from-cyan-500/20 to-cyan-500/5",
@@ -60,30 +62,48 @@ export const BentoCard = ({
       whileHover={{ y: -3, scale: 1.01 }}
       className={cn(
         "group relative overflow-hidden rounded-2xl sm:rounded-3xl flex flex-col justify-between p-4 sm:p-5 md:p-6",
-        "bg-white/[0.03] backdrop-blur-xl border border-white/[0.08]",
+        backgroundImage ? "bg-black" : "bg-white/[0.03] backdrop-blur-xl",
+        "border border-white/[0.08]",
         "shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]",
-        "hover:border-white/[0.15] hover:bg-white/[0.05] transition-all duration-300",
+        "hover:border-white/[0.15] transition-all duration-300",
+        !backgroundImage && "hover:bg-white/[0.05]",
         colSpan === 2 ? "sm:col-span-2" : "col-span-1",
         colSpan === 3 ? "sm:col-span-2 lg:col-span-3" : "",
         rowSpan === 2 ? "row-span-2" : "row-span-1",
         className
       )}
     >
-      <div className={cn(
-        "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500",
-        glowColors[glow]
-      )} />
+      {backgroundImage && (
+        <>
+          <img
+            src={backgroundImage}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/40" />
+        </>
+      )}
       
-      <div className={cn(
-        "absolute -right-16 -top-16 w-32 h-32 rounded-full blur-[60px] opacity-40 group-hover:opacity-60 transition-all duration-500",
-        glowAccent[glow]
-      )} />
-      <div className={cn(
-        "absolute -left-16 -bottom-16 w-32 h-32 rounded-full blur-[60px] opacity-20 group-hover:opacity-40 transition-all duration-500",
-        glowAccent[glow]
-      )} />
-      
-      <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.8),transparent_70%)]" />
+      {!backgroundImage && (
+        <>
+          <div className={cn(
+            "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500",
+            glowColors[glow]
+          )} />
+          
+          <div className={cn(
+            "absolute -right-16 -top-16 w-32 h-32 rounded-full blur-[60px] opacity-40 group-hover:opacity-60 transition-all duration-500",
+            glowAccent[glow]
+          )} />
+          <div className={cn(
+            "absolute -left-16 -bottom-16 w-32 h-32 rounded-full blur-[60px] opacity-20 group-hover:opacity-40 transition-all duration-500",
+            glowAccent[glow]
+          )} />
+          
+          <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.8),transparent_70%)]" />
+        </>
+      )}
       
       <div className="relative z-10 h-full flex flex-col min-w-0">
         {children}
