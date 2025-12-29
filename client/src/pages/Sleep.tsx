@@ -37,11 +37,11 @@ export default function Sleep() {
 
   const averageSleep = sleepLogs.length > 0 
     ? (sleepLogs.reduce((sum, log) => sum + (log.hoursSlept || 0), 0) / sleepLogs.length).toFixed(1)
-    : "7.5";
+    : "--";
 
   const averageQuality = sleepLogs.length > 0
     ? Math.round(sleepLogs.reduce((sum, log) => sum + (log.quality || 0), 0) / sleepLogs.length)
-    : 4;
+    : 0;
 
   const weeklyData = sleepLogs.slice(0, 7).reverse().map((log, i) => ({
     day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(log.date).getDay()],
@@ -107,42 +107,48 @@ export default function Sleep() {
             </div>
           </div>
           <div className="text-xs text-muted-foreground">
-            Based on {sleepLogs.length || "sample"} nights
+            {sleepLogs.length > 0 ? `Based on ${sleepLogs.length} nights` : "No sleep data yet"}
           </div>
         </BentoCard>
 
         {/* Sleep Stages Summary */}
         <BentoCard>
            <h3 className="font-medium mb-4">Sleep Architecture</h3>
-           <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-purple-300">Deep Sleep</span>
-                  <span>1h 45m</span>
+           {sleepLogs.length > 0 ? (
+             <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-purple-300">Deep Sleep</span>
+                    <span>~{Math.round((averageSleep !== "--" ? parseFloat(averageSleep) : 0) * 0.2 * 10) / 10}h</span>
+                  </div>
+                  <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                     <div className="h-full bg-purple-500 w-[20%]" />
+                  </div>
                 </div>
-                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                   <div className="h-full bg-purple-500 w-[25%]" />
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-indigo-300">REM</span>
+                    <span>~{Math.round((averageSleep !== "--" ? parseFloat(averageSleep) : 0) * 0.25 * 10) / 10}h</span>
+                  </div>
+                  <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                     <div className="h-full bg-indigo-500 w-[25%]" />
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-indigo-300">REM</span>
-                  <span>2h 10m</span>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-blue-300">Light</span>
+                    <span>~{Math.round((averageSleep !== "--" ? parseFloat(averageSleep) : 0) * 0.55 * 10) / 10}h</span>
+                  </div>
+                  <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                     <div className="h-full bg-blue-500 w-[55%]" />
+                  </div>
                 </div>
-                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                   <div className="h-full bg-indigo-500 w-[35%]" />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-blue-300">Light</span>
-                  <span>4h 05m</span>
-                </div>
-                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                   <div className="h-full bg-blue-500 w-[40%]" />
-                </div>
-              </div>
-           </div>
+             </div>
+           ) : (
+             <div className="text-center py-4">
+               <p className="text-sm text-muted-foreground">Log sleep to see your sleep architecture</p>
+             </div>
+           )}
         </BentoCard>
 
         {/* Recent Sleep Logs */}

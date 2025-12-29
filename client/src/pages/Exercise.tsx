@@ -7,15 +7,6 @@ import { ExerciseEntryDialog } from "@/components/ui/health-entry-dialogs";
 import { useExerciseTracking } from "@/hooks/use-health-tracking";
 import { useAuth } from "@/hooks/use-auth";
 
-const defaultActivityData = [
-  { name: "Mon", steps: 6000, active: 45 },
-  { name: "Tue", steps: 8500, active: 60 },
-  { name: "Wed", steps: 7000, active: 50 },
-  { name: "Thu", steps: 10000, active: 80 },
-  { name: "Fri", steps: 5000, active: 30 },
-  { name: "Sat", steps: 12000, active: 120 },
-  { name: "Sun", steps: 9000, active: 75 },
-];
 
 export default function Exercise() {
   const { isAuthenticated } = useAuth();
@@ -43,13 +34,18 @@ export default function Exercise() {
       return sum + ((log.durationMinutes || 0) * intensity);
     }, 0);
 
-  const weeklyData = exerciseLogs.length > 0 
-    ? exerciseLogs.slice(0, 7).reverse().map(log => ({
-        name: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(log.date).getDay()],
-        active: log.durationMinutes || 0,
-        steps: Math.round((log.durationMinutes || 0) * 100)
-      }))
-    : defaultActivityData;
+  const weeklyData = (() => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const today = new Date();
+    return [...Array(7)].map((_, i) => {
+      const d = new Date(today);
+      d.setDate(today.getDate() - (6 - i));
+      const dateStr = d.toISOString().split('T')[0];
+      const dayLogs = exerciseLogs.filter(l => l.date === dateStr);
+      const active = dayLogs.reduce((sum, l) => sum + (l.durationMinutes || 0), 0);
+      return { name: days[d.getDay()], active, steps: active * 100 };
+    });
+  })();
 
   const recentWorkouts = exerciseLogs.slice(0, 3).map(log => ({
     name: log.activityType?.replace(/^\w/, c => c.toUpperCase()) || "Workout",
@@ -58,13 +54,7 @@ export default function Exercise() {
     date: new Date(log.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
   }));
 
-  const defaultWorkouts = [
-    { name: "Morning Vinyasa", time: "45 min", intensity: "Moderate", date: "Today, 7:00 AM" },
-    { name: "HIIT Cardio", time: "20 min", intensity: "High", date: "Yesterday" },
-    { name: "Evening Stretch", time: "15 min", intensity: "Low", date: "Yesterday" },
-  ];
-
-  const workoutsToShow = recentWorkouts.length > 0 ? recentWorkouts : defaultWorkouts;
+  const workoutsToShow = recentWorkouts;
 
   return (
     <Shell>
@@ -117,14 +107,14 @@ export default function Exercise() {
              </div>
              <div>
                <p className="text-sm text-muted-foreground">Active Today</p>
-               <p className="text-2xl font-bold">{totalMinutesToday || 45} <span className="text-sm font-normal text-muted-foreground">min</span></p>
+               <p className="text-2xl font-bold">{totalMinutesToday} <span className="text-sm font-normal text-muted-foreground">min</span></p>
              </div>
           </div>
           <div className="h-1 bg-white/10 rounded-full overflow-hidden">
             <motion.div 
               className="h-full bg-gradient-to-r from-cyan-500 to-blue-500"
               initial={{ width: 0 }}
-              animate={{ width: `${Math.min((totalMinutesToday || 45) / 60 * 100, 100)}%` }}
+              animate={{ width: `${Math.min(totalMinutesToday / 60 * 100, 100)}%` }}
             />
           </div>
           <p className="text-xs text-muted-foreground mt-2">Goal: 60 minutes</p>
@@ -138,7 +128,7 @@ export default function Exercise() {
              </div>
              <div>
                <p className="text-sm text-muted-foreground">Calories Burned</p>
-               <p className="text-2xl font-bold">{caloriesBurned || 482} <span className="text-sm font-normal text-muted-foreground">kcal</span></p>
+               <p className="text-2xl font-bold">{caloriesBurned} <span className="text-sm font-normal text-muted-foreground">kcal</span></p>
              </div>
           </div>
           <div className="space-y-3">
@@ -151,16 +141,9 @@ export default function Exercise() {
                </div>
              ))}
              {exerciseLogs.length === 0 && (
-               <>
-                 <div className="bg-white/5 p-3 rounded-xl flex justify-between items-center">
-                    <span className="text-sm">Walking</span>
-                    <span className="text-sm font-mono text-orange-300">124 kcal</span>
-                 </div>
-                 <div className="bg-white/5 p-3 rounded-xl flex justify-between items-center">
-                    <span className="text-sm">Yoga Flow</span>
-                    <span className="text-sm font-mono text-orange-300">210 kcal</span>
-                 </div>
-               </>
+               <div className="text-center py-4">
+                 <p className="text-sm text-muted-foreground">No activity logged yet</p>
+               </div>
              )}
           </div>
         </BentoCard>
@@ -185,31 +168,39 @@ export default function Exercise() {
            <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
              <Calendar className="w-5 h-5 text-cyan-400" /> Recent Sessions
            </h3>
-           <div className="grid md:grid-cols-3 gap-4">
-              {workoutsToShow.map((workout, i) => (
-                <motion.div 
-                  key={i} 
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer border border-white/5 hover:border-white/10"
-                >
-                   <div className="flex justify-between items-start mb-2">
-                     <span className="font-medium">{workout.name}</span>
-                     <Activity className="w-4 h-4 text-muted-foreground" />
-                   </div>
-                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                     <Timer className="w-3 h-3" /> {workout.time}
-                   </div>
-                   <div className="flex justify-between items-center mt-auto">
-                     <span className={`text-xs px-2 py-1 rounded-full ${
-                       workout.intensity === 'High' ? 'bg-red-500/20 text-red-300' :
-                       workout.intensity === 'Moderate' ? 'bg-yellow-500/20 text-yellow-300' :
-                       'bg-green-500/20 text-green-300'
-                     }`}>{workout.intensity}</span>
-                     <span className="text-xs opacity-50">{workout.date}</span>
-                   </div>
-                </motion.div>
-              ))}
-           </div>
+           {workoutsToShow.length > 0 ? (
+             <div className="grid md:grid-cols-3 gap-4">
+                {workoutsToShow.map((workout, i) => (
+                  <motion.div 
+                    key={i} 
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer border border-white/5 hover:border-white/10"
+                  >
+                     <div className="flex justify-between items-start mb-2">
+                       <span className="font-medium">{workout.name}</span>
+                       <Activity className="w-4 h-4 text-muted-foreground" />
+                     </div>
+                     <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                       <Timer className="w-3 h-3" /> {workout.time}
+                     </div>
+                     <div className="flex justify-between items-center mt-auto">
+                       <span className={`text-xs px-2 py-1 rounded-full ${
+                         workout.intensity === 'High' ? 'bg-red-500/20 text-red-300' :
+                         workout.intensity === 'Moderate' ? 'bg-yellow-500/20 text-yellow-300' :
+                         'bg-green-500/20 text-green-300'
+                       }`}>{workout.intensity}</span>
+                       <span className="text-xs opacity-50">{workout.date}</span>
+                     </div>
+                  </motion.div>
+                ))}
+             </div>
+           ) : (
+             <div className="text-center py-8">
+               <Activity className="w-8 h-8 text-muted-foreground/50 mx-auto mb-2" />
+               <p className="text-muted-foreground">No workouts logged yet</p>
+               <p className="text-sm text-muted-foreground/60">Start logging to track your progress</p>
+             </div>
+           )}
         </BentoCard>
       </BentoGrid>
     </Shell>

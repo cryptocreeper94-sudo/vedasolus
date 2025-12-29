@@ -28,15 +28,6 @@ import meditationBg from "@assets/generated_images/bioluminescent_meditation_cav
 import insightsBg from "@assets/generated_images/ai_ayurvedic_insights_visualization.png";
 import aiCoachBg from "@assets/generated_images/holographic_ai_wellness_mentor.png";
 
-const data = [
-  { name: "Mon", value: 4000 },
-  { name: "Tue", value: 3000 },
-  { name: "Wed", value: 2000 },
-  { name: "Thu", value: 2780 },
-  { name: "Fri", value: 1890 },
-  { name: "Sat", value: 2390 },
-  { name: "Sun", value: 3490 },
-];
 
 const dailyQuotes = [
   { text: "Tension is who you think you should be. Relaxation is who you are.", source: "Chinese Proverb" },
@@ -70,12 +61,66 @@ export default function Home() {
     .filter(l => l.date === new Date().toISOString().split('T')[0])
     .reduce((sum, l) => sum + (l.durationMinutes || 0), 0);
 
-  const currentStreak = 7;
-  const vitalityScore = 92;
+  // Calculate streak from consecutive days with health logs
+  const calculateStreak = () => {
+    const today = new Date();
+    let streak = 0;
+    for (let i = 0; i < 365; i++) {
+      const checkDate = new Date(today);
+      checkDate.setDate(today.getDate() - i);
+      const dateStr = checkDate.toISOString().split('T')[0];
+      const hasLog = 
+        sleepLogs.some(l => l.date === dateStr) ||
+        dietLogs.some(l => l.date === dateStr) ||
+        exerciseLogs.some(l => l.date === dateStr);
+      if (hasLog) streak++;
+      else if (i > 0) break;
+    }
+    return streak;
+  };
+  const currentStreak = calculateStreak();
+  
+  // Calculate vitality score based on actual health metrics
+  const calculateVitalityScore = () => {
+    let score = 0;
+    let factors = 0;
+    if (sleepLogs.length > 0) {
+      const avgSleep = sleepLogs.slice(0, 7).reduce((sum, l) => sum + (l.hoursSlept || 0), 0) / Math.min(sleepLogs.length, 7);
+      score += Math.min((avgSleep / 8) * 100, 100);
+      factors++;
+    }
+    if (todayExercise > 0) {
+      score += Math.min((todayExercise / 60) * 100, 100);
+      factors++;
+    }
+    if (todayCalories > 0) {
+      score += Math.min((todayCalories / 2000) * 100, 100);
+      factors++;
+    }
+    return factors > 0 ? Math.round(score / factors) : 0;
+  };
+  const vitalityScore = calculateVitalityScore();
   
   const sleepAverage = sleepLogs.length > 0 
     ? sleepLogs.reduce((sum, l) => sum + (l.hoursSlept || 0), 0) / sleepLogs.length 
     : undefined;
+
+  // Generate chart data from actual logs
+  const chartData = (() => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const today = new Date();
+    return [...Array(7)].map((_, i) => {
+      const d = new Date(today);
+      d.setDate(today.getDate() - (6 - i));
+      const dateStr = d.toISOString().split('T')[0];
+      const dayLogs = [
+        ...sleepLogs.filter(l => l.date === dateStr),
+        ...dietLogs.filter(l => l.date === dateStr),
+        ...exerciseLogs.filter(l => l.date === dateStr)
+      ];
+      return { name: days[d.getDay()], value: dayLogs.length * 1000 };
+    });
+  })();
 
   return (
     <Shell>
@@ -99,10 +144,14 @@ export default function Home() {
               <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-400" />
               <span className="text-xs sm:text-sm font-bold text-orange-300">{currentStreak}d</span>
             </div>
-            <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-sm font-medium text-emerald-300">Optimal</span>
-            </div>
+            {vitalityScore > 0 && (
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10">
+                <div className={`w-2 h-2 rounded-full ${vitalityScore >= 70 ? 'bg-emerald-500' : vitalityScore >= 40 ? 'bg-yellow-500' : 'bg-red-500'} animate-pulse`} />
+                <span className={`text-sm font-medium ${vitalityScore >= 70 ? 'text-emerald-300' : vitalityScore >= 40 ? 'text-yellow-300' : 'text-red-300'}`}>
+                  {vitalityScore >= 70 ? 'Optimal' : vitalityScore >= 40 ? 'Moderate' : 'Low'}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </motion.div>
@@ -127,7 +176,7 @@ export default function Home() {
             
             <div className="h-[200px] w-full mt-auto -mb-6 -mx-6">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data}>
+                <AreaChart data={chartData}>
                   <defs>
                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.5}/>
@@ -187,20 +236,20 @@ export default function Home() {
             </div>
             <div className="mt-auto">
               <div className="flex items-baseline gap-1 text-white">
-                <span className="text-3xl font-bold">{latestSleep?.hoursSlept || 7}</span>
+                <span className="text-3xl font-bold">{latestSleep?.hoursSlept ?? "--"}</span>
                 <span className="text-lg opacity-70">h</span>
-                <span className="text-3xl font-bold ml-2">{Math.round(((latestSleep?.hoursSlept || 7.7) % 1) * 60)}</span>
+                <span className="text-3xl font-bold ml-2">{latestSleep ? Math.round(((latestSleep.hoursSlept || 0) % 1) * 60) : "--"}</span>
                 <span className="text-lg opacity-70">m</span>
               </div>
               <div className="w-full h-2 bg-white/20 rounded-full mt-4 overflow-hidden backdrop-blur-sm">
                 <motion.div 
                   className="h-full bg-gradient-to-r from-purple-400 to-indigo-400"
                   initial={{ width: 0 }}
-                  animate={{ width: `${((latestSleep?.hoursSlept || 7.7) / 9) * 100}%` }}
+                  animate={{ width: `${((latestSleep?.hoursSlept || 0) / 9) * 100}%` }}
                 />
               </div>
               <p className="text-xs text-white/70 mt-2">
-                {sleepLogs.length > 0 ? `${sleepLogs.length} nights logged` : "Rem Cycle: 23% (High)"}
+                {sleepLogs.length > 0 ? `${sleepLogs.length} nights logged` : "No sleep logged yet"}
               </p>
             </div>
           </BentoCard>
@@ -221,7 +270,7 @@ export default function Home() {
                   </TooltipContent>
                 </UITooltip>
               </h3>
-              <span className="text-sm font-mono text-green-300">{todayCalories || 860} kcal</span>
+              <span className="text-sm font-mono text-green-300">{todayCalories || 0} kcal</span>
             </div>
             <div className="space-y-2 mt-auto">
                {dietLogs.slice(0, 2).map((log, i) => (
@@ -239,32 +288,11 @@ export default function Home() {
                  </div>
                ))}
                {dietLogs.length === 0 && (
-                 <>
-                   <div className="flex justify-between items-center p-2 rounded-lg bg-black/40 backdrop-blur-md">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-orange-500/30 flex items-center justify-center">
-                          <Sun className="w-4 h-4 text-orange-300" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-white">Breakfast</p>
-                          <p className="text-xs text-white/60">Oatmeal & Berries</p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-mono text-green-300">320 kcal</span>
-                   </div>
-                   <div className="flex justify-between items-center p-2 rounded-lg bg-black/40 backdrop-blur-md">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-blue-500/30 flex items-center justify-center">
-                          <Utensils className="w-4 h-4 text-blue-300" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-white">Lunch</p>
-                          <p className="text-xs text-white/60">Logged 12:30 PM</p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-mono text-green-300">540 kcal</span>
-                   </div>
-                 </>
+                 <div className="flex flex-col items-center justify-center py-4 text-center">
+                   <Utensils className="w-8 h-8 text-green-300/50 mb-2" />
+                   <p className="text-sm text-white/60">No meals logged today</p>
+                   <p className="text-xs text-white/40">Tap to log your first meal</p>
+                 </div>
                )}
             </div>
           </BentoCard>
@@ -299,7 +327,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-white/60 mt-4">Best: 14 days</p>
+            <p className="text-xs text-white/60 mt-4">{currentStreak > 0 ? `Current best: ${currentStreak} days` : "Start tracking to build your streak!"}</p>
           </BentoCard>
         </Link>
 
@@ -335,14 +363,14 @@ export default function Home() {
             </div>
             <div className="mt-auto">
               <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-white">{todayExercise || 45}</span>
+                <span className="text-3xl font-bold text-white">{todayExercise}</span>
                 <span className="text-lg text-white/70">min</span>
               </div>
               <div className="w-full h-2 bg-white/20 rounded-full mt-4 overflow-hidden">
                 <motion.div 
                   className="h-full bg-gradient-to-r from-cyan-400 to-blue-400"
                   initial={{ width: 0 }}
-                  animate={{ width: `${Math.min(((todayExercise || 45) / 60) * 100, 100)}%` }}
+                  animate={{ width: `${Math.min((todayExercise / 60) * 100, 100)}%` }}
                 />
               </div>
               <p className="text-xs text-white/70 mt-2">
