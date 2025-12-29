@@ -7,7 +7,8 @@ import {
   insertSleepLogSchema,
   insertDietLogSchema,
   insertExerciseLogSchema,
-  insertNotificationPreferencesSchema
+  insertNotificationPreferencesSchema,
+  insertMedicalDisclaimerSchema
 } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 
@@ -137,6 +138,36 @@ export async function registerRoutes(
       }
       console.error("Error creating exercise log:", error);
       res.status(500).json({ message: "Failed to create exercise log" });
+    }
+  });
+
+  // Medical Disclaimer endpoints
+  app.post("/api/disclaimers", async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub || null;
+      const validated = insertMedicalDisclaimerSchema.parse({
+        ...req.body,
+        email: req.body.email?.toLowerCase(),
+        userId,
+      });
+      const disclaimer = await storage.createOrUpdateDisclaimer(validated);
+      res.json({ success: true, disclaimer });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ message: fromError(error).toString() });
+      }
+      console.error("Error saving disclaimer:", error);
+      res.status(500).json({ message: "Failed to save disclaimer acknowledgment" });
+    }
+  });
+
+  app.get("/api/disclaimers", isAuthenticated, async (req: any, res) => {
+    try {
+      const disclaimers = await storage.getAllDisclaimers();
+      res.json(disclaimers);
+    } catch (error) {
+      console.error("Error fetching disclaimers:", error);
+      res.status(500).json({ message: "Failed to fetch disclaimers" });
     }
   });
 
