@@ -54,7 +54,7 @@ const conversations: Conversation[] = [
   }
 ];
 
-const sampleMessages: Message[] = [
+const initialMessages: Message[] = [
   { id: "1", content: "Hi! I wanted to follow up about my diet recommendations.", sender: "me", time: "2:15 PM", read: true },
   { id: "2", content: "Of course! Based on your recent logs, I'd suggest focusing on anti-inflammatory foods.", sender: "other", time: "2:20 PM", read: true },
   { id: "3", content: "Try incorporating more turmeric, ginger, and leafy greens.", sender: "other", time: "2:21 PM", read: true },
@@ -64,12 +64,21 @@ const sampleMessages: Message[] = [
 
 export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(conversations[0]);
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const { isAuthenticated, user } = useAuth();
 
   const handleSend = () => {
     if (message.trim()) {
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        content: message,
+        sender: "me",
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: false
+      };
+      setMessages([...messages, newMessage]);
       setMessage("");
     }
   };
@@ -194,7 +203,7 @@ export default function Messages() {
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {sampleMessages.map((msg) => (
+                {messages.map((msg) => (
                   <motion.div
                     key={msg.id}
                     initial={{ opacity: 0, y: 10 }}

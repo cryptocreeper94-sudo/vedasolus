@@ -17,6 +17,7 @@ import {
 import { QRCodeSVG } from "qrcode.react";
 import idTexture from "@assets/generated_images/holographic_secure_digital_identity_texture_with_geometric_patterns.png";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 // 3D Tilt Card Component
 const DigitalIDCard = () => {
@@ -93,7 +94,7 @@ const DigitalIDCard = () => {
   );
 };
 
-const ConnectionOption = ({ icon: Icon, title, desc, color }: any) => (
+const ConnectionOption = ({ icon: Icon, title, desc, color, onConnect }: any) => (
   <motion.div 
     whileHover={{ scale: 1.02, y: -5 }}
     className="relative p-6 rounded-3xl glass-card overflow-hidden group cursor-pointer border border-white/5 hover:border-white/20"
@@ -106,7 +107,11 @@ const ConnectionOption = ({ icon: Icon, title, desc, color }: any) => (
        <h3 className="text-lg font-serif font-bold mb-2">{title}</h3>
        <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
        <div className="mt-auto pt-6 w-full">
-         <button className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-xs uppercase tracking-widest font-medium transition-colors">
+         <button 
+           onClick={onConnect}
+           data-testid={`button-connect-${title.toLowerCase().replace(/\s+/g, '-')}`}
+           className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-xs uppercase tracking-widest font-medium transition-colors"
+         >
            Connect
          </button>
        </div>
@@ -115,6 +120,15 @@ const ConnectionOption = ({ icon: Icon, title, desc, color }: any) => (
 );
 
 export default function HealthPassport() {
+  const { toast } = useToast();
+
+  const handleConnect = (type: string) => {
+    toast({
+      title: `${type} Integration`,
+      description: "Secure health record integrations coming soon. We're building HIPAA-compliant connections to major EHR systems."
+    });
+  };
+
   return (
     <Shell>
       <div className="mb-8 md:mb-12 space-y-6 md:space-y-0 md:flex md:flex-row md:items-center md:justify-between md:gap-8">
@@ -146,18 +160,21 @@ export default function HealthPassport() {
              title="Provider Login"
              desc="Connect directly to hospital systems (Epic, Cerner) via secure OAuth. We pull and verify your history."
              color="from-blue-500/20 to-cyan-500/20"
+             onConnect={() => handleConnect("Provider Login")}
            />
            <ConnectionOption 
              icon={Upload}
              title="Direct Upload"
              desc="Have existing PDF records? Upload them here. We hash the document and stamp it on-chain."
              color="from-emerald-500/20 to-teal-500/20"
+             onConnect={() => handleConnect("Direct Upload")}
            />
            <ConnectionOption 
              icon={FileText}
              title="Request Release"
              desc="Generate a formal HIPAA digital request to send to any provider to release records to your wallet."
              color="from-purple-500/20 to-pink-500/20"
+             onConnect={() => handleConnect("Request Release")}
            />
         </div>
 

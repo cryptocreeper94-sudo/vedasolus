@@ -1,7 +1,19 @@
 import { Shell } from "@/components/layout/Shell";
-import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
 import { Users, MessageCircle, Flame, Leaf, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
+
+interface Post {
+  id: string;
+  author: string;
+  tribe: string;
+  content: string;
+  time: string;
+  likes: number;
+  comments: number;
+}
 
 const tribes = [
   {
@@ -30,7 +42,92 @@ const tribes = [
   }
 ];
 
+const initialPosts: Post[] = [
+  {
+    id: "1",
+    author: "Sarah J.",
+    tribe: "Biohacker Collective",
+    content: "Just completed a 72-hour fast. The mental clarity around hour 48 was insane. Has anyone else experienced that \"pop\" where the brain fog just completely evaporates?",
+    time: "2h ago",
+    likes: 243,
+    comments: 42
+  },
+  {
+    id: "2",
+    author: "Marcus T.",
+    tribe: "Paleo Ancestral",
+    content: "Started cold plunging every morning at 5am. Week 3 and my energy levels are through the roof. Anyone else notice improved sleep quality?",
+    time: "4h ago",
+    likes: 189,
+    comments: 28
+  },
+  {
+    id: "3",
+    author: "Elena R.",
+    tribe: "Vipassana Sitters",
+    content: "Day 45 of my meditation streak. The stillness is becoming more natural. Grateful for this community.",
+    time: "6h ago",
+    likes: 312,
+    comments: 56
+  }
+];
+
 export default function Community() {
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [newPost, setNewPost] = useState("");
+  const { user, isAuthenticated } = useAuth();
+  const { toast } = useToast();
+
+  const handlePost = () => {
+    if (!newPost.trim()) {
+      toast({
+        title: "Empty Post",
+        description: "Please write something before posting.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in to post in the community.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const post: Post = {
+      id: Date.now().toString(),
+      author: user?.name || "You",
+      tribe: "Biohacker Collective",
+      content: newPost,
+      time: "Just now",
+      likes: 0,
+      comments: 0
+    };
+
+    setPosts([post, ...posts]);
+    setNewPost("");
+    toast({
+      title: "Posted!",
+      description: "Your insight has been shared with the tribe."
+    });
+  };
+
+  const handleLike = (postId: string) => {
+    setPosts(posts.map(p => 
+      p.id === postId ? { ...p, likes: p.likes + 1 } : p
+    ));
+  };
+
+  const handleExploreAll = () => {
+    toast({
+      title: "Tribes Directory",
+      description: "Full tribe discovery coming soon! For now, explore the featured tribes on this page."
+    });
+  };
+
   return (
     <Shell>
       <div className="mb-8 p-6 rounded-3xl glass-card border border-white/10">
@@ -45,11 +142,17 @@ export default function Community() {
         <div className="lg:col-span-2 space-y-6">
            {/* Create Post */}
            <div className="p-4 rounded-3xl glass-panel flex gap-4 items-start">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary" />
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">
+                {user?.name?.[0] || "?"}
+              </div>
               <div className="flex-1">
                  <input 
                    type="text" 
+                   value={newPost}
+                   onChange={(e) => setNewPost(e.target.value)}
+                   onKeyDown={(e) => e.key === "Enter" && handlePost()}
                    placeholder="Share an insight or question..." 
+                   data-testid="input-community-post"
                    className="w-full bg-transparent border-none focus:outline-none text-lg placeholder:text-muted-foreground/50 mb-4"
                  />
                  <div className="flex justify-between items-center">
@@ -57,7 +160,11 @@ export default function Community() {
                        <button className="p-2 rounded-full hover:bg-white/10 transition-colors"><Leaf className="w-5 h-5 text-emerald-400" /></button>
                        <button className="p-2 rounded-full hover:bg-white/10 transition-colors"><Sparkles className="w-5 h-5 text-amber-400" /></button>
                     </div>
-                    <button className="px-6 py-2 bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors">
+                    <button 
+                      onClick={handlePost}
+                      data-testid="button-post"
+                      className="px-6 py-2 bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors"
+                    >
                       Post
                     </button>
                  </div>
@@ -65,26 +172,37 @@ export default function Community() {
            </div>
 
            {/* Feed Items */}
-           {[1, 2, 3].map((i) => (
+           {posts.map((post) => (
              <motion.div 
-               key={i}
+               key={post.id}
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                className="p-6 rounded-3xl glass-card border border-white/5"
+               data-testid={`post-${post.id}`}
              >
                 <div className="flex items-center gap-3 mb-4">
-                   <div className="w-10 h-10 rounded-full bg-white/10" />
+                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500/50 to-emerald-500/50 flex items-center justify-center font-bold">
+                     {post.author[0]}
+                   </div>
                    <div>
-                      <h4 className="font-medium">Sarah J.</h4>
-                      <p className="text-xs text-muted-foreground">Biohacker Collective • 2h ago</p>
+                      <h4 className="font-medium">{post.author}</h4>
+                      <p className="text-xs text-muted-foreground">{post.tribe} • {post.time}</p>
                    </div>
                 </div>
                 <p className="text-sm leading-relaxed mb-4 text-white/80">
-                   Just completed a 72-hour fast. The mental clarity around hour 48 was insane. Has anyone else experienced that "pop" where the brain fog just completely evaporates?
+                   {post.content}
                 </p>
                 <div className="flex gap-4 text-xs text-muted-foreground">
-                   <button className="flex items-center gap-1 hover:text-primary transition-colors"><Flame className="w-4 h-4" /> 243</button>
-                   <button className="flex items-center gap-1 hover:text-primary transition-colors"><MessageCircle className="w-4 h-4" /> 42</button>
+                   <button 
+                     onClick={() => handleLike(post.id)}
+                     data-testid={`button-like-${post.id}`}
+                     className="flex items-center gap-1 hover:text-primary transition-colors"
+                   >
+                     <Flame className="w-4 h-4" /> {post.likes}
+                   </button>
+                   <button className="flex items-center gap-1 hover:text-primary transition-colors">
+                     <MessageCircle className="w-4 h-4" /> {post.comments}
+                   </button>
                 </div>
              </motion.div>
            ))}
@@ -112,7 +230,11 @@ export default function Community() {
                     </div>
                  ))}
               </div>
-              <button className="w-full mt-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs uppercase tracking-widest transition-colors">
+              <button 
+                onClick={handleExploreAll}
+                data-testid="button-explore-tribes"
+                className="w-full mt-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs uppercase tracking-widest transition-colors"
+              >
                 Explore All
               </button>
            </div>

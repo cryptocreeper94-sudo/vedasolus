@@ -104,6 +104,25 @@ export default function Marketplace() {
     });
   };
 
+  const handleMessage = (healerId: number, healerName: string) => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in to message practitioners.",
+        variant: "destructive"
+      });
+      return;
+    }
+    window.location.href = `/messages`;
+  };
+
+  const handleApply = () => {
+    toast({
+      title: "Practitioner Application",
+      description: "Our verification process uses on-chain credentials. Application portal opening soon!",
+    });
+  };
+
   const filteredHealers = healers.filter(healer => {
     const matchesFilter = filter === "All" || healer.tags.some(tag => tag.toLowerCase().includes(filter.toLowerCase()));
     const matchesSearch = searchQuery === "" || 
@@ -234,6 +253,7 @@ export default function Marketplace() {
                    }
                  />
                  <button 
+                   onClick={() => handleMessage(healer.id, healer.name)}
                    className="py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
                    data-testid={`button-message-${healer.id}`}
                  >
@@ -254,6 +274,7 @@ export default function Marketplace() {
              Join our sovereign network. Verification is done on-chain to ensure trust without centralized gatekeepers.
            </p>
            <button 
+             onClick={handleApply}
              className="text-sm font-medium text-primary hover:underline"
              data-testid="button-apply-practitioner"
            >

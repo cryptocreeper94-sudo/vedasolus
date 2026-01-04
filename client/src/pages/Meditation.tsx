@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
@@ -106,6 +106,34 @@ export default function Meditation() {
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
   };
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    
+    if (isPlaying && timeRemaining > 0) {
+      interval = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            setIsPlaying(false);
+            if (activeSession) {
+              setCompletedToday((current) => [...current, activeSession.id]);
+              toast({
+                title: "Session Complete",
+                description: `You completed ${activeSession.title}. Great work!`,
+              });
+              setActiveSession(null);
+            }
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPlaying, activeSession, toast]);
 
   const endSession = () => {
     if (activeSession) {
