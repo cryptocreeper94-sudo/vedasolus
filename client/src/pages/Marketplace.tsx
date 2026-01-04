@@ -153,42 +153,43 @@ export default function Marketplace() {
 
   return (
     <Shell>
-      <div className="mb-8 p-6 rounded-3xl glass-card border border-white/10">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card border border-white/10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
           <div>
-            <h1 className="text-4xl font-serif font-medium mb-2">The Bazaar</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl sm:text-4xl font-serif font-medium mb-1 sm:mb-2">The Bazaar</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               A sovereign marketplace of verified healers. Exercise your freedom to choose the care that resonates with you.
             </p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-muted-foreground">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] sm:text-xs font-mono text-muted-foreground">
              <Globe className="w-3 h-3" />
-             <span>GLOBAL PRACTITIONER NETWORK</span>
+             <span className="hidden sm:inline">GLOBAL PRACTITIONER NETWORK</span>
+             <span className="sm:hidden">GLOBAL NETWORK</span>
           </div>
         </div>
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="mb-8 flex flex-col md:flex-row gap-4">
+      <div className="mb-6 sm:mb-8 flex flex-col md:flex-row gap-3 sm:gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input 
             type="text" 
-            placeholder="Find healers, specialists, or modalities..." 
+            placeholder="Find healers, specialists..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             data-testid="input-search-practitioners"
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-10 pr-4 focus:outline-none focus:border-primary/50 transition-colors"
+            className="w-full bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl py-2.5 sm:py-3 pl-9 sm:pl-10 pr-4 text-sm sm:text-base focus:outline-none focus:border-primary/50 transition-colors"
           />
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 scroll-hidden">
+        <div className="flex gap-2 overflow-x-auto pb-1 md:pb-0 scroll-hidden -mx-4 px-4 sm:mx-0 sm:px-0">
           {["All", "Naturopathy", "TCM", "Ayurveda", "Somatic", "Energy"].map(cat => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
               data-testid={`button-filter-${cat.toLowerCase()}`}
               className={cn(
-                "px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-colors",
+                "px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors touch-manipulation",
                 filter === cat 
                   ? "bg-primary text-primary-foreground font-medium" 
                   : "bg-white/5 hover:bg-white/10 text-muted-foreground"
@@ -200,7 +201,7 @@ export default function Marketplace() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {filteredHealers.map((healer) => (
           <motion.div
             key={healer.id}

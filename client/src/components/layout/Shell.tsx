@@ -253,13 +253,13 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Main Content Area */}
-      <main className="relative z-10 px-3 py-4 sm:p-4 md:p-8 max-w-7xl mx-auto min-h-[calc(100vh-128px)] sm:min-h-[calc(100vh-160px)]">
+      <main className="relative z-10 px-3 py-3 sm:p-4 md:p-8 max-w-7xl mx-auto min-h-[calc(100vh-120px)] sm:min-h-[calc(100vh-160px)] pb-20 sm:pb-24">
          {children}
       </main>
 
       {/* FOOTER - Clean & Mobile-Friendly */}
-      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 safe-area-pb">
-         <div className="flex items-center justify-between px-4 py-3 max-w-7xl mx-auto">
+      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-[env(safe-area-inset-bottom,0px)]">
+         <div className="flex items-center justify-between px-4 py-2 sm:py-3 max-w-7xl mx-auto">
            <div className="flex items-center gap-2 text-xs text-muted-foreground">
              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
              <span className="hidden sm:inline">VedaSolus</span>

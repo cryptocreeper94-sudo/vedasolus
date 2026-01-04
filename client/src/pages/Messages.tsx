@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
-import { Search, Send, MoreVertical, Phone, Video, Paperclip, Smile, Check, CheckCheck, User } from "lucide-react";
+import { Search, Send, MoreVertical, Phone, Video, Paperclip, Smile, Check, CheckCheck, User, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
@@ -135,15 +135,18 @@ export default function Messages() {
 
   return (
     <Shell>
-      <div className="mb-6 p-6 rounded-3xl glass-card border border-white/10">
-        <h1 className="text-4xl font-serif font-medium mb-2">Messages</h1>
-        <p className="text-muted-foreground">Secure communication with your practitioners and community.</p>
+      <div className="mb-4 sm:mb-6 p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card border border-white/10">
+        <h1 className="text-2xl sm:text-4xl font-serif font-medium mb-1 sm:mb-2">Messages</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">Secure communication with your practitioners and community.</p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 h-[calc(100vh-300px)] min-h-[500px]">
+      <div className="grid md:grid-cols-3 gap-4 sm:gap-6 h-[calc(100vh-260px)] sm:h-[calc(100vh-300px)] min-h-[400px] sm:min-h-[500px]">
         {/* Conversations List */}
-        <div className="md:col-span-1 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden flex flex-col">
-          <div className="p-4 border-b border-white/10">
+        <div className={cn(
+          "md:col-span-1 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col",
+          selectedConversation ? "hidden md:flex" : "flex"
+        )}>
+          <div className="p-3 sm:p-4 border-b border-white/10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
@@ -197,36 +200,46 @@ export default function Messages() {
         </div>
 
         {/* Chat Area */}
-        <div className="md:col-span-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden flex flex-col">
+        <div className={cn(
+          "md:col-span-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl overflow-hidden flex-col",
+          selectedConversation ? "flex" : "hidden md:flex"
+        )}>
           {selectedConversation ? (
             <>
               {/* Chat Header */}
-              <div className="p-4 border-b border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="p-3 sm:p-4 border-b border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <button 
+                    onClick={() => setSelectedConversation(null)}
+                    className="md:hidden p-2 -ml-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation"
+                    data-testid="button-back-messages"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
                   <div className="relative">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/50 to-cyan-500/50 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-primary/50 to-cyan-500/50 flex items-center justify-center font-bold text-sm sm:text-base">
                       {selectedConversation.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     {selectedConversation.online && (
-                      <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-black" />
+                      <div className="absolute bottom-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-emerald-500 rounded-full border-2 border-black" />
                     )}
                   </div>
-                  <div>
-                    <h3 className="font-medium">{selectedConversation.name}</h3>
-                    <p className="text-xs text-muted-foreground">
+                  <div className="min-w-0">
+                    <h3 className="font-medium text-sm sm:text-base truncate">{selectedConversation.name}</h3>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">
                       {selectedConversation.online ? "Online" : "Offline"}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-call">
-                    <Phone className="w-5 h-5" />
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation" data-testid="button-call">
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-video">
+                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation hidden sm:block" data-testid="button-video">
                     <Video className="w-5 h-5" />
                   </button>
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-more">
-                    <MoreVertical className="w-5 h-5" />
+                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation" data-testid="button-more">
+                    <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
               </div>

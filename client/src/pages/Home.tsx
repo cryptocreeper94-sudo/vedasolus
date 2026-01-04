@@ -378,8 +378,8 @@ export default function Home() {
         <div className="overflow-hidden" ref={healthCarouselRef}>
           <div className="flex gap-4">
             {/* Nutrition Card */}
-            <Link href="/diet" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
-              <BentoCard glow="emerald" backgroundImage={nutritionBg} className="cursor-pointer h-[200px]" data-testid="card-diet">
+            <Link href="/diet" className="flex-none w-[85%] sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="emerald" backgroundImage={nutritionBg} className="cursor-pointer h-[180px] sm:h-[200px]" data-testid="card-diet">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-white/90 font-medium flex items-center gap-2">
                     <Leaf className="w-4 h-4 text-green-300" /> Nutrition
@@ -400,8 +400,8 @@ export default function Home() {
             </Link>
 
             {/* Streak Card */}
-            <Link href="/settings" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
-              <BentoCard glow="orange" backgroundImage={achievementBg} className="cursor-pointer h-[200px]" data-testid="card-streak">
+            <Link href="/settings" className="flex-none w-[85%] sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="orange" backgroundImage={achievementBg} className="cursor-pointer h-[180px] sm:h-[200px]" data-testid="card-streak">
                 <div className="flex items-center gap-2 mb-2">
                   <Flame className="w-5 h-5 text-orange-300" />
                   <h3 className="font-medium text-white">Current Streak</h3>
@@ -421,8 +421,8 @@ export default function Home() {
             </Link>
 
             {/* Activity Card */}
-            <Link href="/exercise" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
-              <BentoCard glow="cyan" backgroundImage={activityBg} className="cursor-pointer h-[200px]" data-testid="card-exercise">
+            <Link href="/exercise" className="flex-none w-[85%] sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="cyan" backgroundImage={activityBg} className="cursor-pointer h-[180px] sm:h-[200px]" data-testid="card-exercise">
                 <div className="flex justify-between items-start">
                   <h3 className="text-white/90 font-medium flex items-center gap-2">
                     <Zap className="w-4 h-4 text-cyan-300" /> Activity
@@ -446,8 +446,8 @@ export default function Home() {
             </Link>
 
             {/* Sleep Card */}
-            <Link href="/sleep" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
-              <BentoCard glow="violet" backgroundImage={sleepBg} className="cursor-pointer h-[200px]" data-testid="card-sleep">
+            <Link href="/sleep" className="flex-none w-[85%] sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="violet" backgroundImage={sleepBg} className="cursor-pointer h-[180px] sm:h-[200px]" data-testid="card-sleep">
                 <div className="flex justify-between items-start">
                   <h3 className="text-white/90 font-medium flex items-center gap-2">
                     <Moon className="w-4 h-4 text-purple-300" /> Sleep
@@ -469,8 +469,8 @@ export default function Home() {
             </Link>
 
             {/* Meditation Card */}
-            <Link href="/meditation" className="flex-none w-full sm:w-[calc(33.333%-11px)]">
-              <BentoCard glow="pink" backgroundImage={meditationBg} className="cursor-pointer h-[200px]" data-testid="card-meditation">
+            <Link href="/meditation" className="flex-none w-[85%] sm:w-[calc(33.333%-11px)]">
+              <BentoCard glow="pink" backgroundImage={meditationBg} className="cursor-pointer h-[180px] sm:h-[200px]" data-testid="card-meditation">
                 <div className="h-full flex flex-col items-center justify-center gap-2">
                   <div className="w-10 h-10 rounded-full bg-pink-500/30 backdrop-blur-sm flex items-center justify-center">
                     <Brain className="w-5 h-5 text-pink-200" />
@@ -482,8 +482,8 @@ export default function Home() {
             </Link>
 
             {/* Heart Rate Card */}
-            <div className="flex-none w-full sm:w-[calc(33.333%-11px)]" onClick={() => setHeartRateOpen(true)}>
-              <BentoCard glow="pink" backgroundImage={heartRateBg} className="cursor-pointer h-[200px]" data-testid="card-heart-rate">
+            <div className="flex-none w-[85%] sm:w-[calc(33.333%-11px)]" onClick={() => setHeartRateOpen(true)}>
+              <BentoCard glow="pink" backgroundImage={heartRateBg} className="cursor-pointer h-[180px] sm:h-[200px]" data-testid="card-heart-rate">
                 <div className="flex justify-between items-start">
                   <h3 className="text-white/90 font-medium flex items-center gap-2">
                     <Heart className="w-4 h-4 text-rose-300" /> Heart Rate

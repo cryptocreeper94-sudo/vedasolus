@@ -130,22 +130,22 @@ export default function Community() {
 
   return (
     <Shell>
-      <div className="mb-8 p-6 rounded-3xl glass-card border border-white/10">
-        <h1 className="text-4xl font-serif font-medium mb-2">The Tribes</h1>
-        <p className="text-muted-foreground">
+      <div className="mb-6 sm:mb-8 p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card border border-white/10">
+        <h1 className="text-2xl sm:text-4xl font-serif font-medium mb-2">The Tribes</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Healing does not happen in isolation. Find your people, share your wisdom.
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-4 sm:gap-8">
         {/* Main Feed */}
         <div className="lg:col-span-2 space-y-6">
            {/* Create Post */}
-           <div className="p-4 rounded-3xl glass-panel flex gap-4 items-start">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">
+           <div className="p-3 sm:p-4 rounded-2xl sm:rounded-3xl glass-panel flex gap-3 sm:gap-4 items-start">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm sm:text-base">
                 {user?.name?.[0] || "?"}
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                  <input 
                    type="text" 
                    value={newPost}
@@ -153,17 +153,17 @@ export default function Community() {
                    onKeyDown={(e) => e.key === "Enter" && handlePost()}
                    placeholder="Share an insight or question..." 
                    data-testid="input-community-post"
-                   className="w-full bg-transparent border-none focus:outline-none text-lg placeholder:text-muted-foreground/50 mb-4"
+                   className="w-full bg-transparent border-none focus:outline-none text-base sm:text-lg placeholder:text-muted-foreground/50 mb-3 sm:mb-4"
                  />
                  <div className="flex justify-between items-center">
-                    <div className="flex gap-2">
-                       <button className="p-2 rounded-full hover:bg-white/10 transition-colors"><Leaf className="w-5 h-5 text-emerald-400" /></button>
-                       <button className="p-2 rounded-full hover:bg-white/10 transition-colors"><Sparkles className="w-5 h-5 text-amber-400" /></button>
+                    <div className="flex gap-1 sm:gap-2">
+                       <button className="p-2 rounded-full hover:bg-white/10 transition-colors touch-manipulation"><Leaf className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" /></button>
+                       <button className="p-2 rounded-full hover:bg-white/10 transition-colors touch-manipulation"><Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" /></button>
                     </div>
                     <button 
                       onClick={handlePost}
                       data-testid="button-post"
-                      className="px-6 py-2 bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors"
+                      className="px-4 sm:px-6 py-2 bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors touch-manipulation"
                     >
                       Post
                     </button>
@@ -177,30 +177,30 @@ export default function Community() {
                key={post.id}
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
-               className="p-6 rounded-3xl glass-card border border-white/5"
+               className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card border border-white/5"
                data-testid={`post-${post.id}`}
              >
-                <div className="flex items-center gap-3 mb-4">
-                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500/50 to-emerald-500/50 flex items-center justify-center font-bold">
+                <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                   <div className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 rounded-full bg-gradient-to-br from-cyan-500/50 to-emerald-500/50 flex items-center justify-center font-bold text-sm sm:text-base">
                      {post.author[0]}
                    </div>
-                   <div>
-                      <h4 className="font-medium">{post.author}</h4>
-                      <p className="text-xs text-muted-foreground">{post.tribe} • {post.time}</p>
+                   <div className="min-w-0">
+                      <h4 className="font-medium text-sm sm:text-base truncate">{post.author}</h4>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{post.tribe} • {post.time}</p>
                    </div>
                 </div>
-                <p className="text-sm leading-relaxed mb-4 text-white/80">
+                <p className="text-sm leading-relaxed mb-3 sm:mb-4 text-white/80">
                    {post.content}
                 </p>
                 <div className="flex gap-4 text-xs text-muted-foreground">
                    <button 
                      onClick={() => handleLike(post.id)}
                      data-testid={`button-like-${post.id}`}
-                     className="flex items-center gap-1 hover:text-primary transition-colors"
+                     className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-1"
                    >
                      <Flame className="w-4 h-4" /> {post.likes}
                    </button>
-                   <button className="flex items-center gap-1 hover:text-primary transition-colors">
+                   <button className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-1">
                      <MessageCircle className="w-4 h-4" /> {post.comments}
                    </button>
                 </div>
