@@ -157,13 +157,13 @@ export default function Community() {
                  />
                  <div className="flex justify-between items-center">
                     <div className="flex gap-1 sm:gap-2">
-                       <button className="p-2 rounded-full hover:bg-white/10 transition-colors touch-manipulation"><Leaf className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" /></button>
-                       <button className="p-2 rounded-full hover:bg-white/10 transition-colors touch-manipulation"><Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" /></button>
+                       <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-full hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center"><Leaf className="w-5 h-5 text-emerald-400" /></button>
+                       <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-full hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center"><Sparkles className="w-5 h-5 text-amber-400" /></button>
                     </div>
                     <button 
                       onClick={handlePost}
                       data-testid="button-post"
-                      className="px-4 sm:px-6 py-2 bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors touch-manipulation"
+                      className="px-5 sm:px-6 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors touch-manipulation"
                     >
                       Post
                     </button>
@@ -192,15 +192,15 @@ export default function Community() {
                 <p className="text-sm leading-relaxed mb-3 sm:mb-4 text-white/80">
                    {post.content}
                 </p>
-                <div className="flex gap-4 text-xs text-muted-foreground">
+                <div className="flex gap-2 text-xs text-muted-foreground">
                    <button 
                      onClick={() => handleLike(post.id)}
                      data-testid={`button-like-${post.id}`}
-                     className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-1"
+                     className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-2.5 px-3 min-h-[44px] rounded-lg -ml-3"
                    >
                      <Flame className="w-4 h-4" /> {post.likes}
                    </button>
-                   <button className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-1">
+                   <button className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-2.5 px-3 min-h-[44px] rounded-lg">
                      <MessageCircle className="w-4 h-4" /> {post.comments}
                    </button>
                 </div>

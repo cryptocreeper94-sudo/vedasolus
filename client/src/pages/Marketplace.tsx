@@ -189,7 +189,7 @@ export default function Marketplace() {
               onClick={() => setFilter(cat)}
               data-testid={`button-filter-${cat.toLowerCase()}`}
               className={cn(
-                "px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors touch-manipulation",
+                "px-4 py-2.5 min-h-[44px] rounded-lg sm:rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors touch-manipulation",
                 filter === cat 
                   ? "bg-primary text-primary-foreground font-medium" 
                   : "bg-white/5 hover:bg-white/10 text-muted-foreground"

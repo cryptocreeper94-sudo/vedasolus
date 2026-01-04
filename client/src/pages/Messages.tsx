@@ -211,7 +211,7 @@ export default function Messages() {
                 <div className="flex items-center gap-2 sm:gap-3">
                   <button 
                     onClick={() => setSelectedConversation(null)}
-                    className="md:hidden p-2 -ml-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation"
+                    className="md:hidden min-w-[44px] min-h-[44px] p-2.5 -ml-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center"
                     data-testid="button-back-messages"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -231,15 +231,15 @@ export default function Messages() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation" data-testid="button-call">
-                    <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="flex items-center gap-0.5 sm:gap-1">
+                  <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-call">
+                    <Phone className="w-5 h-5" />
                   </button>
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation hidden sm:block" data-testid="button-video">
+                  <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation hidden sm:flex items-center justify-center" data-testid="button-video">
                     <Video className="w-5 h-5" />
                   </button>
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors touch-manipulation" data-testid="button-more">
-                    <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-more">
+                    <MoreVertical className="w-5 h-5" />
                   </button>
                 </div>
               </div>
