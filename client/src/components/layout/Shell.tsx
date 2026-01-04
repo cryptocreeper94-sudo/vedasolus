@@ -126,7 +126,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground overflow-x-hidden font-sans selection:bg-primary/30 pb-16 pt-16 sm:pb-20 sm:pt-20">
+    <div className="relative min-h-screen w-full bg-background text-foreground overflow-x-hidden font-sans selection:bg-primary/30 pb-16 pt-20 sm:pb-20 sm:pt-24">
       {/* Background Layer */}
       <div 
         className="fixed inset-0 z-0 pointer-events-none opacity-40"
@@ -141,7 +141,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       {/* HEADER - Sticky & Transparent */}
       <header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-3 sm:px-6 h-20 sm:h-24 flex items-center justify-between",
           isScrolled ? "bg-black/60 backdrop-blur-xl border-b border-white/10" : "bg-transparent"
         )}
       >
@@ -150,7 +150,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <img 
             src={logoImage} 
             alt="VedaSolus" 
-            className="h-10 sm:h-12 w-auto object-contain"
+            className="h-32 sm:h-40 md:h-44 w-auto object-contain -ml-2 sm:-ml-4"
           />
         </div>
 
