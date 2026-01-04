@@ -29,8 +29,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useQuery } from "@tanstack/react-query";
 
 const PARTNER_PINS: Record<string, { name: string; role: string }> = {
-  "0424": { name: "Jason", role: "Founder/Developer" },
-  "4444": { name: "Sidonie", role: "Partner/Co-Owner" },
+  "0424": { name: "Jason", role: "Founder/Owner" },
 };
 
 const iconMap: Record<string, any> = {
@@ -407,24 +406,19 @@ export default function PartnerDashboard() {
 
         <BentoCard className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/5 border-emerald-500/20">
           <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <DollarSign className="w-5 h-5 text-emerald-400" /> Royalty Split
+            <DollarSign className="w-5 h-5 text-emerald-400" /> Revenue
           </h3>
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
               <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-xs font-bold">J</div>
               <div className="flex-1">
                 <p className="text-sm text-white">Jason Andrews</p>
-                <p className="text-xs text-slate-400">50% share</p>
+                <p className="text-xs text-slate-400">Sole Owner</p>
               </div>
-              <span className="font-mono text-cyan-400">$2,445</span>
+              <span className="font-mono text-cyan-400">100%</span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-              <div className="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center text-xs font-bold">S</div>
-              <div className="flex-1">
-                <p className="text-sm text-white">Sidonie Summers</p>
-                <p className="text-xs text-slate-400">50% share</p>
-              </div>
-              <span className="font-mono text-pink-400">$2,445</span>
+            <div className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+              <p className="text-xs text-emerald-300">All revenue from VedaSolus flows directly to Jason Andrews via Orbit Financial Hub.</p>
             </div>
           </div>
         </BentoCard>

@@ -24,7 +24,7 @@ export const partnerOnboardingSlides: OnboardingSlide[] = [
   {
     title: "What's Connected",
     subtitle: "Live Integrations",
-    content: "Stripe payments processing subscription revenue. Orbit Staffing manages payroll, invoicing, and the 50/50 royalty split. Firebase handles authentication. OpenAI + ElevenLabs power our AI wellness coach.",
+    content: "Stripe payments processing subscription revenue. Orbit Staffing manages payroll and invoicing. Firebase handles authentication. OpenAI + ElevenLabs power our AI wellness coach.",
     iconName: "Zap",
     color: "emerald",
   },

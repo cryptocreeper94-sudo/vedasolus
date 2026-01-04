@@ -162,7 +162,7 @@ Both logos feature:
 - darkwavehealth_franchise_fee
 - darkwavehealth_franchise_royalty
 
-**Royalty Split**: 50/50 between Jason Andrews and Sidonie Summers
+**Royalty Split**: 100% Jason Andrews (VedaSolus is solely owned by Jason)
 
 ### Dark Wave Smart Chain (FUTURE)
 - Blockchain integration for health credentials and NFT verification - details TBD
@@ -221,7 +221,7 @@ Both logos feature:
 - Configured Firebase Auth with dynamic config loading
 - Enhanced Practitioner Dashboard with Orbit Staff Management tabs
 - **Added Partner Portal** with pin-based authentication
-  - Jason PIN: 0424, Sidonie PIN: 4444
+  - Jason PIN: 0424 (sole owner)
   - Full overview access (view-only for code/pricing)
   - Onboarding slideshow for new partners/employees
   - Partners button in footer navigation
