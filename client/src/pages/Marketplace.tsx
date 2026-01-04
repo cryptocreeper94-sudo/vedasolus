@@ -1,12 +1,14 @@
 import { Shell } from "@/components/layout/Shell";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
-import { Search, Star, MapPin, ShieldCheck, Zap, Flower2, HeartHandshake, Globe, Video, MessageCircle } from "lucide-react";
+import { Search, Star, MapPin, ShieldCheck, Zap, Flower2, HeartHandshake, Globe, Video, MessageCircle, X, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BookingDialog } from "@/components/ui/booking-dialog";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const healers = [
   {
@@ -94,8 +96,11 @@ const healers = [
 export default function Marketplace() {
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  const [applicationSubmitted, setApplicationSubmitted] = useState(false);
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const handleBook = (booking: any) => {
     toast({
@@ -113,14 +118,28 @@ export default function Marketplace() {
       });
       return;
     }
-    window.location.href = `/messages`;
+    toast({
+      title: `Messaging ${healerName}`,
+      description: "Opening conversation..."
+    });
+    setLocation(`/messages?practitioner=${healerId}&name=${encodeURIComponent(healerName)}`);
   };
 
   const handleApply = () => {
-    toast({
-      title: "Practitioner Application",
-      description: "Our verification process uses on-chain credentials. Application portal opening soon!",
-    });
+    setShowApplyModal(true);
+  };
+
+  const handleSubmitApplication = (e: React.FormEvent) => {
+    e.preventDefault();
+    setApplicationSubmitted(true);
+    setTimeout(() => {
+      setShowApplyModal(false);
+      setApplicationSubmitted(false);
+      toast({
+        title: "Application Received",
+        description: "We'll review your credentials and get back to you within 48 hours."
+      });
+    }, 2000);
   };
 
   const filteredHealers = healers.filter(healer => {
@@ -282,6 +301,86 @@ export default function Marketplace() {
            </button>
         </div>
       </div>
+
+      <Dialog open={showApplyModal} onOpenChange={setShowApplyModal}>
+        <DialogContent className="bg-background/95 backdrop-blur-xl border-cyan-500/20 max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-serif">Practitioner Application</DialogTitle>
+            <DialogDescription>
+              Join our global network of verified healers. Your credentials will be verified on-chain.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {applicationSubmitted ? (
+            <div className="py-8 text-center">
+              <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+              <h3 className="text-xl font-medium mb-2">Application Submitted!</h3>
+              <p className="text-muted-foreground">We're processing your application...</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmitApplication} className="space-y-4 mt-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Full Name</label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="Dr. Jane Smith"
+                  data-testid="input-practitioner-name"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Email</label>
+                <input 
+                  type="email" 
+                  required
+                  placeholder="jane@practice.com"
+                  data-testid="input-practitioner-email"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Primary Modality</label>
+                <select 
+                  required
+                  data-testid="select-modality"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 text-white"
+                >
+                  <option value="">Select your specialty...</option>
+                  <option value="naturopathy">Naturopathy</option>
+                  <option value="tcm">Traditional Chinese Medicine</option>
+                  <option value="ayurveda">Ayurveda</option>
+                  <option value="somatic">Somatic Therapy</option>
+                  <option value="integrative">Integrative Medicine</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">License/Certification Number</label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="e.g., ND-12345"
+                  data-testid="input-license"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50"
+                />
+              </div>
+              <div className="pt-4">
+                <button 
+                  type="submit"
+                  data-testid="button-submit-application"
+                  className="w-full py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-colors"
+                >
+                  Submit Application
+                </button>
+              </div>
+              <p className="text-xs text-center text-muted-foreground">
+                Your credentials will be verified through our on-chain verification protocol.
+              </p>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </Shell>
   );
 }

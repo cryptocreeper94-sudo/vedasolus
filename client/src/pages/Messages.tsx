@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
 import { Search, Send, MoreVertical, Phone, Video, Paperclip, Smile, Check, CheckCheck, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import { useLocation } from "wouter";
 
 interface Conversation {
   id: string;
@@ -63,11 +64,40 @@ const initialMessages: Message[] = [
 ];
 
 export default function Messages() {
+  const [conversationList, setConversationList] = useState<Conversation[]>(conversations);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(conversations[0]);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const { isAuthenticated, user } = useAuth();
+  const [location] = useLocation();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const practitionerId = urlParams.get('practitioner');
+    const practitionerName = urlParams.get('name');
+    
+    if (practitionerId && practitionerName) {
+      const existingConvo = conversationList.find(c => c.name === practitionerName);
+      if (existingConvo) {
+        setSelectedConversation(existingConvo);
+      } else {
+        const newConvo: Conversation = {
+          id: practitionerId,
+          name: practitionerName,
+          lastMessage: "Start a conversation...",
+          time: "Now",
+          unread: 0,
+          online: true,
+          type: "practitioner"
+        };
+        setConversationList([newConvo, ...conversationList]);
+        setSelectedConversation(newConvo);
+        setMessages([]);
+      }
+      window.history.replaceState({}, '', '/messages');
+    }
+  }, [location]);
 
   const handleSend = () => {
     if (message.trim()) {
@@ -83,7 +113,7 @@ export default function Messages() {
     }
   };
 
-  const filteredConversations = conversations.filter(c => 
+  const filteredConversations = conversationList.filter(c => 
     c.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
