@@ -78,7 +78,7 @@ export default function BusinessPlan() {
             </div>
             <div>
               <h1 className="text-3xl font-serif font-bold text-white">Business Plan</h1>
-              <p className="text-orange-300/70 text-sm">Strategic Overview • Dark Wave Studios LLC</p>
+              <p className="text-orange-300/70 text-sm">Strategic Overview • VedaSolus by Jason Andrews</p>
             </div>
           </div>
           <div className="flex gap-2">

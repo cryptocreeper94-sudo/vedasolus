@@ -19,7 +19,7 @@ export function MissionStatement({ onClose }: MissionStatementProps) {
             <Sparkles className="w-8 h-8 text-cyan-400" />
           </div>
           <h2 className="text-2xl font-serif font-bold text-white mb-2">Our Mission</h2>
-          <p className="text-cyan-300/80 text-sm">Dark Wave Studios LLC</p>
+          <p className="text-cyan-300/80 text-sm">VedaSolus by Jason Andrews</p>
         </div>
 
         <ScrollArea className="h-[400px] pr-4">
