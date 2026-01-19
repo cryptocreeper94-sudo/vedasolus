@@ -64,7 +64,7 @@ export default function PractitionerDashboard() {
           <h1 className="text-4xl font-serif font-medium mb-2">Practice Hub</h1>
           <p className="text-muted-foreground">Manage your clients, appointments, and business growth.</p>
         </div>
-        <button className="px-4 py-2 bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors">
+        <button onClick={() => toast({ title: "New Client", description: "Client intake form coming soon!" })} className="px-4 py-2 bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors">
           + New Client
         </button>
       </div>
