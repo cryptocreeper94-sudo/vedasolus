@@ -40,6 +40,7 @@ import { Area, AreaChart, ResponsiveContainer, BarChart, Bar, Cell, Tooltip, XAx
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const roadmapPhases = [
   {
@@ -228,6 +229,14 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function DeveloperDashboard() {
   const [activeTab, setActiveTab] = useState("roadmap");
+  const { toast } = useToast();
+  
+  const handleDevAction = (action: string) => {
+    toast({
+      title: "Developer Action",
+      description: `${action} - this action requires admin access.`,
+    });
+  };
 
   return (
     <Shell>
@@ -556,19 +565,19 @@ export default function DeveloperDashboard() {
                 <Code className="w-4 h-4" /> DEVELOPER CONSOLE
               </h3>
               <div className="grid grid-cols-4 gap-4">
-                <button className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-flush-cache">
+                <button onClick={() => handleDevAction("Cache flush")} className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-flush-cache">
                   <span className="block text-xs text-muted-foreground mb-1">Cache</span>
                   <span className="text-sm font-mono group-hover:text-red-400">FLUSH ALL</span>
                 </button>
-                <button className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-migrate-db">
+                <button onClick={() => handleDevAction("Database migration")} className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-migrate-db">
                   <span className="block text-xs text-muted-foreground mb-1">Database</span>
                   <span className="text-sm font-mono group-hover:text-orange-400">MIGRATE</span>
                 </button>
-                <button className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-export-logs">
+                <button onClick={() => handleDevAction("Log export")} className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-export-logs">
                   <span className="block text-xs text-muted-foreground mb-1">Logs</span>
                   <span className="text-sm font-mono group-hover:text-blue-400">EXPORT</span>
                 </button>
-                <button className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-restart-system">
+                <button onClick={() => handleDevAction("System restart")} className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-restart-system">
                   <span className="block text-xs text-muted-foreground mb-1">System</span>
                   <span className="text-sm font-mono group-hover:text-emerald-400">RESTART</span>
                 </button>

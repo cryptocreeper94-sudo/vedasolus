@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
 const marketData = {
   tam: "$150B",
@@ -54,6 +55,15 @@ const milestones = [
 ];
 
 export default function BusinessPlan() {
+  const { toast } = useToast();
+  
+  const handleComingSoon = (feature: string) => {
+    toast({
+      title: "Coming Soon",
+      description: `${feature} will be available in a future update.`,
+    });
+  };
+
   return (
     <Shell>
       <motion.div
@@ -72,10 +82,10 @@ export default function BusinessPlan() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-white/10 hover:bg-white/5" data-testid="button-download-plan">
+            <Button onClick={() => handleComingSoon("PDF export")} variant="outline" size="sm" className="border-white/10 hover:bg-white/5" data-testid="button-download-plan">
               <Download className="w-4 h-4 mr-2" /> Export PDF
             </Button>
-            <Button variant="outline" size="sm" className="border-white/10 hover:bg-white/5" data-testid="button-share-plan">
+            <Button onClick={() => handleComingSoon("Share feature")} variant="outline" size="sm" className="border-white/10 hover:bg-white/5" data-testid="button-share-plan">
               <Share2 className="w-4 h-4 mr-2" /> Share
             </Button>
           </div>

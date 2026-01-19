@@ -21,6 +21,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 const mockStaff = [
   { id: "doc_001", name: "Dr. Sarah Chen", role: "Acupuncturist", status: "active", rate: "$85/hr" },
@@ -38,6 +39,14 @@ const mockTimesheets = [
 
 export default function PractitionerDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const { toast } = useToast();
+  
+  const handleAppointmentClick = (client: string) => {
+    toast({
+      title: `Appointment with ${client}`,
+      description: "View appointment details and client history coming soon!",
+    });
+  };
   
   const { data: orbitStatus } = useQuery({
     queryKey: ["/api/orbit/status"],
@@ -116,7 +125,7 @@ export default function PractitionerDashboard() {
                  { time: "01:00 PM", client: "Emily Davis", type: "Ayurvedic Assessment", status: "Upcoming" },
                  { time: "02:30 PM", client: "Michael Wilson", type: "Integration Session", status: "Upcoming" },
                ].map((app, i) => (
-                 <div key={i} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                 <div key={i} onClick={() => handleAppointmentClick(app.client)} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
                     <div className="w-20 text-sm font-mono text-muted-foreground">{app.time}</div>
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-sm font-bold text-white">
                       {app.client.charAt(0)}
@@ -132,7 +141,7 @@ export default function PractitionerDashboard() {
                     }`}>
                       {app.status}
                     </div>
-                    <button className="p-2 hover:bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={(e) => { e.stopPropagation(); toast({ title: "Options", description: "Appointment options menu coming soon!" }); }} className="p-2 hover:bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                       <MoreVertical className="w-4 h-4" />
                     </button>
                  </div>
@@ -158,7 +167,7 @@ export default function PractitionerDashboard() {
                     <span className="text-emerald-400 flex items-center gap-1"><CheckCircle className="w-3 h-3" /> Synced</span>
                   </div>
                </div>
-               <button className="w-full mt-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors" data-testid="button-manage-business">
+               <button onClick={() => toast({ title: "Business Manager", description: "Full business management dashboard coming soon!" })} className="w-full mt-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors" data-testid="button-manage-business">
                  Manage Business
                </button>
             </div>

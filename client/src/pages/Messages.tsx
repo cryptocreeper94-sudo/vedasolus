@@ -5,6 +5,7 @@ import { Search, Send, MoreVertical, Phone, Video, Paperclip, Smile, Check, Chec
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 interface Conversation {
   id: string;
@@ -71,6 +72,14 @@ export default function Messages() {
   const [searchQuery, setSearchQuery] = useState("");
   const { isAuthenticated, user } = useAuth();
   const [location] = useLocation();
+  const { toast } = useToast();
+  
+  const handleComingSoon = (feature: string) => {
+    toast({
+      title: "Coming Soon",
+      description: `${feature} will be available in a future update.`,
+    });
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -232,13 +241,13 @@ export default function Messages() {
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5 sm:gap-1">
-                  <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-call">
+                  <button onClick={() => handleComingSoon("Voice calls")} className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-call">
                     <Phone className="w-5 h-5" />
                   </button>
-                  <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation hidden sm:flex items-center justify-center" data-testid="button-video">
+                  <button onClick={() => handleComingSoon("Video consultations")} className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation hidden sm:flex items-center justify-center" data-testid="button-video">
                     <Video className="w-5 h-5" />
                   </button>
-                  <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-more">
+                  <button onClick={() => handleComingSoon("More options")} className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-more">
                     <MoreVertical className="w-5 h-5" />
                   </button>
                 </div>
@@ -281,7 +290,7 @@ export default function Messages() {
               {/* Input Area */}
               <div className="p-4 border-t border-white/10">
                 <div className="flex items-center gap-2">
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-attach">
+                  <button onClick={() => handleComingSoon("File attachments")} className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-attach">
                     <Paperclip className="w-5 h-5 text-muted-foreground" />
                   </button>
                   <input
@@ -293,7 +302,7 @@ export default function Messages() {
                     data-testid="input-message"
                     className="flex-1 bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 focus:outline-none focus:border-primary/50"
                   />
-                  <button className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-emoji">
+                  <button onClick={() => handleComingSoon("Emoji picker")} className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-emoji">
                     <Smile className="w-5 h-5 text-muted-foreground" />
                   </button>
                   <button

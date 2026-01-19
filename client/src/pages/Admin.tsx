@@ -8,8 +8,17 @@ import {
   Settings, 
   FileText
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AdminDashboard() {
+  const { toast } = useToast();
+  
+  const handleComingSoon = (feature: string) => {
+    toast({
+      title: "Coming Soon",
+      description: `${feature} will be available in a future update.`,
+    });
+  };
   return (
     <Shell>
       <div className="mb-8 flex justify-between items-end">
@@ -41,7 +50,7 @@ export default function AdminDashboard() {
                      <span className={`text-xs font-bold ${item.severity === "High" ? "text-rose-500" : "text-amber-500"}`}>
                        {item.severity} Priority
                      </span>
-                     <button className="px-3 py-1 bg-white/10 hover:bg-white/20 rounded-lg text-xs">Review</button>
+                     <button onClick={() => handleComingSoon("Content review")} className="px-3 py-1 bg-white/10 hover:bg-white/20 rounded-lg text-xs">Review</button>
                    </div>
                 </div>
               ))}
@@ -53,15 +62,15 @@ export default function AdminDashboard() {
               <UserX className="w-4 h-4 text-muted-foreground" /> User Management
             </h3>
             <div className="space-y-2">
-               <button className="w-full p-3 text-left rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+               <button onClick={() => handleComingSoon("User search")} className="w-full p-3 text-left rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
                  <span className="block font-medium">Search User Database</span>
                  <span className="text-xs text-muted-foreground">Find by ID, Email, or Wallet</span>
                </button>
-               <button className="w-full p-3 text-left rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+               <button onClick={() => handleComingSoon("Ban/suspension logs")} className="w-full p-3 text-left rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
                  <span className="block font-medium">Ban / Suspension Logs</span>
                  <span className="text-xs text-muted-foreground">View active restrictions</span>
                </button>
-               <button className="w-full p-3 text-left rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+               <button onClick={() => handleComingSoon("Verification override")} className="w-full p-3 text-left rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
                  <span className="block font-medium">Verification Override</span>
                  <span className="text-xs text-muted-foreground">Manually verify practitioners</span>
                </button>
@@ -75,7 +84,7 @@ export default function AdminDashboard() {
              <p className="text-sm text-muted-foreground mb-4">
                Generate monthly compliance reports for Orbit Staffing.io audit logs.
              </p>
-             <button className="w-full py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm">Download CSV</button>
+             <button onClick={() => handleComingSoon("CSV export")} className="w-full py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm">Download CSV</button>
          </BentoCard>
       </BentoGrid>
     </Shell>

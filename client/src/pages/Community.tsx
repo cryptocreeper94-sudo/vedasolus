@@ -157,8 +157,8 @@ export default function Community() {
                  />
                  <div className="flex justify-between items-center">
                     <div className="flex gap-1 sm:gap-2">
-                       <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-full hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center"><Leaf className="w-5 h-5 text-emerald-400" /></button>
-                       <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-full hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center"><Sparkles className="w-5 h-5 text-amber-400" /></button>
+                       <button onClick={() => toast({ title: "Eco Tag", description: "Add an eco-friendly tag to your post" })} className="min-w-[44px] min-h-[44px] p-2.5 rounded-full hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center"><Leaf className="w-5 h-5 text-emerald-400" /></button>
+                       <button onClick={() => toast({ title: "Wellness Tag", description: "Add a wellness insight tag to your post" })} className="min-w-[44px] min-h-[44px] p-2.5 rounded-full hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center"><Sparkles className="w-5 h-5 text-amber-400" /></button>
                     </div>
                     <button 
                       onClick={handlePost}
@@ -200,7 +200,7 @@ export default function Community() {
                    >
                      <Flame className="w-4 h-4" /> {post.likes}
                    </button>
-                   <button className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-2.5 px-3 min-h-[44px] rounded-lg">
+                   <button onClick={() => toast({ title: "Comments", description: "Comment threads coming soon!" })} className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-2.5 px-3 min-h-[44px] rounded-lg">
                      <MessageCircle className="w-4 h-4" /> {post.comments}
                    </button>
                 </div>
