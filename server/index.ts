@@ -68,13 +68,19 @@ app.use((req, res, next) => {
   const PgSession = connectPgSimple(session);
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   
+  // Require SESSION_SECRET in production
+  const sessionSecret = process.env.SESSION_SECRET;
+  if (!sessionSecret && process.env.NODE_ENV === "production") {
+    throw new Error("SESSION_SECRET environment variable is required in production");
+  }
+  
   app.use(session({
     store: new PgSession({
       pool,
       tableName: "sessions",
       createTableIfMissing: false,
     }),
-    secret: process.env.SESSION_SECRET || "vedasolus-secret-key-change-in-production",
+    secret: sessionSecret || "dev-only-secret-" + Date.now(),
     resave: false,
     saveUninitialized: false,
     cookie: {

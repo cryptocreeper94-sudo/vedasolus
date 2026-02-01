@@ -60,11 +60,13 @@ Both logos feature:
 - **Tables**: users, sessions, user_profiles, sleep_logs, diet_logs, exercise_logs, notification_preferences
 
 ### Authentication Flow
-- Firebase Auth provides Google Sign-In authentication (VedaSolus branded, no Replit branding)
-- Backend verifies Firebase ID tokens via firebase-admin SDK
-- Sessions stored in PostgreSQL `sessions` table
-- User data synced to `users` table on login
-- Protected routes use `isFirebaseAuthenticated` middleware
+- Email/password signup with verification code sent via Resend
+- Passwords hashed with bcrypt (12 rounds)
+- Verification codes hashed and stored with 15-minute expiry
+- Sessions stored in PostgreSQL `sessions` table via connect-pg-simple
+- Rate limiting on auth endpoints (10 attempts/15 min for login/signup, 5 for verification)
+- Protected routes use `isEmailAuthenticated` middleware
+- Files: `server/email-auth.ts`, `server/resend-client.ts`
 
 ### Project Structure
 ```
@@ -130,11 +132,12 @@ Both logos feature:
 - **Endpoint**: `POST /api/wellness-chat` - Get AI wellness guidance with optional voice
 - **File**: `server/elevenlabs.ts` contains wellness coach logic
 
-### Firebase Auth (ACTIVE)
-- **Config**: Fetched dynamically from `/api/firebase-config` endpoint
-- **Uses**: GOOGLE_API_KEY (existing secret) for authentication
-- **Project**: darkwave-auth.firebaseapp.com
-- **File**: `client/src/lib/firebase.ts` contains async initialization
+### Email Authentication (ACTIVE)
+- **Signup**: Email/password with 6-digit verification code
+- **Emails**: Sent via Resend integration with VedaSolus branding
+- **Security**: Passwords hashed with bcrypt, verification codes hashed, rate limiting
+- **Session**: PostgreSQL-backed sessions with 7-day expiry
+- **Files**: `server/email-auth.ts`, `server/resend-client.ts`
 
 ### Orbit Staffing (ACTIVE)
 - **Status**: Fully integrated with HMAC authentication

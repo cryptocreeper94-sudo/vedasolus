@@ -6,14 +6,40 @@ import { users, signupSchema, loginSchema, verifyEmailSchema } from "@shared/sch
 import { eq } from "drizzle-orm";
 import { sendVerificationEmail } from "./resend-client";
 import { fromError } from "zod-validation-error";
+import rateLimit from "express-rate-limit";
 
 function generateVerificationCode(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+async function hashVerificationCode(code: string): Promise<string> {
+  return bcrypt.hash(code, 10);
+}
+
+async function verifyCode(code: string, hashedCode: string): Promise<boolean> {
+  return bcrypt.compare(code, hashedCode);
+}
+
+// Rate limiters for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // 10 attempts per window
+  message: { message: "Too many attempts. Please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const verifyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 verification attempts per window
+  message: { message: "Too many verification attempts. Please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 export function setupEmailAuth(app: Express) {
   // Signup - creates unverified account and sends verification email
-  app.post("/api/auth/signup", async (req: Request, res: Response) => {
+  app.post("/api/auth/signup", authLimiter, async (req: Request, res: Response) => {
     try {
       const validated = signupSchema.parse(req.body);
       
@@ -25,10 +51,11 @@ export function setupEmailAuth(app: Express) {
         }
         // Resend verification for unverified account
         const code = generateVerificationCode();
+        const hashedCode = await hashVerificationCode(code);
         const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
         
         await db.update(users).set({
-          verificationCode: code,
+          verificationCode: hashedCode,
           verificationExpires: expires,
           updatedAt: new Date(),
         }).where(eq(users.email, validated.email));
@@ -40,16 +67,17 @@ export function setupEmailAuth(app: Express) {
       // Hash password
       const passwordHash = await bcrypt.hash(validated.password, 12);
       const code = generateVerificationCode();
+      const hashedCode = await hashVerificationCode(code);
       const expires = new Date(Date.now() + 15 * 60 * 1000);
       
-      // Create user
+      // Create user with hashed verification code
       const [newUser] = await db.insert(users).values({
         email: validated.email,
         passwordHash,
         firstName: validated.firstName,
         lastName: validated.lastName || null,
         emailVerified: false,
-        verificationCode: code,
+        verificationCode: hashedCode,
         verificationExpires: expires,
       }).returning();
       
@@ -67,7 +95,7 @@ export function setupEmailAuth(app: Express) {
   });
 
   // Verify email with code
-  app.post("/api/auth/verify", async (req: Request, res: Response) => {
+  app.post("/api/auth/verify", verifyLimiter, async (req: Request, res: Response) => {
     try {
       const validated = verifyEmailSchema.parse(req.body);
       
@@ -81,12 +109,14 @@ export function setupEmailAuth(app: Express) {
         return res.status(400).json({ message: "Email already verified" });
       }
       
-      if (user.verificationCode !== validated.code) {
-        return res.status(400).json({ message: "Invalid verification code" });
-      }
-      
       if (user.verificationExpires && new Date() > user.verificationExpires) {
         return res.status(400).json({ message: "Verification code expired. Please request a new one." });
+      }
+      
+      // Verify the hashed code
+      const isValidCode = user.verificationCode ? await verifyCode(validated.code, user.verificationCode) : false;
+      if (!isValidCode) {
+        return res.status(400).json({ message: "Invalid verification code" });
       }
       
       // Mark as verified
@@ -119,7 +149,7 @@ export function setupEmailAuth(app: Express) {
   });
 
   // Resend verification code
-  app.post("/api/auth/resend-verification", async (req: Request, res: Response) => {
+  app.post("/api/auth/resend-verification", authLimiter, async (req: Request, res: Response) => {
     try {
       const { email } = req.body;
       if (!email) {
@@ -137,10 +167,11 @@ export function setupEmailAuth(app: Express) {
       }
       
       const code = generateVerificationCode();
+      const hashedCode = await hashVerificationCode(code);
       const expires = new Date(Date.now() + 15 * 60 * 1000);
       
       await db.update(users).set({
-        verificationCode: code,
+        verificationCode: hashedCode,
         verificationExpires: expires,
         updatedAt: new Date(),
       }).where(eq(users.email, email));
@@ -155,7 +186,7 @@ export function setupEmailAuth(app: Express) {
   });
 
   // Login
-  app.post("/api/auth/login", async (req: Request, res: Response) => {
+  app.post("/api/auth/login", authLimiter, async (req: Request, res: Response) => {
     try {
       const validated = loginSchema.parse(req.body);
       
@@ -171,12 +202,13 @@ export function setupEmailAuth(app: Express) {
       }
       
       if (!user.emailVerified) {
-        // Send new verification code
+        // Send new verification code (hashed)
         const code = generateVerificationCode();
+        const hashedCode = await hashVerificationCode(code);
         const expires = new Date(Date.now() + 15 * 60 * 1000);
         
         await db.update(users).set({
-          verificationCode: code,
+          verificationCode: hashedCode,
           verificationExpires: expires,
         }).where(eq(users.email, validated.email));
         
