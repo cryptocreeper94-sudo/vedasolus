@@ -1,6 +1,11 @@
 VedaSolus - Complete Description
 "Ancient Wisdom. Modern Science. Your Wellness Journey."
 
+Brand Assets:
+- Emblem (with background): Copilot_20251228_214224_1766980581672.png
+- Emblem (transparent): Copilot_20251228_214220_1766980581975.png
+- Features: Circular emblem with meditating figure in orange/gold, green leaf/crescent accent, cyan "VedaSolus" text with glow effect
+
 VedaSolus is a production-ready, mobile-first holistic health platform that bridges Eastern healing traditions (Ayurveda, Traditional Chinese Medicine) with Western scientific wellness. We replace fragmented health tracking with integrated mind-body insights, AI-powered guidance, and a community of verified practitioners.
 
 What We Offer:
