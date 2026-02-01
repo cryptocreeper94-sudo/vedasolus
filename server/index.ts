@@ -2,7 +2,10 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
-import { setupFirebaseAuth } from "./firebase-auth";
+import { setupEmailAuth } from "./email-auth";
+import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
+import { Pool } from "@neondatabase/serverless";
 
 const app = express();
 const httpServer = createServer(app);
@@ -61,8 +64,29 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Setup Firebase authentication BEFORE other routes
-  await setupFirebaseAuth(app);
+  // Setup session store with PostgreSQL
+  const PgSession = connectPgSimple(session);
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  
+  app.use(session({
+    store: new PgSession({
+      pool,
+      tableName: "sessions",
+      createTableIfMissing: false,
+    }),
+    secret: process.env.SESSION_SECRET || "vedasolus-secret-key-change-in-production",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: "lax",
+    },
+  }));
+
+  // Setup email authentication routes
+  setupEmailAuth(app);
   
   await registerRoutes(httpServer, app);
 

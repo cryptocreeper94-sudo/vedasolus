@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { isFirebaseAuthenticated as isAuthenticated } from "./firebase-auth";
+import { isEmailAuthenticated as isAuthenticated } from "./email-auth";
 import { 
   insertUserProfileSchema,
   insertSleepLogSchema,
