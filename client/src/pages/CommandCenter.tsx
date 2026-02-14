@@ -35,7 +35,6 @@ import {
   Heart,
   ExternalLink,
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import logoImage from "@assets/Copilot_20251228_214224_1766980581672.png";
 import bgImage from "@assets/generated_images/dark_ethereal_fluid_gradient_background_with_glowing_particles.png";
 
@@ -80,9 +79,9 @@ const categories: Category[] = [
     cardGradient: "from-purple-500/15 to-pink-500/10",
     glowColor: "purple",
     cards: [
-      { title: "Marketing Hub", description: "Campaign management and analytics", icon: Megaphone, toast: "Marketing Hub coming soon!" },
-      { title: "Newsletter", description: "Email campaigns and subscriber management", icon: Mail, toast: "Newsletter feature coming soon!" },
-      { title: "Social Media", description: "Social scheduling and engagement", icon: Share2, toast: "Social Media manager coming soon!" },
+      { title: "Marketing Hub", description: "Campaign management and analytics", icon: Megaphone, toast: "Planned" },
+      { title: "Newsletter", description: "Email campaigns and subscriber management", icon: Mail, toast: "Planned" },
+      { title: "Social Media", description: "Social scheduling and engagement", icon: Share2, toast: "Planned" },
     ],
   },
   {
@@ -244,7 +243,6 @@ function PinGate({ onUnlock }: { onUnlock: () => void }) {
 
 function FeatureCard({ card, glowColor }: { card: CardItem; glowColor: string; cardGradient: string }) {
   const [, setLocation] = useLocation();
-  const { toast } = useToast();
 
   const glowMap: Record<string, string> = {
     cyan: "hover:shadow-cyan-500/20 hover:border-cyan-500/30",
@@ -268,12 +266,12 @@ function FeatureCard({ card, glowColor }: { card: CardItem; glowColor: string; c
     slate: "text-slate-400",
   };
 
+  const isPlanned = card.toast && !card.path;
+
   const handleClick = () => {
-    if (card.toast) {
-      toast({ title: card.toast, description: card.path ? "Navigating..." : undefined });
-      if (card.path) {
-        setLocation(card.path);
-      }
+    if (isPlanned) return;
+    if (card.toast && card.path) {
+      setLocation(card.path);
       return;
     }
     if (card.external) {
@@ -292,7 +290,7 @@ function FeatureCard({ card, glowColor }: { card: CardItem; glowColor: string; c
       whileHover={{ scale: 1.03, y: -4 }}
       whileTap={{ scale: 0.98 }}
       onClick={handleClick}
-      className={`flex-shrink-0 w-[280px] sm:w-[300px] h-[200px] rounded-2xl bg-white/[0.04] backdrop-blur-md border border-white/10 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl ${glowMap[glowColor] || ""} flex flex-col justify-between group`}
+      className={`flex-shrink-0 w-[280px] sm:w-[300px] h-[200px] rounded-2xl bg-white/[0.04] backdrop-blur-md border border-white/10 p-5 ${isPlanned ? "cursor-default opacity-60" : "cursor-pointer"} transition-all duration-300 hover:shadow-xl ${glowMap[glowColor] || ""} flex flex-col justify-between group`}
       data-testid={`card-${card.title.toLowerCase().replace(/\s+/g, '-')}`}
     >
       <div>
@@ -306,7 +304,7 @@ function FeatureCard({ card, glowColor }: { card: CardItem; glowColor: string; c
         <p className="text-slate-400 text-xs leading-relaxed">{card.description}</p>
       </div>
       <div className="flex items-center gap-1 text-xs text-slate-500 group-hover:text-slate-300 transition-colors">
-        <span>{card.external ? "Open external" : card.toast && !card.path ? "Coming soon" : "Navigate"}</span>
+        <span>{card.external ? "Open external" : card.toast && !card.path ? "Planned" : "Navigate"}</span>
         <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
       </div>
     </motion.div>

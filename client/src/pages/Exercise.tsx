@@ -6,20 +6,11 @@ import { Area, AreaChart, ResponsiveContainer, BarChart, Bar, Cell, Tooltip, XAx
 import { ExerciseEntryDialog } from "@/components/ui/health-entry-dialogs";
 import { useExerciseTracking } from "@/hooks/use-health-tracking";
 import { useAuth } from "@/hooks/use-auth";
-import { useToast } from "@/hooks/use-toast";
 
 
 export default function Exercise() {
   const { isAuthenticated } = useAuth();
   const { exerciseLogs, isLoading, createExerciseLog, isCreating } = useExerciseTracking();
-  const { toast } = useToast();
-  
-  const handleComingSoon = (feature: string) => {
-    toast({
-      title: "Coming Soon",
-      description: `${feature} will be available in a future update.`,
-    });
-  };
 
   const handleExerciseSubmit = (data: { date: string; activityType: string; durationMinutes: number; intensity: string; notes?: string }) => {
     createExerciseLog({
@@ -165,11 +156,12 @@ export default function Exercise() {
              The 8 Brocades sequence is recommended for today to clear liver stagnation.
            </p>
            <button 
-             onClick={() => handleComingSoon("Guided Qigong video sessions")}
-             className="w-full py-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-xl flex items-center justify-center gap-2 transition-colors"
+             disabled
+             className="w-full py-3 bg-emerald-500/10 text-emerald-300/50 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed"
              data-testid="button-start-qigong"
+             title="Guided Qigong video sessions coming in a future update"
            >
-             <Play className="w-4 h-4 fill-current" /> Start Session
+             <Play className="w-4 h-4 fill-current" /> Sessions Coming Soon
            </button>
         </BentoCard>
 

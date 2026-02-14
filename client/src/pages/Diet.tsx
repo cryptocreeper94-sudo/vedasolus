@@ -6,7 +6,6 @@ import { Flame, Clock, Leaf, Info, Calendar, Utensils, Apple } from "lucide-reac
 import { MealEntryDialog, WaterTracker } from "@/components/ui/health-entry-dialogs";
 import { useDietTracking } from "@/hooks/use-health-tracking";
 import { useAuth } from "@/hooks/use-auth";
-import { useToast } from "@/hooks/use-toast";
 
 const recipes = [
   {
@@ -36,15 +35,6 @@ export default function Diet() {
   const { isAuthenticated } = useAuth();
   const { dietLogs, isLoading, createDietLog, isCreating } = useDietTracking();
   const [waterIntake, setWaterIntake] = useState(1.2);
-  const { toast } = useToast();
-
-  const handleRecipeClick = (title: string) => {
-    toast({
-      title: title,
-      description: "Full recipe with ingredients and instructions coming soon!",
-    });
-  };
-
   const handleMealSubmit = (data: { date: string; mealType: string; items: string[]; calories: number; notes?: string }) => {
     createDietLog({
       date: data.date,
@@ -204,8 +194,8 @@ export default function Diet() {
               <motion.div
                 key={i}
                 whileHover={{ y: -5 }}
-                onClick={() => handleRecipeClick(recipe.title)}
-                className={`p-5 rounded-3xl bg-gradient-to-br ${recipe.color} border border-white/5 cursor-pointer relative overflow-hidden group`}
+                title="Full recipe details coming soon"
+                className={`p-5 rounded-3xl bg-gradient-to-br ${recipe.color} border border-white/5 relative overflow-hidden group`}
               >
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
                 <div className="relative z-10">

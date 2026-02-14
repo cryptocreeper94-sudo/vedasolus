@@ -1,5 +1,4 @@
 import { Shell } from "@/components/layout/Shell";
-import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
 import { 
   Users, 
@@ -8,8 +7,6 @@ import {
   DollarSign, 
   Clock, 
   CheckCircle,
-  TrendingUp,
-  MoreVertical,
   UserPlus,
   FileText,
   CreditCard,
@@ -17,37 +14,11 @@ import {
   Building2,
   RefreshCw
 } from "lucide-react";
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast";
-
-const mockStaff = [
-  { id: "doc_001", name: "Dr. Sarah Chen", role: "Acupuncturist", status: "active", rate: "$85/hr" },
-  { id: "doc_002", name: "Dr. Michael Patel", role: "Ayurvedic Physician", status: "active", rate: "$120/hr" },
-  { id: "cont_001", name: "Lisa Thompson", role: "Massage Therapist", status: "active", rate: "$65/hr" },
-  { id: "emp_001", name: "James Wilson", role: "Front Desk", status: "active", rate: "$22/hr" },
-];
-
-const mockTimesheets = [
-  { staff: "Dr. Sarah Chen", date: "2025-01-15", hours: 8, total: "$680" },
-  { staff: "Dr. Michael Patel", date: "2025-01-15", hours: 6, total: "$720" },
-  { staff: "Lisa Thompson", date: "2025-01-15", hours: 7, total: "$455" },
-  { staff: "James Wilson", date: "2025-01-15", hours: 8, total: "$176" },
-];
 
 export default function PractitionerDashboard() {
-  const [activeTab, setActiveTab] = useState("overview");
-  const { toast } = useToast();
-  
-  const handleAppointmentClick = (client: string) => {
-    toast({
-      title: `Appointment with ${client}`,
-      description: "View appointment details and client history coming soon!",
-    });
-  };
-  
   const { data: orbitStatus } = useQuery({
     queryKey: ["/api/orbit/status"],
     queryFn: async () => {
@@ -64,7 +35,7 @@ export default function PractitionerDashboard() {
           <h1 className="text-4xl font-serif font-medium mb-2">Practice Hub</h1>
           <p className="text-muted-foreground">Manage your clients, appointments, and business growth.</p>
         </div>
-        <button onClick={() => toast({ title: "New Client", description: "Client intake form coming soon!" })} className="px-4 py-2 bg-primary text-primary-foreground rounded-xl font-medium text-sm hover:bg-primary/90 transition-colors">
+        <button disabled className="px-4 py-2 bg-primary/40 text-primary-foreground/60 rounded-xl font-medium text-sm cursor-not-allowed" title="Client intake form coming soon">
           + New Client
         </button>
       </div>
@@ -75,12 +46,9 @@ export default function PractitionerDashboard() {
                <div className="p-3 bg-blue-500/20 rounded-xl text-blue-400">
                  <Users className="w-6 h-6" />
                </div>
-               <span className="text-xs text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-1 rounded-full">
-                 <TrendingUp className="w-3 h-3" /> +12%
-               </span>
             </div>
-            <h3 className="text-3xl font-bold">142</h3>
-            <p className="text-sm text-muted-foreground">Active Clients</p>
+            <h3 className="text-3xl font-bold">0</h3>
+            <p className="text-sm text-muted-foreground">No clients yet</p>
          </div>
 
          <div className="p-6 rounded-3xl glass-card border border-white/10">
@@ -89,8 +57,8 @@ export default function PractitionerDashboard() {
                  <Calendar className="w-6 h-6" />
                </div>
             </div>
-            <h3 className="text-3xl font-bold">8</h3>
-            <p className="text-sm text-muted-foreground">Upcoming Today</p>
+            <h3 className="text-3xl font-bold">0</h3>
+            <p className="text-sm text-muted-foreground">No appointments</p>
          </div>
 
          <div className="p-6 rounded-3xl glass-card border border-white/10">
@@ -99,7 +67,7 @@ export default function PractitionerDashboard() {
                  <DollarSign className="w-6 h-6" />
                </div>
             </div>
-            <h3 className="text-3xl font-bold">$12.4k</h3>
+            <h3 className="text-3xl font-bold">$0</h3>
             <p className="text-sm text-muted-foreground">Revenue (Mo)</p>
          </div>
 
@@ -110,7 +78,7 @@ export default function PractitionerDashboard() {
                </div>
             </div>
             <h3 className="text-3xl font-bold">Orbit</h3>
-            <p className="text-sm text-muted-foreground">Staffing Status: Active</p>
+            <p className="text-sm text-muted-foreground">Staffing Status: Standby</p>
          </div>
       </div>
 
@@ -118,34 +86,11 @@ export default function PractitionerDashboard() {
          {/* Appointment Schedule */}
          <div className="lg:col-span-8 p-6 rounded-3xl glass-panel border border-white/10 overflow-y-auto">
             <h3 className="font-medium text-lg mb-6">Today's Schedule</h3>
-            <div className="space-y-3">
-               {[
-                 { time: "09:00 AM", client: "Sarah Miller", type: "Initial Consultation", status: "Completed" },
-                 { time: "10:30 AM", client: "David Chen", type: "Follow-up", status: "In Progress" },
-                 { time: "01:00 PM", client: "Emily Davis", type: "Ayurvedic Assessment", status: "Upcoming" },
-                 { time: "02:30 PM", client: "Michael Wilson", type: "Integration Session", status: "Upcoming" },
-               ].map((app, i) => (
-                 <div key={i} onClick={() => handleAppointmentClick(app.client)} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
-                    <div className="w-20 text-sm font-mono text-muted-foreground">{app.time}</div>
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-sm font-bold text-white">
-                      {app.client.charAt(0)}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium group-hover:text-primary transition-colors">{app.client}</h4>
-                      <p className="text-xs text-muted-foreground">{app.type}</p>
-                    </div>
-                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      app.status === "Completed" ? "bg-emerald-500/10 text-emerald-400" :
-                      app.status === "In Progress" ? "bg-blue-500/10 text-blue-400 animate-pulse" :
-                      "bg-white/10 text-muted-foreground"
-                    }`}>
-                      {app.status}
-                    </div>
-                    <button onClick={(e) => { e.stopPropagation(); toast({ title: "Options", description: "Appointment options menu coming soon!" }); }} className="p-2 hover:bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                 </div>
-               ))}
+            <div className="flex flex-col items-center justify-center h-[calc(100%-3rem)] text-center">
+              <div className="p-4 bg-purple-500/10 rounded-2xl mb-4">
+                <Calendar className="w-10 h-10 text-purple-400/60" />
+              </div>
+              <p className="text-muted-foreground text-sm">No appointments scheduled today</p>
             </div>
          </div>
 
@@ -167,8 +112,8 @@ export default function PractitionerDashboard() {
                     <span className="text-emerald-400 flex items-center gap-1"><CheckCircle className="w-3 h-3" /> Synced</span>
                   </div>
                </div>
-               <button onClick={() => toast({ title: "Business Manager", description: "Full business management dashboard coming soon!" })} className="w-full mt-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors" data-testid="button-manage-business">
-                 Manage Business
+               <button disabled className="w-full mt-6 py-3 bg-indigo-500/40 text-white/60 rounded-xl text-xs font-bold uppercase tracking-widest cursor-not-allowed" data-testid="button-manage-business" title="Full business management dashboard coming Q3">
+                 Business Manager (Coming Q3)
                </button>
             </div>
          </div>
@@ -237,37 +182,16 @@ export default function PractitionerDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockStaff.map((staff) => (
-                    <tr key={staff.id} className="border-t border-white/5 hover:bg-white/5 transition-colors" data-testid={`row-staff-${staff.id}`}>
-                      <td className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-violet-500 flex items-center justify-center text-xs font-bold">
-                            {staff.name.charAt(0)}
-                          </div>
-                          <span className="font-medium text-white">{staff.name}</span>
+                  <tr>
+                    <td colSpan={6} className="p-12">
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <div className="p-4 bg-cyan-500/10 rounded-2xl mb-4">
+                          <Users className="w-10 h-10 text-cyan-400/60" />
                         </div>
-                      </td>
-                      <td className="p-4 text-sm text-slate-300">{staff.role}</td>
-                      <td className="p-4">
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          staff.id.startsWith("doc") ? "bg-blue-500/20 text-blue-400" :
-                          staff.id.startsWith("cont") ? "bg-orange-500/20 text-orange-400" :
-                          "bg-emerald-500/20 text-emerald-400"
-                        }`}>
-                          {staff.id.startsWith("doc") ? "1099" : staff.id.startsWith("cont") ? "Contractor" : "W-2"}
-                        </span>
-                      </td>
-                      <td className="p-4 text-sm font-mono text-cyan-400">{staff.rate}</td>
-                      <td className="p-4">
-                        <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">Active</span>
-                      </td>
-                      <td className="p-4">
-                        <button className="p-2 hover:bg-white/10 rounded-lg transition-colors">
-                          <MoreVertical className="w-4 h-4 text-slate-400" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                        <p className="text-muted-foreground text-sm">No staff members yet. Add your first team member to get started.</p>
+                      </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -292,19 +216,16 @@ export default function PractitionerDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockTimesheets.map((entry, i) => (
-                    <tr key={i} className="border-t border-white/5 hover:bg-white/5 transition-colors" data-testid={`row-timesheet-${i}`}>
-                      <td className="p-4 font-medium text-white">{entry.staff}</td>
-                      <td className="p-4 text-sm text-slate-300">{entry.date}</td>
-                      <td className="p-4 text-sm font-mono text-violet-400">{entry.hours}h</td>
-                      <td className="p-4 text-sm font-mono text-emerald-400">{entry.total}</td>
-                      <td className="p-4">
-                        <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center gap-1 w-fit">
-                          <CheckCircle className="w-3 h-3" /> Synced
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                  <tr>
+                    <td colSpan={5} className="p-12">
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <div className="p-4 bg-violet-500/10 rounded-2xl mb-4">
+                          <Clock className="w-10 h-10 text-violet-400/60" />
+                        </div>
+                        <p className="text-muted-foreground text-sm">No timesheets recorded yet.</p>
+                      </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -314,18 +235,18 @@ export default function PractitionerDashboard() {
             <div className="grid md:grid-cols-3 gap-4 mb-6">
               <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/5 border border-emerald-500/20">
                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-2">This Pay Period</p>
-                <p className="text-3xl font-bold text-emerald-400">$4,231</p>
-                <p className="text-xs text-slate-400 mt-1">Jan 1 - Jan 15, 2025</p>
+                <p className="text-3xl font-bold text-emerald-400">$0</p>
+                <p className="text-xs text-slate-400 mt-1">No pay period active</p>
               </div>
               <div className="p-6 rounded-2xl bg-gradient-to-br from-violet-500/10 to-pink-500/5 border border-violet-500/20">
                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-2">Total Hours</p>
-                <p className="text-3xl font-bold text-violet-400">156h</p>
-                <p className="text-xs text-slate-400 mt-1">Across 4 staff members</p>
+                <p className="text-3xl font-bold text-violet-400">0h</p>
+                <p className="text-xs text-slate-400 mt-1">No hours logged</p>
               </div>
               <div className="p-6 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20">
                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-2">Next Payout</p>
-                <p className="text-3xl font-bold text-cyan-400">Jan 20</p>
-                <p className="text-xs text-slate-400 mt-1">Via Orbit Direct Deposit</p>
+                <p className="text-3xl font-bold text-cyan-400">—</p>
+                <p className="text-xs text-slate-400 mt-1">No payout scheduled</p>
               </div>
             </div>
             <div className="p-6 rounded-2xl border border-white/10 bg-white/5">
@@ -360,29 +281,14 @@ export default function PractitionerDashboard() {
               </Button>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              {[
-                { name: "Dr. Sarah Chen", cert: "Acupuncture License", number: "ACU-TN-12345", expires: "2026-06-15", status: "valid" },
-                { name: "Dr. Michael Patel", cert: "Ayurvedic Medicine", number: "AYU-TN-67890", expires: "2025-03-01", status: "expiring" },
-                { name: "Lisa Thompson", cert: "LMT License", number: "LMT-TN-11111", expires: "2025-12-31", status: "valid" },
-              ].map((cert, i) => (
-                <div key={i} className="p-4 rounded-xl border border-white/10 bg-white/5" data-testid={`card-cert-${i}`}>
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h4 className="font-medium text-white">{cert.name}</h4>
-                      <p className="text-sm text-slate-400">{cert.cert}</p>
-                    </div>
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      cert.status === "valid" ? "bg-emerald-500/20 text-emerald-400" : "bg-orange-500/20 text-orange-400"
-                    }`}>
-                      {cert.status === "valid" ? "Valid" : "Expiring Soon"}
-                    </span>
+              <div className="md:col-span-2 p-12">
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="p-4 bg-pink-500/10 rounded-2xl mb-4">
+                    <Shield className="w-10 h-10 text-pink-400/60" />
                   </div>
-                  <div className="flex justify-between text-xs text-slate-400">
-                    <span>#{cert.number}</span>
-                    <span>Expires: {cert.expires}</span>
-                  </div>
+                  <p className="text-muted-foreground text-sm">No certifications tracked yet.</p>
                 </div>
-              ))}
+              </div>
             </div>
           </TabsContent>
         </Tabs>

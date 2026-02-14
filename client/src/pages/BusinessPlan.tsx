@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
 
 const marketData = {
   tam: "$150B",
@@ -41,29 +40,22 @@ const revenueProjections = [
 const teamRoles = [
   { role: "Founder/CEO", name: "Jason", status: "Active", focus: "Vision & Strategy" },
   { role: "Lead Developer", name: "AI Agent", status: "Active", focus: "Full-Stack Development" },
-  { role: "Wellness Director", name: "TBD", status: "Hiring", focus: "Content & Practitioner Relations" },
-  { role: "Marketing Lead", name: "TBD", status: "Hiring", focus: "Growth & Community" },
+  { role: "Wellness Director", name: "Open Position", status: "Hiring", focus: "Content & Practitioner Relations" },
+  { role: "Marketing Lead", name: "Open Position", status: "Hiring", focus: "Growth & Community" },
 ];
 
 const milestones = [
   { date: "Q4 2024", milestone: "MVP Launch", status: "completed" },
   { date: "Q1 2025", milestone: "AI Coach Integration", status: "completed" },
-  { date: "Q2 2025", milestone: "Practitioner Marketplace", status: "in_progress" },
-  { date: "Q3 2025", milestone: "Blockchain Integration", status: "pending" },
-  { date: "Q4 2025", milestone: "Enterprise API Launch", status: "pending" },
-  { date: "Q1 2026", milestone: "Series A Funding", status: "pending" },
+  { date: "Q2 2025", milestone: "Practitioner Marketplace", status: "completed" },
+  { date: "Q3 2025", milestone: "Analytics & SEO", status: "completed" },
+  { date: "Q4 2025", milestone: "Command Center & PWA", status: "completed" },
+  { date: "Q1 2026", milestone: "Email Auth & Lead Capture", status: "completed" },
+  { date: "Q2 2026", milestone: "Telehealth Integration", status: "in_progress" },
+  { date: "Q3 2026", milestone: "Enterprise API", status: "pending" },
 ];
 
 export default function BusinessPlan() {
-  const { toast } = useToast();
-  
-  const handleComingSoon = (feature: string) => {
-    toast({
-      title: "Coming Soon",
-      description: `${feature} will be available in a future update.`,
-    });
-  };
-
   return (
     <Shell>
       <motion.div
@@ -82,10 +74,10 @@ export default function BusinessPlan() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => handleComingSoon("PDF export")} variant="outline" size="sm" className="border-white/10 hover:bg-white/5" data-testid="button-download-plan">
+            <Button disabled variant="outline" size="sm" className="border-white/10 opacity-50 cursor-not-allowed" data-testid="button-download-plan" title="PDF export coming soon">
               <Download className="w-4 h-4 mr-2" /> Export PDF
             </Button>
-            <Button onClick={() => handleComingSoon("Share feature")} variant="outline" size="sm" className="border-white/10 hover:bg-white/5" data-testid="button-share-plan">
+            <Button disabled variant="outline" size="sm" className="border-white/10 opacity-50 cursor-not-allowed" data-testid="button-share-plan" title="Share feature coming soon">
               <Share2 className="w-4 h-4 mr-2" /> Share
             </Button>
           </div>

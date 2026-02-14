@@ -314,7 +314,21 @@ export default function Settings() {
                   <h2 className="text-xl font-medium mb-6 flex items-center gap-2">
                     <Shield className="w-5 h-5 text-primary" /> Security Settings
                   </h2>
-                  <p className="text-sm text-muted-foreground">Two-factor authentication, session management, and access logs coming soon.</p>
+                  <div className="space-y-4">
+                    {[
+                      { feature: "Two-Factor Authentication (2FA)", desc: "TOTP and SMS-based second factor" },
+                      { feature: "Session Management", desc: "View and revoke active sessions across devices" },
+                      { feature: "Access Logs", desc: "Detailed audit trail of account activity" },
+                    ].map((item) => (
+                      <div key={item.feature} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
+                        <div>
+                          <h3 className="font-medium text-sm">{item.feature}</h3>
+                          <p className="text-xs text-muted-foreground">{item.desc}</p>
+                        </div>
+                        <span className="text-[10px] px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/20 font-medium uppercase tracking-wider">Planned</span>
+                      </div>
+                    ))}
+                  </div>
                </div>
             </motion.div>
           )}
@@ -329,7 +343,20 @@ export default function Settings() {
                   <h2 className="text-xl font-medium mb-6 flex items-center gap-2">
                     <Wallet className="w-5 h-5 text-primary" /> Wallet Management
                   </h2>
-                  <p className="text-sm text-muted-foreground">Crypto wallet integration and payment methods coming soon.</p>
+                  <div className="space-y-4">
+                    {[
+                      { feature: "Crypto Wallet Integration", desc: "Connect and manage blockchain-based health credentials" },
+                      { feature: "Payment Methods", desc: "Add credit cards, ACH, and digital payment options" },
+                    ].map((item) => (
+                      <div key={item.feature} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
+                        <div>
+                          <h3 className="font-medium text-sm">{item.feature}</h3>
+                          <p className="text-xs text-muted-foreground">{item.desc}</p>
+                        </div>
+                        <span className="text-[10px] px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/20 font-medium uppercase tracking-wider">Planned</span>
+                      </div>
+                    ))}
+                  </div>
                </div>
             </motion.div>
           )}

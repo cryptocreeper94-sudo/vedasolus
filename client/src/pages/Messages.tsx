@@ -5,7 +5,6 @@ import { Search, Send, MoreVertical, Phone, Video, Paperclip, Smile, Check, Chec
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
-import { useToast } from "@/hooks/use-toast";
 
 interface Conversation {
   id: string;
@@ -72,15 +71,6 @@ export default function Messages() {
   const [searchQuery, setSearchQuery] = useState("");
   const { isAuthenticated, user } = useAuth();
   const [location] = useLocation();
-  const { toast } = useToast();
-  
-  const handleComingSoon = (feature: string) => {
-    toast({
-      title: "Coming Soon",
-      description: `${feature} will be available in a future update.`,
-    });
-  };
-
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const practitionerId = urlParams.get('practitioner');
@@ -241,13 +231,13 @@ export default function Messages() {
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5 sm:gap-1">
-                  <button onClick={() => handleComingSoon("Voice calls")} className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-call">
+                  <button disabled title="Voice calls coming soon" className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg transition-colors touch-manipulation flex items-center justify-center opacity-40 cursor-not-allowed" data-testid="button-call">
                     <Phone className="w-5 h-5" />
                   </button>
-                  <button onClick={() => handleComingSoon("Video consultations")} className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation hidden sm:flex items-center justify-center" data-testid="button-video">
+                  <button disabled title="Video consultations coming soon" className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg transition-colors touch-manipulation hidden sm:flex items-center justify-center opacity-40 cursor-not-allowed" data-testid="button-video">
                     <Video className="w-5 h-5" />
                   </button>
-                  <button onClick={() => handleComingSoon("More options")} className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-more">
+                  <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-more">
                     <MoreVertical className="w-5 h-5" />
                   </button>
                 </div>
@@ -290,7 +280,7 @@ export default function Messages() {
               {/* Input Area */}
               <div className="p-4 border-t border-white/10">
                 <div className="flex items-center gap-2">
-                  <button onClick={() => handleComingSoon("File attachments")} className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-attach">
+                  <button disabled title="File attachments coming soon" className="p-2 rounded-lg transition-colors opacity-40 cursor-not-allowed" data-testid="button-attach">
                     <Paperclip className="w-5 h-5 text-muted-foreground" />
                   </button>
                   <input
@@ -302,7 +292,7 @@ export default function Messages() {
                     data-testid="input-message"
                     className="flex-1 bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 focus:outline-none focus:border-primary/50"
                   />
-                  <button onClick={() => handleComingSoon("Emoji picker")} className="p-2 rounded-lg hover:bg-white/10 transition-colors" data-testid="button-emoji">
+                  <button disabled title="Emoji picker coming soon" className="p-2 rounded-lg transition-colors opacity-40 cursor-not-allowed" data-testid="button-emoji">
                     <Smile className="w-5 h-5 text-muted-foreground" />
                   </button>
                   <button

@@ -16,23 +16,17 @@ interface HealthRecord {
   status: "verified" | "pending" | "unverified";
 }
 
-const sampleRecords: HealthRecord[] = [
-  { id: "1", name: "Annual Physical 2024", type: "Lab Results", source: "Austin Wellness Clinic", date: "2024-11-15", status: "verified" },
-  { id: "2", name: "Lipid Panel", type: "Lab Results", source: "Quest Diagnostics", date: "2024-10-22", status: "verified" },
-  { id: "3", name: "Vaccination Record", type: "Immunization", source: "Manual Upload", date: "2024-09-10", status: "pending" },
-];
-
 const healthProviders = [
-  { id: "epic", name: "Epic MyChart", logo: "🏥", connected: true },
+  { id: "epic", name: "Epic MyChart", logo: "🏥", connected: false },
   { id: "cerner", name: "Cerner Health", logo: "🩺", connected: false },
   { id: "allscripts", name: "AllScripts", logo: "📋", connected: false },
   { id: "athena", name: "AthenaHealth", logo: "⚕️", connected: false },
-  { id: "apple", name: "Apple Health", logo: "🍎", connected: true },
+  { id: "apple", name: "Apple Health", logo: "🍎", connected: false },
   { id: "fitbit", name: "Fitbit", logo: "⌚", connected: false },
 ];
 
 export default function HealthRecords() {
-  const [records, setRecords] = useState(sampleRecords);
+  const [records, setRecords] = useState<HealthRecord[]>([]);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [connectDialogOpen, setConnectDialogOpen] = useState(false);
   const { isAuthenticated } = useAuth();
@@ -312,7 +306,7 @@ export default function HealthRecords() {
             </p>
             <div className="flex items-center gap-2 text-xs text-primary">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>2 records verified on-chain</span>
+              <span>0 records verified on-chain</span>
             </div>
           </div>
         </div>

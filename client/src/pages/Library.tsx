@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Search, BookOpen, Globe, Fingerprint, ExternalLink, Dna, Activity } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
 
 const libraryTopics = [
   {
@@ -69,15 +68,6 @@ const libraryTopics = [
 export default function Library() {
   const [selectedTopic, setSelectedTopic] = useState(libraryTopics[0]);
   const [searchTerm, setSearchTerm] = useState("");
-  const { toast } = useToast();
-
-  const handleResourceHub = () => {
-    toast({
-      title: "Resource Hub",
-      description: "Curated external resources and research papers coming soon!"
-    });
-  };
-
   const filteredTopics = libraryTopics.filter(t => 
     t.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -243,7 +233,7 @@ export default function Library() {
                <ExternalLink className="w-4 h-4" />
                <span>Want to learn more? Explore our verified external resources.</span>
              </div>
-             <button onClick={handleResourceHub} data-testid="button-resource-hub" className="text-primary hover:text-primary/80 transition-colors">View Resource Hub &rarr;</button>
+             <span data-testid="button-resource-hub" className="text-muted-foreground/60 cursor-not-allowed text-sm">Resource Hub (Coming Soon)</span>
            </div>
         </div>
       </div>

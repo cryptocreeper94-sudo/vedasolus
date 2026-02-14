@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Flame, Wind, Droplets, Sun, Moon, Leaf, Sprout } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
 import alchemyBg from "@assets/generated_images/modern_alchemy_lab_with_glowing_herbal_elixirs.png";
 
 const doshas = [
@@ -48,14 +47,6 @@ const dailyRoutine = [
 
 export default function Ayurveda() {
   const [activeDosha, setActiveDosha] = useState("Pitta");
-  const { toast } = useToast();
-  
-  const handleComingSoon = (feature: string) => {
-    toast({
-      title: "Coming Soon",
-      description: `${feature} will be available in a future update.`,
-    });
-  };
 
   return (
     <Shell>
@@ -201,8 +192,8 @@ export default function Ayurveda() {
                  The strength of the digestive fire is high. It is the time to nourish the body with sweet, sour, and salty tastes. Oil massage (Abhyanga) is highly beneficial to counter the dry, cold Vata qualities of the season.
                </p>
                <div className="flex gap-3">
-                 <button onClick={() => handleComingSoon("Seasonal diet guide")} className="px-4 py-2 bg-white/10 hover:bg-white/15 rounded-lg text-sm transition-colors">View Seasonal Diet</button>
-                 <button onClick={() => handleComingSoon("Daily routines guide")} className="px-4 py-2 bg-white/10 hover:bg-white/15 rounded-lg text-sm transition-colors">Daily Routines</button>
+                 <button disabled className="px-4 py-2 bg-white/5 rounded-lg text-sm text-white/40 cursor-not-allowed" title="Available Soon">View Seasonal Diet</button>
+                 <button disabled className="px-4 py-2 bg-white/5 rounded-lg text-sm text-white/40 cursor-not-allowed" title="Available Soon">Daily Routines</button>
                </div>
              </div>
            </div>

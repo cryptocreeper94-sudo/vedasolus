@@ -121,12 +121,7 @@ export default function Community() {
     ));
   };
 
-  const handleExploreAll = () => {
-    toast({
-      title: "Tribes Directory",
-      description: "Full tribe discovery coming soon! For now, explore the featured tribes on this page."
-    });
-  };
+  const [showExploreMessage, setShowExploreMessage] = useState(false);
 
   return (
     <Shell>
@@ -200,9 +195,10 @@ export default function Community() {
                    >
                      <Flame className="w-4 h-4" /> {post.likes}
                    </button>
-                   <button onClick={() => toast({ title: "Comments", description: "Comment threads coming soon!" })} className="flex items-center gap-1.5 hover:text-primary transition-colors touch-manipulation py-2.5 px-3 min-h-[44px] rounded-lg">
+                   <span className="flex items-center gap-1.5 text-muted-foreground/60 py-2.5 px-3 min-h-[44px] rounded-lg cursor-default" title="Discussion threads launching soon">
                      <MessageCircle className="w-4 h-4" /> {post.comments}
-                   </button>
+                     <span className="text-[10px] ml-1 text-cyan-400/60">threads soon</span>
+                   </span>
                 </div>
              </motion.div>
            ))}
@@ -231,12 +227,17 @@ export default function Community() {
                  ))}
               </div>
               <button 
-                onClick={handleExploreAll}
+                onClick={() => setShowExploreMessage(!showExploreMessage)}
                 data-testid="button-explore-tribes"
                 className="w-full mt-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs uppercase tracking-widest transition-colors"
               >
                 Explore All
               </button>
+              {showExploreMessage && (
+                <p className="mt-3 text-xs text-cyan-400/80 text-center px-2">
+                  Full tribe discovery launching soon — explore featured tribes above for now.
+                </p>
+              )}
            </div>
         </div>
       </div>
