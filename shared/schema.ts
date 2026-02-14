@@ -584,5 +584,42 @@ export const insertAdCampaignSchema = createInsertSchema(adCampaigns).omit({
 export type InsertAdCampaign = z.infer<typeof insertAdCampaignSchema>;
 export type AdCampaign = typeof adCampaigns.$inferSelect;
 
+// Practitioner Inquiries (lead capture for practitioners/teledoc providers)
+export const practitionerInquiries = pgTable("practitioner_inquiries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  modality: text("modality").notNull(),
+  licenseNumber: text("license_number"),
+  yearsExperience: integer("years_experience"),
+  interestedInTeledoc: boolean("interested_in_teledoc").default(false),
+  state: text("state"),
+  country: text("country"),
+  message: text("message"),
+  status: text("status").default("new"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertPractitionerInquirySchema = createInsertSchema(practitionerInquiries).omit({
+  id: true,
+  status: true,
+  createdAt: true,
+}).extend({
+  fullName: z.string().min(2, "Name is required"),
+  email: z.string().email("Please enter a valid email"),
+  phone: z.string().nullable().optional(),
+  modality: z.string().min(1, "Please select a modality"),
+  licenseNumber: z.string().nullable().optional(),
+  yearsExperience: z.number().nullable().optional(),
+  interestedInTeledoc: z.boolean().optional().default(false),
+  state: z.string().nullable().optional(),
+  country: z.string().nullable().optional(),
+  message: z.string().nullable().optional(),
+});
+
+export type InsertPractitionerInquiry = z.infer<typeof insertPractitionerInquirySchema>;
+export type PractitionerInquiry = typeof practitionerInquiries.$inferSelect;
+
 // Import users from auth models for references
 import { users } from "./models/auth";
