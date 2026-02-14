@@ -981,7 +981,7 @@ export default function DeveloperDashboard() {
               <h3 className="font-mono text-sm text-muted-foreground mb-4 flex items-center gap-2">
                 <Code className="w-4 h-4" /> DEVELOPER CONSOLE
               </h3>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <button onClick={() => handleDevAction("Cache flush")} className="p-3 rounded-lg border border-white/10 hover:bg-white/5 text-left transition-colors group" data-testid="button-flush-cache">
                   <span className="block text-xs text-muted-foreground mb-1">Cache</span>
                   <span className="text-sm font-mono group-hover:text-red-400">FLUSH ALL</span>

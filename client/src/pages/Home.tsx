@@ -576,7 +576,7 @@ export default function Home() {
               <span className="text-xs text-primary hover:underline cursor-pointer">View all</span>
             </Link>
           </div>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { name: "First Steps", icon: "⭐", earned: true },
               { name: "Week Warrior", icon: "🔥", earned: true },
