@@ -233,7 +233,7 @@ export default function Library() {
                <ExternalLink className="w-4 h-4" />
                <span>Want to learn more? Explore our verified external resources.</span>
              </div>
-             <span data-testid="button-resource-hub" className="text-muted-foreground/60 cursor-not-allowed text-sm">Resource Hub (Coming Soon)</span>
+             <span data-testid="button-resource-hub" className="text-muted-foreground/60 cursor-not-allowed text-sm">Resource Hub (Planned)</span>
            </div>
         </div>
       </div>

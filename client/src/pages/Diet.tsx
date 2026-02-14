@@ -194,7 +194,7 @@ export default function Diet() {
               <motion.div
                 key={i}
                 whileHover={{ y: -5 }}
-                title="Full recipe details coming soon"
+                title="Full recipe details — planned feature"
                 className={`p-5 rounded-3xl bg-gradient-to-br ${recipe.color} border border-white/5 relative overflow-hidden group`}
               >
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />

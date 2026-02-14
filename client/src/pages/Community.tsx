@@ -18,7 +18,7 @@ interface Post {
 const tribes = [
   {
     name: "Paleo Ancestral",
-    members: "12.4k",
+    members: "0",
     desc: "Returning to human biological roots through diet and movement.",
     active: true,
     color: "text-orange-400",
@@ -26,7 +26,7 @@ const tribes = [
   },
   {
     name: "Vipassana Sitters",
-    members: "8.2k",
+    members: "0",
     desc: "Daily silent meditation practice and Dhamma discussion.",
     active: true,
     color: "text-purple-400",
@@ -34,7 +34,7 @@ const tribes = [
   },
   {
     name: "Biohacker Collective",
-    members: "24.1k",
+    members: "0",
     desc: "Quantified self, longevity protocols, and cold exposure.",
     active: true,
     color: "text-cyan-400",
@@ -42,38 +42,9 @@ const tribes = [
   }
 ];
 
-const initialPosts: Post[] = [
-  {
-    id: "1",
-    author: "Sarah J.",
-    tribe: "Biohacker Collective",
-    content: "Just completed a 72-hour fast. The mental clarity around hour 48 was insane. Has anyone else experienced that \"pop\" where the brain fog just completely evaporates?",
-    time: "2h ago",
-    likes: 243,
-    comments: 42
-  },
-  {
-    id: "2",
-    author: "Marcus T.",
-    tribe: "Paleo Ancestral",
-    content: "Started cold plunging every morning at 5am. Week 3 and my energy levels are through the roof. Anyone else notice improved sleep quality?",
-    time: "4h ago",
-    likes: 189,
-    comments: 28
-  },
-  {
-    id: "3",
-    author: "Elena R.",
-    tribe: "Vipassana Sitters",
-    content: "Day 45 of my meditation streak. The stillness is becoming more natural. Grateful for this community.",
-    time: "6h ago",
-    likes: 312,
-    comments: 56
-  }
-];
 
 export default function Community() {
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState("");
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -167,6 +138,13 @@ export default function Community() {
            </div>
 
            {/* Feed Items */}
+           {posts.length === 0 && (
+             <div className="p-8 sm:p-12 rounded-2xl sm:rounded-3xl border border-dashed border-white/20 text-center">
+               <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+               <p className="font-medium mb-2">No posts yet</p>
+               <p className="text-sm text-muted-foreground">Be the first to share an insight with the tribe.</p>
+             </div>
+           )}
            {posts.map((post) => (
              <motion.div 
                key={post.id}

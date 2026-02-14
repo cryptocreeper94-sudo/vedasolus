@@ -159,9 +159,9 @@ export default function Exercise() {
              disabled
              className="w-full py-3 bg-emerald-500/10 text-emerald-300/50 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed"
              data-testid="button-start-qigong"
-             title="Guided Qigong video sessions coming in a future update"
+             title="Guided Qigong video sessions — planned feature"
            >
-             <Play className="w-4 h-4 fill-current" /> Sessions Coming Soon
+             <Play className="w-4 h-4 fill-current" /> Sessions Planned
            </button>
         </BentoCard>
 

@@ -25,48 +25,11 @@ interface Message {
   read: boolean;
 }
 
-const conversations: Conversation[] = [
-  {
-    id: "1",
-    name: "Dr. Elena Vasquez",
-    lastMessage: "Looking forward to our session tomorrow!",
-    time: "2:30 PM",
-    unread: 2,
-    online: true,
-    type: "practitioner"
-  },
-  {
-    id: "2",
-    name: "Master Jun Wei",
-    lastMessage: "The acupuncture points I mentioned are...",
-    time: "Yesterday",
-    unread: 0,
-    online: false,
-    type: "practitioner"
-  },
-  {
-    id: "3",
-    name: "VedaSolus Support",
-    lastMessage: "Thank you for contacting support",
-    time: "Dec 26",
-    unread: 0,
-    online: true,
-    type: "user"
-  }
-];
-
-const initialMessages: Message[] = [
-  { id: "1", content: "Hi! I wanted to follow up about my diet recommendations.", sender: "me", time: "2:15 PM", read: true },
-  { id: "2", content: "Of course! Based on your recent logs, I'd suggest focusing on anti-inflammatory foods.", sender: "other", time: "2:20 PM", read: true },
-  { id: "3", content: "Try incorporating more turmeric, ginger, and leafy greens.", sender: "other", time: "2:21 PM", read: true },
-  { id: "4", content: "That sounds great! Any specific recipes you recommend?", sender: "me", time: "2:25 PM", read: true },
-  { id: "5", content: "Looking forward to our session tomorrow!", sender: "other", time: "2:30 PM", read: false },
-];
 
 export default function Messages() {
-  const [conversationList, setConversationList] = useState<Conversation[]>(conversations);
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(conversations[0]);
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [conversationList, setConversationList] = useState<Conversation[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const { isAuthenticated, user } = useAuth();
@@ -160,6 +123,13 @@ export default function Messages() {
           </div>
           
           <div className="flex-1 overflow-y-auto">
+            {filteredConversations.length === 0 && (
+              <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                <Send className="w-10 h-10 text-muted-foreground mb-3" />
+                <p className="font-medium text-sm mb-1">No conversations yet</p>
+                <p className="text-xs text-muted-foreground">Visit the marketplace to connect with a practitioner.</p>
+              </div>
+            )}
             {filteredConversations.map((convo) => (
               <motion.div
                 key={convo.id}
@@ -231,10 +201,10 @@ export default function Messages() {
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5 sm:gap-1">
-                  <button disabled title="Voice calls coming soon" className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg transition-colors touch-manipulation flex items-center justify-center opacity-40 cursor-not-allowed" data-testid="button-call">
+                  <button disabled title="Voice calls — planned feature" className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg transition-colors touch-manipulation flex items-center justify-center opacity-40 cursor-not-allowed" data-testid="button-call">
                     <Phone className="w-5 h-5" />
                   </button>
-                  <button disabled title="Video consultations coming soon" className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg transition-colors touch-manipulation hidden sm:flex items-center justify-center opacity-40 cursor-not-allowed" data-testid="button-video">
+                  <button disabled title="Video consultations — planned feature" className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg transition-colors touch-manipulation hidden sm:flex items-center justify-center opacity-40 cursor-not-allowed" data-testid="button-video">
                     <Video className="w-5 h-5" />
                   </button>
                   <button className="min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-white/10 transition-colors touch-manipulation flex items-center justify-center" data-testid="button-more">
@@ -280,7 +250,7 @@ export default function Messages() {
               {/* Input Area */}
               <div className="p-4 border-t border-white/10">
                 <div className="flex items-center gap-2">
-                  <button disabled title="File attachments coming soon" className="p-2 rounded-lg transition-colors opacity-40 cursor-not-allowed" data-testid="button-attach">
+                  <button disabled title="File attachments — planned feature" className="p-2 rounded-lg transition-colors opacity-40 cursor-not-allowed" data-testid="button-attach">
                     <Paperclip className="w-5 h-5 text-muted-foreground" />
                   </button>
                   <input
@@ -292,7 +262,7 @@ export default function Messages() {
                     data-testid="input-message"
                     className="flex-1 bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 focus:outline-none focus:border-primary/50"
                   />
-                  <button disabled title="Emoji picker coming soon" className="p-2 rounded-lg transition-colors opacity-40 cursor-not-allowed" data-testid="button-emoji">
+                  <button disabled title="Emoji picker — planned feature" className="p-2 rounded-lg transition-colors opacity-40 cursor-not-allowed" data-testid="button-emoji">
                     <Smile className="w-5 h-5 text-muted-foreground" />
                   </button>
                   <button

@@ -74,10 +74,10 @@ export default function BusinessPlan() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button disabled variant="outline" size="sm" className="border-white/10 opacity-50 cursor-not-allowed" data-testid="button-download-plan" title="PDF export coming soon">
+            <Button disabled variant="outline" size="sm" className="border-white/10 opacity-50 cursor-not-allowed" data-testid="button-download-plan" title="PDF export — planned feature">
               <Download className="w-4 h-4 mr-2" /> Export PDF
             </Button>
-            <Button disabled variant="outline" size="sm" className="border-white/10 opacity-50 cursor-not-allowed" data-testid="button-share-plan" title="Share feature coming soon">
+            <Button disabled variant="outline" size="sm" className="border-white/10 opacity-50 cursor-not-allowed" data-testid="button-share-plan" title="Share — planned feature">
               <Share2 className="w-4 h-4 mr-2" /> Share
             </Button>
           </div>

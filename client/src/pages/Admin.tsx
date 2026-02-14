@@ -24,26 +24,10 @@ export default function AdminDashboard() {
               <Flag className="w-5 h-5" /> Flagged Content Queue
             </h3>
             
-            <div className="space-y-3">
-              {[
-                { type: "Post", user: "User_892", reason: "Potential Medical Misinformation", severity: "High" },
-                { type: "Profile", user: "Healer_Test", reason: "Unverified Credentials", severity: "Medium" },
-                { type: "Comment", user: "Anon_22", reason: "Spam / Bot Behavior", severity: "Low" },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-white/5">
-                   <div>
-                     <span className="text-xs uppercase bg-white/10 px-2 py-1 rounded text-muted-foreground mr-3">{item.type}</span>
-                     <span className="font-medium text-white/90">{item.reason}</span>
-                     <p className="text-xs text-muted-foreground mt-1">Reported by System • {item.user}</p>
-                   </div>
-                   <div className="flex items-center gap-3">
-                     <span className={`text-xs font-bold ${item.severity === "High" ? "text-rose-500" : "text-amber-500"}`}>
-                       {item.severity} Priority
-                     </span>
-                     <button disabled title="Content review coming soon" className="px-3 py-1 bg-white/10 rounded-lg text-xs opacity-40 cursor-not-allowed">Review</button>
-                   </div>
-                </div>
-              ))}
+            <div className="p-8 rounded-xl border border-dashed border-white/20 text-center">
+              <Flag className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <p className="font-medium mb-1">No flagged content</p>
+              <p className="text-xs text-muted-foreground">Content moderation queue is empty. Flagged items will appear here.</p>
             </div>
          </BentoCard>
 
@@ -52,15 +36,15 @@ export default function AdminDashboard() {
               <UserX className="w-4 h-4 text-muted-foreground" /> User Management
             </h3>
             <div className="space-y-2">
-               <button disabled title="User search coming soon" className="w-full p-3 text-left rounded-xl border border-transparent opacity-40 cursor-not-allowed">
+               <button disabled title="User search — planned feature" className="w-full p-3 text-left rounded-xl border border-transparent opacity-40 cursor-not-allowed">
                  <span className="block font-medium">Search User Database</span>
                  <span className="text-xs text-muted-foreground">Find by ID, Email, or Wallet</span>
                </button>
-               <button disabled title="Ban/suspension logs coming soon" className="w-full p-3 text-left rounded-xl border border-transparent opacity-40 cursor-not-allowed">
+               <button disabled title="Ban/suspension logs — planned feature" className="w-full p-3 text-left rounded-xl border border-transparent opacity-40 cursor-not-allowed">
                  <span className="block font-medium">Ban / Suspension Logs</span>
                  <span className="text-xs text-muted-foreground">View active restrictions</span>
                </button>
-               <button disabled title="Verification override coming soon" className="w-full p-3 text-left rounded-xl border border-transparent opacity-40 cursor-not-allowed">
+               <button disabled title="Verification override — planned feature" className="w-full p-3 text-left rounded-xl border border-transparent opacity-40 cursor-not-allowed">
                  <span className="block font-medium">Verification Override</span>
                  <span className="text-xs text-muted-foreground">Manually verify practitioners</span>
                </button>
@@ -74,7 +58,7 @@ export default function AdminDashboard() {
              <p className="text-sm text-muted-foreground mb-4">
                Generate monthly compliance reports for Orbit Staffing.io audit logs.
              </p>
-             <button disabled title="CSV export coming soon" className="w-full py-2 bg-white/10 rounded-lg text-sm opacity-40 cursor-not-allowed">Download CSV</button>
+             <button disabled title="CSV export — planned feature" className="w-full py-2 bg-white/10 rounded-lg text-sm opacity-40 cursor-not-allowed">Download CSV</button>
          </BentoCard>
       </BentoGrid>
     </Shell>

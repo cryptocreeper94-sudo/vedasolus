@@ -108,7 +108,7 @@ const ConnectionOption = ({ icon: Icon, title, desc, color }: any) => (
        <div className="mt-auto pt-6 w-full">
          <button 
            disabled
-           title="HIPAA-compliant integrations coming soon"
+           title="HIPAA-compliant integrations — planned feature"
            data-testid={`button-connect-${title.toLowerCase().replace(/\s+/g, '-')}`}
            className="w-full py-2 rounded-xl bg-white/5 border border-white/5 text-xs uppercase tracking-widest font-medium opacity-40 cursor-not-allowed"
          >

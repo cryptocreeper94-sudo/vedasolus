@@ -35,7 +35,7 @@ export default function PractitionerDashboard() {
           <h1 className="text-4xl font-serif font-medium mb-2">Practice Hub</h1>
           <p className="text-muted-foreground">Manage your clients, appointments, and business growth.</p>
         </div>
-        <button disabled className="px-4 py-2 bg-primary/40 text-primary-foreground/60 rounded-xl font-medium text-sm cursor-not-allowed" title="Client intake form coming soon">
+        <button disabled className="px-4 py-2 bg-primary/40 text-primary-foreground/60 rounded-xl font-medium text-sm cursor-not-allowed" title="Client intake form — planned feature">
           + New Client
         </button>
       </div>
