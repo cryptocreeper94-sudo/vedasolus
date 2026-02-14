@@ -1,7 +1,6 @@
 import { Shell } from "@/components/layout/Shell";
-import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { motion } from "framer-motion";
-import { Search, Star, MapPin, ShieldCheck, Zap, Flower2, HeartHandshake, Globe, Video, MessageCircle, X, CheckCircle } from "lucide-react";
+import { Search, Star, MapPin, ShieldCheck, Zap, Flower2, HeartHandshake, Globe, Video, MessageCircle, CheckCircle, Stethoscope, Phone } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { BookingDialog } from "@/components/ui/booking-dialog";
@@ -93,14 +92,40 @@ const healers = [
   }
 ];
 
+const US_STATES = [
+  "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia",
+  "Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland",
+  "Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey",
+  "New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina",
+  "South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"
+];
+
 export default function Marketplace() {
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [applicationSubmitted, setApplicationSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    modality: "",
+    licenseNumber: "",
+    yearsExperience: "",
+    interestedInTeledoc: false,
+    state: "",
+    country: "United States",
+    message: "",
+  });
+
+  const handleFormChange = (field: string, value: string | boolean) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleBook = (booking: any) => {
     toast({
@@ -127,19 +152,51 @@ export default function Marketplace() {
 
   const handleApply = () => {
     setShowApplyModal(true);
+    setApplicationSubmitted(false);
+    setFormData({
+      fullName: "", email: "", phone: "", modality: "", licenseNumber: "",
+      yearsExperience: "", interestedInTeledoc: false, state: "", country: "United States", message: "",
+    });
   };
 
-  const handleSubmitApplication = (e: React.FormEvent) => {
+  const handleSubmitApplication = async (e: React.FormEvent) => {
     e.preventDefault();
-    setApplicationSubmitted(true);
-    setTimeout(() => {
-      setShowApplyModal(false);
-      setApplicationSubmitted(false);
-      toast({
-        title: "Application Received",
-        description: "We'll review your credentials and get back to you within 48 hours."
+    setSubmitting(true);
+    try {
+      const payload = {
+        ...formData,
+        yearsExperience: formData.yearsExperience ? parseInt(formData.yearsExperience) : null,
+        phone: formData.phone || null,
+        licenseNumber: formData.licenseNumber || null,
+        state: formData.state || null,
+        message: formData.message || null,
+      };
+      const res = await fetch("/api/practitioner-inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-    }, 2000);
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Submission failed");
+      }
+      setApplicationSubmitted(true);
+      setTimeout(() => {
+        setShowApplyModal(false);
+        toast({
+          title: "Request Received!",
+          description: "Thank you for your interest. We'll be in touch within 48 hours."
+        });
+      }, 2500);
+    } catch (error: any) {
+      toast({
+        title: "Submission Error",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const filteredHealers = healers.filter(healer => {
@@ -209,7 +266,6 @@ export default function Marketplace() {
             className="group relative bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
             data-testid={`card-practitioner-${healer.id}`}
           >
-            {/* Holographic Header */}
             <div className={cn("h-24 relative overflow-hidden", healer.image)}>
                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
                <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1 text-xs border border-white/10">
@@ -285,98 +341,231 @@ export default function Marketplace() {
         ))}
         
         {/* Call to Action Card for Providers */}
-        <div className="relative border border-dashed border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer min-h-[400px]">
-           <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
-             <HeartHandshake className="w-8 h-8 text-muted-foreground" />
+        <motion.div 
+          whileHover={{ y: -5 }}
+          className="relative border border-dashed border-cyan-500/30 rounded-3xl p-6 flex flex-col items-center justify-center text-center hover:bg-cyan-500/5 transition-colors cursor-pointer min-h-[400px] group"
+          onClick={handleApply}
+        >
+           <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform border border-cyan-500/20">
+             <Stethoscope className="w-10 h-10 text-cyan-400" />
            </div>
-           <h3 className="text-lg font-serif mb-2">Are you a Healer?</h3>
-           <p className="text-sm text-muted-foreground max-w-xs mb-6">
-             Join our sovereign network. Verification is done on-chain to ensure trust without centralized gatekeepers.
+           <h3 className="text-xl font-serif mb-2">Are you a Practitioner?</h3>
+           <p className="text-sm text-muted-foreground max-w-xs mb-2">
+             Join our growing network of holistic healers and teledoc providers.
+           </p>
+           <p className="text-xs text-cyan-400/60 max-w-xs mb-6">
+             In-person & telehealth opportunities available
            </p>
            <button 
-             onClick={handleApply}
-             className="text-sm font-medium text-primary hover:underline"
+             onClick={(e) => { e.stopPropagation(); handleApply(); }}
+             className="px-6 py-3 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 transition-all font-medium text-sm flex items-center gap-2"
              data-testid="button-apply-practitioner"
            >
-             Apply for Verification &rarr;
+             <Phone className="w-4 h-4" />
+             Request Info
            </button>
-        </div>
+        </motion.div>
       </div>
 
+      {/* Request Info Modal */}
       <Dialog open={showApplyModal} onOpenChange={setShowApplyModal}>
-        <DialogContent className="bg-background/95 backdrop-blur-xl border-cyan-500/20 max-w-lg">
+        <DialogContent className="bg-background/95 backdrop-blur-xl border-cyan-500/20 max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-serif">Practitioner Application</DialogTitle>
+            <DialogTitle className="text-2xl font-serif flex items-center gap-3">
+              <Stethoscope className="w-6 h-6 text-cyan-400" />
+              Request Information
+            </DialogTitle>
             <DialogDescription>
-              Join our global network of verified healers. Your credentials will be verified on-chain.
+              Interested in joining VedaSolus as a practitioner or telehealth provider? Tell us about yourself and we'll reach out with details.
             </DialogDescription>
           </DialogHeader>
           
           {applicationSubmitted ? (
-            <div className="py-8 text-center">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="py-8 text-center"
+            >
               <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-              <h3 className="text-xl font-medium mb-2">Application Submitted!</h3>
-              <p className="text-muted-foreground">We're processing your application...</p>
-            </div>
+              <h3 className="text-xl font-medium mb-2">Request Received!</h3>
+              <p className="text-muted-foreground">We'll reach out to you within 48 hours with more information.</p>
+            </motion.div>
           ) : (
             <form onSubmit={handleSubmitApplication} className="space-y-4 mt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Full Name *</label>
+                  <input 
+                    type="text" 
+                    required
+                    value={formData.fullName}
+                    onChange={(e) => handleFormChange("fullName", e.target.value)}
+                    placeholder="Dr. Jane Smith"
+                    data-testid="input-practitioner-name"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Email *</label>
+                  <input 
+                    type="email" 
+                    required
+                    value={formData.email}
+                    onChange={(e) => handleFormChange("email", e.target.value)}
+                    placeholder="jane@practice.com"
+                    data-testid="input-practitioner-email"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Phone</label>
+                  <input 
+                    type="tel" 
+                    value={formData.phone}
+                    onChange={(e) => handleFormChange("phone", e.target.value)}
+                    placeholder="(555) 123-4567"
+                    data-testid="input-practitioner-phone"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Primary Modality *</label>
+                  <select 
+                    required
+                    value={formData.modality}
+                    onChange={(e) => handleFormChange("modality", e.target.value)}
+                    data-testid="select-modality"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors text-white"
+                  >
+                    <option value="">Select your specialty...</option>
+                    <option value="naturopathy">Naturopathy</option>
+                    <option value="tcm">Traditional Chinese Medicine</option>
+                    <option value="ayurveda">Ayurveda</option>
+                    <option value="somatic">Somatic Therapy</option>
+                    <option value="integrative">Integrative Medicine</option>
+                    <option value="functional">Functional Medicine</option>
+                    <option value="acupuncture">Acupuncture</option>
+                    <option value="chiropractic">Chiropractic</option>
+                    <option value="massage">Massage Therapy</option>
+                    <option value="nutrition">Nutrition / Dietetics</option>
+                    <option value="mental_health">Mental Health / Counseling</option>
+                    <option value="teledoc">Telehealth / Telemedicine (MD/DO)</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">License / Certification #</label>
+                  <input 
+                    type="text" 
+                    value={formData.licenseNumber}
+                    onChange={(e) => handleFormChange("licenseNumber", e.target.value)}
+                    placeholder="e.g., ND-12345"
+                    data-testid="input-license"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Years of Experience</label>
+                  <input 
+                    type="number" 
+                    min="0"
+                    max="60"
+                    value={formData.yearsExperience}
+                    onChange={(e) => handleFormChange("yearsExperience", e.target.value)}
+                    placeholder="e.g., 5"
+                    data-testid="input-years-experience"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">State</label>
+                  <select 
+                    value={formData.state}
+                    onChange={(e) => handleFormChange("state", e.target.value)}
+                    data-testid="select-state"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors text-white"
+                  >
+                    <option value="">Select state...</option>
+                    {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Country</label>
+                  <input 
+                    type="text" 
+                    value={formData.country}
+                    onChange={(e) => handleFormChange("country", e.target.value)}
+                    placeholder="United States"
+                    data-testid="input-country"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/20">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={formData.interestedInTeledoc}
+                    onChange={(e) => handleFormChange("interestedInTeledoc", e.target.checked)}
+                    data-testid="checkbox-teledoc"
+                    className="mt-1 w-4 h-4 rounded border-white/20 accent-cyan-500"
+                  />
+                  <div>
+                    <span className="text-sm font-medium flex items-center gap-2">
+                      <Video className="w-4 h-4 text-cyan-400" />
+                      Interested in Telehealth / Teledoc Services
+                    </span>
+                    <span className="text-xs text-muted-foreground block mt-1">
+                      Check this if you'd like to offer virtual consultations through VedaSolus
+                    </span>
+                  </div>
+                </label>
+              </div>
+
               <div>
-                <label className="block text-sm font-medium mb-2">Full Name</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="Dr. Jane Smith"
-                  data-testid="input-practitioner-name"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50"
+                <label className="block text-sm font-medium mb-1.5">Tell us about yourself</label>
+                <textarea 
+                  value={formData.message}
+                  onChange={(e) => handleFormChange("message", e.target.value)}
+                  placeholder="Brief description of your practice, areas of interest, or any questions you have about joining VedaSolus..."
+                  rows={3}
+                  data-testid="textarea-message"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500/50 transition-colors resize-none"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Email</label>
-                <input 
-                  type="email" 
-                  required
-                  placeholder="jane@practice.com"
-                  data-testid="input-practitioner-email"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Primary Modality</label>
-                <select 
-                  required
-                  data-testid="select-modality"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50 text-white"
-                >
-                  <option value="">Select your specialty...</option>
-                  <option value="naturopathy">Naturopathy</option>
-                  <option value="tcm">Traditional Chinese Medicine</option>
-                  <option value="ayurveda">Ayurveda</option>
-                  <option value="somatic">Somatic Therapy</option>
-                  <option value="integrative">Integrative Medicine</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">License/Certification Number</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="e.g., ND-12345"
-                  data-testid="input-license"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary/50"
-                />
-              </div>
-              <div className="pt-4">
+
+              <div className="pt-2">
                 <button 
                   type="submit"
+                  disabled={submitting}
                   data-testid="button-submit-application"
-                  className="w-full py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-colors"
+                  className="w-full py-3 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-white rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Submit Application
+                  {submitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Stethoscope className="w-4 h-4" />
+                      Submit Request
+                    </>
+                  )}
                 </button>
               </div>
               <p className="text-xs text-center text-muted-foreground">
-                Your credentials will be verified through our on-chain verification protocol.
+                Your information is kept confidential. We'll contact you within 48 hours.
               </p>
             </form>
           )}

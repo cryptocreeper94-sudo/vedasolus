@@ -39,7 +39,11 @@ import {
   Plus,
   X,
   ToggleLeft,
-  ToggleRight
+  ToggleRight,
+  Stethoscope,
+  Phone,
+  MapPin,
+  Eye
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
@@ -606,6 +610,9 @@ export default function DeveloperDashboard() {
           <TabsTrigger value="subscribers" className="data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400" data-testid="tab-subscribers">
             <Mail className="w-4 h-4 mr-2" /> Subscribers
           </TabsTrigger>
+          <TabsTrigger value="inquiries" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400" data-testid="tab-inquiries">
+            <Stethoscope className="w-4 h-4 mr-2" /> Inquiries
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="roadmap" className="space-y-6" data-testid="content-roadmap">
@@ -1108,8 +1115,173 @@ export default function DeveloperDashboard() {
         </TabsContent>
 
         <SubscribersTab />
+        <InquiriesTab />
       </Tabs>
     </Shell>
+  );
+}
+
+function InquiriesTab() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { data: inquiries, isLoading, error } = useQuery({
+    queryKey: ["/api/practitioner-inquiries"],
+    queryFn: async () => {
+      const res = await fetch("/api/practitioner-inquiries");
+      if (!res.ok) throw new Error("Failed to fetch inquiries");
+      return res.json();
+    },
+  });
+
+  const updateStatus = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const res = await fetch(`/api/practitioner-inquiries/${id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error("Failed to update status");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/practitioner-inquiries"] });
+      toast({ title: "Status Updated" });
+    },
+  });
+
+  const exportCSV = () => {
+    if (!inquiries || inquiries.length === 0) return;
+    const headers = ["Name", "Email", "Phone", "Modality", "License", "Experience", "Teledoc", "State", "Country", "Message", "Status", "Date"];
+    const rows = inquiries.map((d: any) => [
+      d.fullName, d.email, d.phone || "", d.modality, d.licenseNumber || "",
+      d.yearsExperience || "", d.interestedInTeledoc ? "Yes" : "No",
+      d.state || "", d.country || "", (d.message || "").replace(/,/g, ";"),
+      d.status, new Date(d.createdAt).toLocaleDateString(),
+    ]);
+    const csv = [headers.join(","), ...rows.map((r: string[]) => r.map(v => `"${v}"`).join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `vedasolus-practitioner-inquiries-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const total = inquiries?.length || 0;
+  const newCount = inquiries?.filter((d: any) => d.status === "new").length || 0;
+  const teledocCount = inquiries?.filter((d: any) => d.interestedInTeledoc).length || 0;
+
+  const statusColors: Record<string, string> = {
+    new: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
+    contacted: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+    approved: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+    declined: "bg-red-500/20 text-red-300 border-red-500/30",
+  };
+
+  return (
+    <TabsContent value="inquiries" className="space-y-6" data-testid="content-inquiries">
+      <BentoGrid>
+        <BentoCard colSpan={3} className="bg-gradient-to-br from-cyan-500/5 to-emerald-500/5 border-cyan-500/20">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+              <Stethoscope className="w-5 h-5 text-cyan-400" /> Practitioner Inquiries
+            </h2>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 text-sm">
+                <span className="text-slate-400">Total: <span className="text-white font-medium">{total}</span></span>
+                <span className="text-slate-400">New: <span className="text-cyan-400 font-medium">{newCount}</span></span>
+                <span className="text-slate-400">Teledoc: <span className="text-emerald-400 font-medium">{teledocCount}</span></span>
+              </div>
+              <Button
+                onClick={exportCSV}
+                disabled={!inquiries || inquiries.length === 0}
+                size="sm"
+                variant="outline"
+                className="border-cyan-500/30 hover:bg-cyan-500/10"
+                data-testid="button-export-inquiries-csv"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export CSV
+              </Button>
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div className="text-center py-12 text-slate-400">Loading inquiries...</div>
+          ) : error ? (
+            <div className="text-center py-12 text-red-400">
+              Failed to load inquiries. Make sure you're logged in.
+            </div>
+          ) : inquiries?.length === 0 ? (
+            <div className="text-center py-12 text-slate-400">
+              <Stethoscope className="w-12 h-12 mx-auto mb-4 opacity-30" />
+              <p>No practitioner inquiries yet.</p>
+              <p className="text-xs mt-2">They'll appear here when someone submits a request through The Bazaar.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {inquiries?.map((inq: any) => (
+                <div key={inq.id} className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-500/20 transition-colors">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-sm font-semibold text-white">{inq.fullName}</h3>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full border ${statusColors[inq.status] || statusColors.new}`}>
+                          {inq.status}
+                        </span>
+                        {inq.interestedInTeledoc && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                            <Video className="w-3 h-3" /> Teledoc
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
+                        <span className="flex items-center gap-1">
+                          <Mail className="w-3 h-3" /> {inq.email}
+                        </span>
+                        {inq.phone && (
+                          <span className="flex items-center gap-1">
+                            <Phone className="w-3 h-3" /> {inq.phone}
+                          </span>
+                        )}
+                        <span className="capitalize">{inq.modality?.replace(/_/g, " ")}</span>
+                        {inq.licenseNumber && <span>License: {inq.licenseNumber}</span>}
+                        {inq.yearsExperience && <span>{inq.yearsExperience} yrs exp</span>}
+                        {inq.state && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" /> {inq.state}{inq.country && inq.country !== "United States" ? `, ${inq.country}` : ""}
+                          </span>
+                        )}
+                      </div>
+                      {inq.message && (
+                        <p className="text-xs text-slate-500 mt-2 italic line-clamp-2">"{inq.message}"</p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <select
+                        value={inq.status}
+                        onChange={(e) => updateStatus.mutate({ id: inq.id, status: e.target.value })}
+                        className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-white focus:outline-none focus:border-cyan-500/50"
+                        data-testid={`select-status-${inq.id}`}
+                      >
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="approved">Approved</option>
+                        <option value="declined">Declined</option>
+                      </select>
+                      <span className="text-[10px] text-slate-500">
+                        {new Date(inq.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </BentoCard>
+      </BentoGrid>
+    </TabsContent>
   );
 }
 

@@ -9,7 +9,9 @@ import {
   insertExerciseLogSchema,
   insertHeartRateLogSchema,
   insertNotificationPreferencesSchema,
-  insertMedicalDisclaimerSchema
+  insertMedicalDisclaimerSchema,
+  insertPractitionerInquirySchema,
+  practitionerInquiries
 } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 
@@ -438,6 +440,51 @@ export async function registerRoutes(
     } catch (error: any) {
       console.error("Error processing Stripe webhook:", error);
       res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Practitioner Inquiry (public - no auth required)
+  app.post("/api/practitioner-inquiries", async (req, res) => {
+    try {
+      const validated = insertPractitionerInquirySchema.parse(req.body);
+      const { db } = await import("./db");
+      const [inquiry] = await db.insert(practitionerInquiries).values(validated).returning();
+      res.json({ success: true, id: inquiry.id });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ message: fromError(error).toString() });
+      }
+      console.error("Error creating practitioner inquiry:", error);
+      res.status(500).json({ message: "Failed to submit inquiry" });
+    }
+  });
+
+  // Get all practitioner inquiries (auth required)
+  app.get("/api/practitioner-inquiries", isAuthenticated, async (_req: any, res) => {
+    try {
+      const { db } = await import("./db");
+      const { desc } = await import("drizzle-orm");
+      const inquiries = await db.select().from(practitionerInquiries).orderBy(desc(practitionerInquiries.createdAt));
+      res.json(inquiries);
+    } catch (error: any) {
+      console.error("Error fetching practitioner inquiries:", error);
+      res.status(500).json({ message: "Failed to fetch inquiries" });
+    }
+  });
+
+  // Update inquiry status (auth required)
+  app.patch("/api/practitioner-inquiries/:id/status", isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      const { db } = await import("./db");
+      const { eq } = await import("drizzle-orm");
+      const [updated] = await db.update(practitionerInquiries).set({ status }).where(eq(practitionerInquiries.id, id)).returning();
+      if (!updated) return res.status(404).json({ message: "Inquiry not found" });
+      res.json(updated);
+    } catch (error: any) {
+      console.error("Error updating inquiry status:", error);
+      res.status(500).json({ message: "Failed to update inquiry" });
     }
   });
 
