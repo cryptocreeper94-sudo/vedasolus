@@ -17,7 +17,12 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  
+  const { registerAnalyticsRoutes } = await import("./analytics");
+  registerAnalyticsRoutes(app);
+
+  const { registerSeoRoutes } = await import("./seo");
+  registerSeoRoutes(app);
+
   // Firebase config endpoint (public - provides client config)
   app.get("/api/firebase-config", (_req, res) => {
     res.json({

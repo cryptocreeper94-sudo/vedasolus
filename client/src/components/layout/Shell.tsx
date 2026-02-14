@@ -30,7 +30,8 @@ import {
   FileText,
   Sparkles,
   Handshake,
-  Wallet
+  Wallet,
+  LayoutDashboard
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -293,6 +294,15 @@ export function Shell({ children }: { children: React.ReactNode }) {
                   data-testid="button-partners"
                 >
                   <Handshake className="w-4 h-4" />
+                </button>
+              </Link>
+
+              <Link href="/command-center">
+                <button 
+                  className="p-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/20 transition-colors"
+                  data-testid="button-command-center"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
                 </button>
               </Link>
 

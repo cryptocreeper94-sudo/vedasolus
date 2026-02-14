@@ -2,245 +2,86 @@
 
 ## Overview
 
-VedaSolus is a holistic health tracking application that blends Eastern wisdom (Ayurveda, Traditional Chinese Medicine) with Western science. The platform enables users to track sleep, diet, and exercise while exploring ancient health philosophies through a modern, visually rich interface.
-
-The application features:
-- Personal health tracking (sleep, diet, exercise logs)
-- Ayurvedic dosha analysis and daily routines
-- Health passport with digital identity
-- Practitioner marketplace for connecting with healers
-- Community features for health-focused tribes
-- Educational library bridging Eastern and Western health concepts
-- Role-based dashboards (Developer, Practitioner, Admin)
-- AI Wellness Coach with voice interaction (OpenAI + ElevenLabs)
-- Strategic roadmap and business documentation
+VedaSolus is a holistic health tracking application that integrates Eastern health philosophies (Ayurveda, Traditional Chinese Medicine) with Western science. It enables users to track key health metrics like sleep, diet, and exercise through a modern, visually engaging interface. The platform aims to provide personalized wellness guidance, connect users with practitioners, and foster a health-focused community, bridging ancient wisdom with contemporary health practices. Key capabilities include personal health tracking, Ayurvedic analysis, a health passport, a practitioner marketplace, an AI wellness coach, and an educational library. The business vision is to tap into the growing wellness market by offering a unique blend of traditional and modern health approaches, supported by advanced technology and a robust ecosystem.
 
 ## User Preferences
 
-- **Owner/Developer**: Jason (dev pin: 0424)
 - **Preferred communication style**: Simple, everyday language
 - **Design**: "Cyberpunk Zen" aesthetic - NO brown/yellow colors, use cyan/pink/emerald pastels
 - **Cards**: All subject-matter cards require full photorealistic backgrounds
 - **UI**: True Bento grid with accordion dropdowns, glassmorphism effects, 3D/glow styling
 
-## Brand Assets
-
-### Logos (stored in attached_assets/)
-- **With Background**: `Copilot_20251228_214224_1766980581672.png` - VedaSolus logo with dark teal gradient background, glowing effect
-- **Alpha Transparent**: `Copilot_20251228_214220_1766980581975.png` - VedaSolus logo with transparent background (for overlays)
-
-Both logos feature:
-- Circular emblem with meditating figure in orange/gold
-- Green leaf/crescent accent wrapping the figure
-- Cyan "VedaSolus" text with subtle glow
-
 ## System Architecture
 
-### Frontend Architecture
+### Frontend
 - **Framework**: React 18 with TypeScript
-- **Routing**: Wouter (lightweight React router)
-- **State Management**: TanStack React Query for server state
-- **Styling**: Tailwind CSS v4 with custom CSS variables for theming
-- **UI Components**: shadcn/ui component library (New York style) with Radix UI primitives
-- **Animations**: Framer Motion for page transitions and micro-interactions
-- **Charts**: Recharts for data visualization
-- **Build Tool**: Vite with custom plugins for meta images and Replit integration
+- **Routing**: Wouter
+- **State Management**: TanStack React Query
+- **Styling**: Tailwind CSS v4, custom CSS variables
+- **UI Components**: shadcn/ui (New York style), Radix UI
+- **Animations**: Framer Motion
+- **Charts**: Recharts
+- **Build Tool**: Vite
 
-### Backend Architecture
+### Backend
 - **Runtime**: Node.js with Express
-- **Language**: TypeScript with ESM modules
-- **API Design**: RESTful endpoints under `/api/*` prefix
-- **Authentication**: Replit Auth integration via OpenID Connect (OIDC)
-- **Session Management**: express-session with PostgreSQL session store (connect-pg-simple)
+- **Language**: TypeScript with ESM
+- **API Design**: RESTful endpoints (`/api/*`)
+- **Authentication**: Replit Auth (OpenID Connect), custom email/password with Resend and bcrypt
+- **Session Management**: `express-session` with PostgreSQL store
 
 ### Data Storage
 - **Database**: PostgreSQL
-- **ORM**: Drizzle ORM with drizzle-zod for schema validation
-- **Schema Location**: `shared/schema.ts` for shared types between client and server
-- **Tables**: users, sessions, user_profiles, sleep_logs, diet_logs, exercise_logs, notification_preferences
+- **ORM**: Drizzle ORM with `drizzle-zod` for validation
+- **Schema**: `shared/schema.ts`
+- **Key Tables**: `users`, `sessions`, `user_profiles`, `sleep_logs`, `diet_logs`, `exercise_logs`, `notification_preferences`, `analytics_sessions`, `analytics_page_views`, `analytics_events`, `seo_pages`, `medical_disclaimers`
 
-### Authentication Flow
-- Email/password signup with verification code sent via Resend
-- Passwords hashed with bcrypt (12 rounds)
-- Verification codes hashed and stored with 15-minute expiry
-- Sessions stored in PostgreSQL `sessions` table via connect-pg-simple
-- Rate limiting on auth endpoints (10 attempts/15 min for login/signup, 5 for verification)
-- Protected routes use `isEmailAuthenticated` middleware
-- Files: `server/email-auth.ts`, `server/resend-client.ts`
+### Core Features
+- **Personal Health Tracking**: Sleep, diet, exercise, heart rate logging.
+- **Ayurvedic Integration**: Dosha analysis and personalized routines.
+- **AI Wellness Coach**: OpenAI integration with ElevenLabs for voice interaction.
+- **Developer Dashboard**: Provides roadmap, analytics, system overview, and documentation.
+- **Analytics System**: First-party tracking for sessions, page views, and events with real-time KPIs.
+- **SEO Management**: CRUD for per-route SEO configurations via admin dashboard.
+- **PWA**: Configured with manifest and icons for installability.
+- **Command Center**: PIN-gated admin dashboard for various platform controls.
 
 ### Project Structure
-```
-├── client/           # Frontend React application
-│   ├── src/
-│   │   ├── components/  # UI components (layout, ui)
-│   │   ├── hooks/       # Custom React hooks
-│   │   ├── lib/         # Utilities and query client
-│   │   └── pages/       # Route page components
-├── server/           # Backend Express application
-│   ├── replit_integrations/  # Replit Auth + OpenAI integrations
-│   ├── routes.ts     # API route definitions
-│   ├── elevenlabs.ts # AI wellness coach with voice
-│   └── storage.ts    # Database access layer
-├── shared/           # Shared code between client/server
-│   ├── schema.ts     # Drizzle database schemas
-│   └── models/       # Shared type definitions
-```
+- `client/`: Frontend React application.
+- `server/`: Backend Express application.
+- `shared/`: Shared code, schemas, and types.
 
 ### Design Patterns
-- **Storage Pattern**: `IStorage` interface abstracts database operations for testability
-- **API Hooks**: Custom hooks (`use-auth`, `use-profile`, `use-health-tracking`) encapsulate API calls with React Query
-- **Path Aliases**: `@/` for client src, `@shared/` for shared code
+- **Storage Pattern**: `IStorage` interface for database abstraction.
+- **API Hooks**: Custom hooks for API interaction with React Query.
+- **Path Aliases**: `@/` for client, `@shared/` for shared code.
 
 ## External Dependencies
 
 ### Database
-- PostgreSQL via `DATABASE_URL` environment variable
-- Drizzle Kit for schema migrations (`npm run db:push`)
+- PostgreSQL (via `DATABASE_URL`)
+- Drizzle Kit
 
 ### Authentication
 - Replit Auth (OpenID Connect)
-- Requires `ISSUER_URL`, `REPL_ID`, and `SESSION_SECRET` environment variables
+- Resend (for email verification)
+
+### AI Services
+- OpenAI (for AI chat completions)
+- ElevenLabs (for voice synthesis)
+
+### Payment Processing
+- Stripe (for subscriptions and practitioner payments)
+
+### HR & Payroll
+- Orbit Staffing (for practitioner management, payroll, timesheets, and revenue syncing)
 
 ### Key npm Packages
-- `drizzle-orm` / `drizzle-zod`: Database ORM and validation
-- `@tanstack/react-query`: Server state management
-- `express-session` / `connect-pg-simple`: Session handling
-- `passport` / `openid-client`: OIDC authentication
-- `recharts`: Chart components
-- `framer-motion`: Animations
-- `qrcode.react`: QR code generation for health passport
-- `openai`: AI chat completions for wellness coach
-
-## Integrations
-
-### Stripe Payments (ACTIVE)
-- **Status**: Configured with STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY
-- **Endpoints**:
-  - `GET /api/subscription/tiers` - Get available subscription tiers
-  - `POST /api/subscription/checkout` - Create subscription checkout session
-  - `POST /api/payment/practitioner` - Create practitioner payment session
-- **Subscription Tiers**:
-  - Seeker (Free): Basic tracking, 3 meditations
-  - Practitioner Path ($9.99/mo): Unlimited tracking, full library
-  - Healer's Circle ($19.99/mo): Marketplace access, consultations
-  - Master's Journey ($39.99/mo): Unlimited consultations, family sharing
-- **File**: `server/stripe.ts` contains all Stripe configuration
-
-### AI Wellness Coach (ACTIVE)
-- **OpenAI**: Via Replit AI Integrations (AI_INTEGRATIONS_OPENAI_API_KEY, AI_INTEGRATIONS_OPENAI_BASE_URL)
-- **ElevenLabs**: Voice synthesis with ELEVENLABS_API_KEY
-- **Endpoint**: `POST /api/wellness-chat` - Get AI wellness guidance with optional voice
-- **File**: `server/elevenlabs.ts` contains wellness coach logic
-
-### Email Authentication (ACTIVE)
-- **Signup**: Email/password with 6-digit verification code
-- **Emails**: Sent via Resend integration with VedaSolus branding
-- **Security**: Passwords hashed with bcrypt, verification codes hashed, rate limiting
-- **Session**: PostgreSQL-backed sessions with 7-day expiry
-- **Files**: `server/email-auth.ts`, `server/resend-client.ts`
-
-### Orbit Staffing (ACTIVE)
-- **Status**: Fully integrated with HMAC authentication
-- **App ID**: dw_app_darkwavehealth
-- **Base URL**: https://orbitstaffing.replit.app
-- **Secret**: DARKWAVEHEALTH_WEBHOOK_SECRET
-- **File**: `server/orbitClient.ts` contains all Orbit API functions
-
-**Financial Hub Endpoints:**
-- `POST /api/orbit/sync/revenue` - Sync subscription payments for royalty tracking
-- Automatic sync via `POST /api/webhooks/stripe` webhook handler
-
-**Ecosystem Hub Endpoints:**
-- `POST /api/orbit/sync/doctors` - Sync practitioners/physicians
-- `POST /api/orbit/sync/timesheets` - Sync hours worked
-- `POST /api/orbit/sync/contractors` - Sync 1099 contractors
-- `POST /api/orbit/sync/employees` - Sync W-2 employees
-- `POST /api/orbit/sync/certifications` - Sync medical licenses
-- `GET /api/orbit/status` - Check connection status
-
-**Product Codes:**
-- darkwavehealth_starter_monthly
-- darkwavehealth_pro_monthly
-- darkwavehealth_enterprise_monthly
-- darkwavehealth_franchise_fee
-- darkwavehealth_franchise_royalty
-
-**Royalty Split**: 100% Jason Andrews (VedaSolus is solely owned by Jason)
-
-### Dark Wave Smart Chain (FUTURE)
-- Blockchain integration for health credentials and NFT verification - details TBD
-
-## Developer Dashboard Features
-
-### Roadmap (6 Phases)
-1. **Foundation** (Q4 2024) - Auth, tracking, payments, AI coach, health passport ✅
-2. **Intelligence & Personalization** (Q1 2025) - Dosha engine, insights, FHIR/HealthKit
-3. **Ecosystem Growth** (Q2 2025) - Marketplace, messaging, tribes, practitioner verification
-4. **Web3 & Enterprise** (Q3 2025) - Blockchain, Orbit payroll, enterprise API, HIPAA
-5. **Native Mobile Apps** (Q1 2025) - 14-day Expo/React Native plan for Google Play
-6. **Video Consultations** (Q2 2025) - ZEGOCLOUD/Daily.co integration for practitioner telehealth
-
-### Analytics Dashboard
-- User metrics (total, active, growth)
-- Revenue metrics (MRR, subscribers, conversion)
-- Engagement metrics (session time, streaks, logs)
-- AI coach performance (conversations, satisfaction)
-
-### Documentation Hub
-- API Reference
-- Integration Guides (FHIR, HealthKit, Blockchain)
-- Security & Compliance (HIPAA)
-
-### External Resources (with clickable links)
-- **Mobile Development**: Expo, React Native, Google Play Console, Apple Developer
-- **Video Consultations**: ZEGOCLOUD, Daily.co, VSee
-- **Integrations**: Stripe Dashboard, Firebase Console, OpenAI, ElevenLabs, Orbit Staffing
-- **Compliance**: HIPAA Guidelines, App Store Guidelines, Google Play Policy
-- Database Schema
-- Business Plan
-- Release Notes
-
-## Recent Changes
-
-### December 2024
-- **Card Design Overhaul** - All BentoCards now feature photorealistic backgrounds
-  - 9 generated images: vitality, wisdom, nutrition, activity, heart rate, achievements, meditation, insights, AI coach
-  - Fade-to-black gradient overlay (bg-gradient-to-t from-black via-black/60 to-transparent)
-  - Text colors updated to white/light for visibility on image backgrounds
-- **Educational Info Tooltips** on Sleep, Nutrition, Activity, and Heart Rate cards
-- **Heart Rate Tracking** with manual BPM logging, context selection (Resting, Exercise, etc.), and interactive modal
-- Added AI Wellness Coach with ElevenLabs voice synthesis
-- Created comprehensive Developer Dashboard with Roadmap, Analytics, System, and Docs tabs
-- Added Mission Statement / Executive Summary in hamburger menu
-- Created Business Plan page with market analysis and projections
-- Updated notification preferences system
-- Added personalized insights based on dosha type and time of day
-- **Integrated Orbit Staffing** for practitioner payroll/invoicing
-  - Staff management (1099, W-2, contractors)
-  - Timesheet tracking with Orbit sync
-  - Payroll processing via Orbit
-  - Certification/license tracking
-  - Revenue sync to Financial Hub for royalty calculation
-- Configured Firebase Auth with dynamic config loading
-- Enhanced Practitioner Dashboard with Orbit Staff Management tabs
-- **Added Partner Portal** with pin-based authentication
-  - Jason PIN: 0424 (sole owner)
-  - Full overview access (view-only for code/pricing)
-  - Onboarding slideshow for new partners/employees
-  - Partners button in footer navigation
-  - Google authentication option via Firebase
-- **Medical Disclaimer with Email Collection**
-  - Requires name and email to acknowledge disclaimer
-  - Optional marketing opt-in checkbox with no-spam assurance
-  - Stored in medical_disclaimers database table
-  - Subscribers tab in Developer Dashboard to view/export emails
-
-### Version 2.1 (December 29, 2024) - Pre-Publish Sweep
-- **Wellness Hub carousel** on home page with Dosha Balance, Health Passport, Weekly Progress, Hydration, Today's Focus
-- **Health Tracking carousel** - 6 cards (Nutrition, Streak, Activity, Sleep, Meditation, Heart Rate) in horizontal scroll
-- **Our Mission** executive summary in hamburger menu with vision, values, problem/solution, and pricing tiers
-- Updated roadmap phases to reflect Orbit Staffing integration completion
-- Version bumped to v2.1 across platform
-- Fixed broken /profile links (now redirects to Ayurveda page)
-- All LSP diagnostics resolved - zero TypeScript errors
-- Database connectivity verified and healthy
+- `drizzle-orm`, `drizzle-zod`
+- `@tanstack/react-query`
+- `express-session`, `connect-pg-simple`
+- `passport`, `openid-client`
+- `recharts`
+- `framer-motion`
+- `qrcode.react`
+- `openai`

@@ -32,13 +32,20 @@ import {
   Mail,
   Download,
   CheckCheck,
-  XCircle
+  XCircle,
+  Search,
+  Trash2,
+  Edit3,
+  Plus,
+  X,
+  ToggleLeft,
+  ToggleRight
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { Area, AreaChart, ResponsiveContainer, BarChart, Bar, Cell, Tooltip, XAxis } from "recharts";
+import { Area, AreaChart, ResponsiveContainer, BarChart, Bar, Cell, Tooltip, XAxis, YAxis, PieChart, Pie, Legend } from "recharts";
 import { Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -176,29 +183,6 @@ const externalResources = [
   ]},
 ];
 
-const analyticsData = {
-  users: { total: 1247, growth: "+23%", active: 892 },
-  revenue: { mrr: "$4,890", growth: "+18%", subscribers: 156 },
-  engagement: { avgSession: "8.2 min", streak: "5.4 days", logs: 3420 },
-  ai: { conversations: 892, avgLength: "6.2 msg", satisfaction: "94%" },
-};
-
-const usageData = [
-  { time: "00:00", requests: 2400 },
-  { time: "04:00", requests: 1398 },
-  { time: "08:00", requests: 9800 },
-  { time: "12:00", requests: 15200 },
-  { time: "16:00", requests: 12400 },
-  { time: "20:00", requests: 8900 },
-  { time: "23:59", requests: 4300 },
-];
-
-const geoData = [
-  { region: "NA", users: 45000 },
-  { region: "EU", users: 32000 },
-  { region: "AS", users: 28000 },
-  { region: "SA", users: 12000 },
-];
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
@@ -227,9 +211,350 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+function SeoManager() {
+  const queryClient = useQueryClient();
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    route: "", title: "", description: "", keywords: "",
+    ogTitle: "", ogDescription: "", ogImage: "",
+    twitterTitle: "", twitterDescription: "",
+    canonicalUrl: "", robots: "index, follow", isActive: true,
+  });
+
+  const { data: seoPages, isLoading } = useQuery({
+    queryKey: ["/api/seo/pages"],
+    queryFn: async () => {
+      const res = await fetch("/api/seo/pages");
+      if (!res.ok) throw new Error("Failed to fetch SEO pages");
+      return res.json();
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      const res = await fetch("/api/seo/pages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed to create");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/seo/pages"] });
+      resetForm();
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: typeof formData }) => {
+      const res = await fetch(`/api/seo/pages/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed to update");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/seo/pages"] });
+      resetForm();
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/seo/pages/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/seo/pages"] });
+      setDeleteConfirm(null);
+    },
+  });
+
+  const resetForm = () => {
+    setFormData({
+      route: "", title: "", description: "", keywords: "",
+      ogTitle: "", ogDescription: "", ogImage: "",
+      twitterTitle: "", twitterDescription: "",
+      canonicalUrl: "", robots: "index, follow", isActive: true,
+    });
+    setEditingId(null);
+    setShowForm(false);
+  };
+
+  const handleEdit = (page: any) => {
+    setFormData({
+      route: page.route || "",
+      title: page.title || "",
+      description: page.description || "",
+      keywords: page.keywords || "",
+      ogTitle: page.ogTitle || "",
+      ogDescription: page.ogDescription || "",
+      ogImage: page.ogImage || "",
+      twitterTitle: page.twitterTitle || "",
+      twitterDescription: page.twitterDescription || "",
+      canonicalUrl: page.canonicalUrl || "",
+      robots: page.robots || "index, follow",
+      isActive: page.isActive ?? true,
+    });
+    setEditingId(page.id);
+    setShowForm(true);
+  };
+
+  const handleSubmit = () => {
+    if (editingId) {
+      updateMutation.mutate({ id: editingId, data: formData });
+    } else {
+      createMutation.mutate(formData);
+    }
+  };
+
+  const inputClass = "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500/50 focus:outline-none";
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+          <Search className="w-5 h-5 text-emerald-400" /> SEO Manager
+        </h2>
+        <button
+          onClick={() => { resetForm(); setShowForm(!showForm); }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm hover:bg-emerald-500/20 transition-colors"
+          data-testid="button-add-seo-route"
+        >
+          <Plus className="w-4 h-4" /> Add Route
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-3">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-medium text-white">
+              {editingId ? "Edit SEO Config" : "New SEO Config"}
+            </h3>
+            <button onClick={resetForm} className="text-slate-400 hover:text-white" data-testid="button-close-seo-form">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">Route</label>
+              <input className={inputClass} placeholder="/about" value={formData.route} onChange={(e) => setFormData({ ...formData, route: e.target.value })} data-testid="input-seo-route" />
+            </div>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">Title</label>
+              <input className={inputClass} placeholder="Page Title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} data-testid="input-seo-title" />
+            </div>
+            <div className="col-span-2">
+              <label className="text-xs text-slate-400 mb-1 block">Description</label>
+              <input className={inputClass} placeholder="Meta description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} data-testid="input-seo-description" />
+            </div>
+            <div className="col-span-2">
+              <label className="text-xs text-slate-400 mb-1 block">Keywords</label>
+              <input className={inputClass} placeholder="keyword1, keyword2" value={formData.keywords} onChange={(e) => setFormData({ ...formData, keywords: e.target.value })} data-testid="input-seo-keywords" />
+            </div>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">OG Title</label>
+              <input className={inputClass} placeholder="Open Graph Title" value={formData.ogTitle} onChange={(e) => setFormData({ ...formData, ogTitle: e.target.value })} data-testid="input-seo-og-title" />
+            </div>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">OG Description</label>
+              <input className={inputClass} placeholder="Open Graph Description" value={formData.ogDescription} onChange={(e) => setFormData({ ...formData, ogDescription: e.target.value })} data-testid="input-seo-og-description" />
+            </div>
+            <div className="col-span-2">
+              <label className="text-xs text-slate-400 mb-1 block">OG Image URL</label>
+              <input className={inputClass} placeholder="https://..." value={formData.ogImage} onChange={(e) => setFormData({ ...formData, ogImage: e.target.value })} data-testid="input-seo-og-image" />
+            </div>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">Twitter Title</label>
+              <input className={inputClass} placeholder="Twitter Card Title" value={formData.twitterTitle} onChange={(e) => setFormData({ ...formData, twitterTitle: e.target.value })} data-testid="input-seo-twitter-title" />
+            </div>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">Twitter Description</label>
+              <input className={inputClass} placeholder="Twitter Card Description" value={formData.twitterDescription} onChange={(e) => setFormData({ ...formData, twitterDescription: e.target.value })} data-testid="input-seo-twitter-description" />
+            </div>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">Canonical URL</label>
+              <input className={inputClass} placeholder="https://..." value={formData.canonicalUrl} onChange={(e) => setFormData({ ...formData, canonicalUrl: e.target.value })} data-testid="input-seo-canonical" />
+            </div>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">Robots</label>
+              <input className={inputClass} placeholder="index, follow" value={formData.robots} onChange={(e) => setFormData({ ...formData, robots: e.target.value })} data-testid="input-seo-robots" />
+            </div>
+            <div className="col-span-2 flex items-center gap-3">
+              <label className="text-xs text-slate-400">Active</label>
+              <button
+                onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
+                className="text-emerald-400"
+                data-testid="button-seo-toggle-active"
+              >
+                {formData.isActive ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6 text-slate-500" />}
+              </button>
+              <span className="text-xs text-slate-400">{formData.isActive ? "Enabled" : "Disabled"}</span>
+            </div>
+          </div>
+          <div className="flex gap-2 pt-2">
+            <button
+              onClick={handleSubmit}
+              disabled={createMutation.isPending || updateMutation.isPending}
+              className="px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
+              data-testid="button-seo-submit"
+            >
+              {createMutation.isPending || updateMutation.isPending ? "Saving..." : editingId ? "Update" : "Create"}
+            </button>
+            <button onClick={resetForm} className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 text-sm hover:bg-white/10 transition-colors" data-testid="button-seo-cancel">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isLoading ? (
+        <div className="text-center py-8 text-slate-400 text-sm">Loading SEO configurations...</div>
+      ) : !seoPages || seoPages.length === 0 ? (
+        <div className="text-center py-8 text-slate-500 text-sm" data-testid="text-seo-empty">
+          No SEO configurations yet. Add a route to get started.
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {seoPages.map((page: any) => (
+            <div
+              key={page.id}
+              className="flex items-center justify-between p-3 rounded-lg bg-white/[0.03] border border-white/10 hover:border-emerald-500/30 transition-all group"
+              data-testid={`seo-row-${page.id}`}
+            >
+              <div className="flex items-center gap-3 flex-1 cursor-pointer" onClick={() => handleEdit(page)}>
+                <div className={`w-2 h-2 rounded-full ${page.isActive ? "bg-emerald-400" : "bg-slate-500"}`} />
+                <div>
+                  <span className="text-sm text-white font-mono">{page.route}</span>
+                  <span className="text-xs text-slate-400 ml-3">{page.title}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => handleEdit(page)}
+                  className="p-1.5 rounded-md hover:bg-cyan-500/10 text-slate-400 hover:text-cyan-400 transition-colors"
+                  data-testid={`button-edit-seo-${page.id}`}
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                </button>
+                {deleteConfirm === page.id ? (
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => deleteMutation.mutate(page.id)}
+                      className="px-2 py-1 rounded-md bg-red-500/20 text-red-400 text-xs hover:bg-red-500/30 transition-colors"
+                      data-testid={`button-confirm-delete-seo-${page.id}`}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      onClick={() => setDeleteConfirm(null)}
+                      className="px-2 py-1 rounded-md bg-white/5 text-slate-400 text-xs hover:bg-white/10 transition-colors"
+                      data-testid={`button-cancel-delete-seo-${page.id}`}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setDeleteConfirm(page.id)}
+                    className="p-1.5 rounded-md hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-colors"
+                    data-testid={`button-delete-seo-${page.id}`}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function DeveloperDashboard() {
   const [activeTab, setActiveTab] = useState("roadmap");
+  const [dateRange, setDateRange] = useState(7);
   const { toast } = useToast();
+
+  const { data: summary } = useQuery({
+    queryKey: ["/api/analytics/summary", dateRange],
+    queryFn: async () => {
+      const res = await fetch(`/api/analytics/summary?days=${dateRange}`);
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    refetchInterval: 30000,
+  });
+
+  const { data: realtime } = useQuery({
+    queryKey: ["/api/analytics/realtime"],
+    queryFn: async () => {
+      const res = await fetch("/api/analytics/realtime");
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    refetchInterval: 10000,
+  });
+
+  const { data: traffic } = useQuery({
+    queryKey: ["/api/analytics/traffic", dateRange],
+    queryFn: async () => {
+      const res = await fetch(`/api/analytics/traffic?days=${dateRange}`);
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+  });
+
+  const { data: topPages } = useQuery({
+    queryKey: ["/api/analytics/pages", dateRange],
+    queryFn: async () => {
+      const res = await fetch(`/api/analytics/pages?days=${dateRange}`);
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+  });
+
+  const { data: devices } = useQuery({
+    queryKey: ["/api/analytics/devices", dateRange],
+    queryFn: async () => {
+      const res = await fetch(`/api/analytics/devices?days=${dateRange}`);
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+  });
+
+  const { data: browsers } = useQuery({
+    queryKey: ["/api/analytics/browsers", dateRange],
+    queryFn: async () => {
+      const res = await fetch(`/api/analytics/browsers?days=${dateRange}`);
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+  });
+
+  const { data: geo } = useQuery({
+    queryKey: ["/api/analytics/geo", dateRange],
+    queryFn: async () => {
+      const res = await fetch(`/api/analytics/geo?days=${dateRange}`);
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+  });
+
+  const formatDuration = (seconds: number) => {
+    if (!seconds) return "0s";
+    if (seconds < 60) return `${seconds}s`;
+    return `${(seconds / 60).toFixed(1)} min`;
+  };
+
+  const DEVICE_COLORS = ["#06b6d4", "#ec4899", "#10b981", "#8b5cf6", "#f59e0b"];
   
   const handleDevAction = (action: string) => {
     toast({
@@ -356,92 +681,177 @@ export default function DeveloperDashboard() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6" data-testid="content-analytics">
-          <BentoGrid>
-            <BentoCard className="bg-gradient-to-br from-cyan-500/10 to-emerald-500/5 border-cyan-500/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-cyan-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-400 uppercase tracking-wider">Total Users</p>
-                  <p className="text-2xl font-bold text-white" data-testid="text-total-users">{analyticsData.users.total}</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-emerald-400">{analyticsData.users.growth} this month</span>
-                <span className="text-slate-400">{analyticsData.users.active} active</span>
-              </div>
-            </BentoCard>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-pink-400" /> Live Analytics
+            </h2>
+            <div className="flex gap-1 bg-white/5 border border-white/10 rounded-lg p-1">
+              {[7, 30, 90].map((d) => (
+                <button
+                  key={d}
+                  onClick={() => setDateRange(d)}
+                  className={`px-3 py-1 rounded-md text-xs font-mono transition-colors ${dateRange === d ? "bg-cyan-500/20 text-cyan-400" : "text-slate-400 hover:text-white"}`}
+                  data-testid={`button-range-${d}`}
+                >
+                  {d}d
+                </button>
+              ))}
+            </div>
+          </div>
 
-            <BentoCard className="bg-gradient-to-br from-pink-500/10 to-rose-500/5 border-pink-500/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center">
-                  <Wallet className="w-5 h-5 text-pink-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-400 uppercase tracking-wider">Monthly Revenue</p>
-                  <p className="text-2xl font-bold text-white" data-testid="text-mrr">{analyticsData.revenue.mrr}</p>
-                </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hover:border-emerald-500/30 transition-all">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs text-slate-400 uppercase tracking-wider">Active Now</span>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-emerald-400">{analyticsData.revenue.growth} growth</span>
-                <span className="text-slate-400">{analyticsData.revenue.subscribers} subscribers</span>
-              </div>
-            </BentoCard>
+              <p className="text-2xl font-bold text-emerald-400" data-testid="text-active-now">{realtime?.activeVisitors || 0}</p>
+            </motion.div>
 
-            <BentoCard className="bg-gradient-to-br from-violet-500/10 to-purple-500/5 border-violet-500/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center">
-                  <Activity className="w-5 h-5 text-violet-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-400 uppercase tracking-wider">Avg Session</p>
-                  <p className="text-2xl font-bold text-white">{analyticsData.engagement.avgSession}</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-cyan-400">Avg streak: {analyticsData.engagement.streak}</span>
-                <span className="text-slate-400">{analyticsData.engagement.logs} logs</span>
-              </div>
-            </BentoCard>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="p-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hover:border-cyan-500/30 transition-all">
+              <span className="text-xs text-slate-400 uppercase tracking-wider block mb-2">Page Views</span>
+              <p className="text-2xl font-bold text-white" data-testid="text-page-views">{(summary?.totalPageViews || 0).toLocaleString()}</p>
+            </motion.div>
 
-            <BentoCard colSpan={2} className="bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border-emerald-500/20">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-white flex items-center gap-2">
-                  <Brain className="w-5 h-5 text-emerald-400" /> AI Coach Performance
-                </h3>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-white/5 rounded-xl">
-                  <p className="text-2xl font-bold text-white">{analyticsData.ai.conversations}</p>
-                  <p className="text-xs text-slate-400">Conversations</p>
-                </div>
-                <div className="text-center p-4 bg-white/5 rounded-xl">
-                  <p className="text-2xl font-bold text-white">{analyticsData.ai.avgLength}</p>
-                  <p className="text-xs text-slate-400">Avg Length</p>
-                </div>
-                <div className="text-center p-4 bg-white/5 rounded-xl">
-                  <p className="text-2xl font-bold text-cyan-400">{analyticsData.ai.satisfaction}</p>
-                  <p className="text-xs text-slate-400">Satisfaction</p>
-                </div>
-              </div>
-            </BentoCard>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="p-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hover:border-pink-500/30 transition-all">
+              <span className="text-xs text-slate-400 uppercase tracking-wider block mb-2">Unique Visitors</span>
+              <p className="text-2xl font-bold text-white" data-testid="text-unique-visitors">{(summary?.uniqueVisitors || 0).toLocaleString()}</p>
+            </motion.div>
 
-            <BentoCard className="bg-gradient-to-br from-orange-500/10 to-amber-500/5 border-orange-500/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                  <Target className="w-5 h-5 text-orange-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-400 uppercase tracking-wider">Conversion Rate</p>
-                  <p className="text-2xl font-bold text-white">12.5%</p>
-                </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="p-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all">
+              <span className="text-xs text-slate-400 uppercase tracking-wider block mb-2">Sessions</span>
+              <p className="text-2xl font-bold text-white" data-testid="text-sessions">{(summary?.totalSessions || 0).toLocaleString()}</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="p-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hover:border-orange-500/30 transition-all">
+              <span className="text-xs text-slate-400 uppercase tracking-wider block mb-2">Avg Duration</span>
+              <p className="text-2xl font-bold text-white" data-testid="text-avg-duration">{formatDuration(summary?.avgSessionDuration || 0)}</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="p-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hover:border-pink-500/30 transition-all">
+              <span className="text-xs text-slate-400 uppercase tracking-wider block mb-2">Bounce Rate</span>
+              <p className="text-2xl font-bold text-white" data-testid="text-bounce-rate">{(summary?.bounceRate || 0).toFixed(1)}%</p>
+            </motion.div>
+          </div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="p-6 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08]">
+            <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2 mb-4">
+              <Activity className="w-4 h-4 text-cyan-400" /> TRAFFIC OVER TIME
+            </h3>
+            <div className="h-[280px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={traffic || []}>
+                  <defs>
+                    <linearGradient id="colorPV" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorVis" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#ec4899" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="date" tick={{ fill: '#94a3b8', fontSize: 11 }} tickLine={false} axisLine={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontFamily: 'monospace' }}
+                    itemStyle={{ color: '#e2e8f0' }}
+                  />
+                  <Area type="monotone" dataKey="pageViews" stroke="#06b6d4" fillOpacity={1} fill="url(#colorPV)" strokeWidth={2} name="Page Views" />
+                  <Area type="monotone" dataKey="visitors" stroke="#ec4899" fillOpacity={1} fill="url(#colorVis)" strokeWidth={2} name="Visitors" />
+                  <Legend />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="p-5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08]">
+              <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2 mb-4">
+                <FileText className="w-4 h-4 text-cyan-400" /> TOP PAGES
+              </h3>
+              <div className="space-y-2 max-h-[240px] overflow-y-auto">
+                {(topPages || []).length === 0 ? (
+                  <p className="text-xs text-slate-500">No page data yet</p>
+                ) : (
+                  (topPages || []).map((page: any, i: number) => (
+                    <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                      <span className="text-sm text-white truncate mr-2">{page.route || "/"}</span>
+                      <span className="text-xs font-mono text-cyan-400 whitespace-nowrap">{page.views}</span>
+                    </div>
+                  ))
+                )}
               </div>
-              <div className="text-xs text-slate-400">
-                Free → Paid conversion
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="p-5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08]">
+              <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2 mb-4">
+                <Smartphone className="w-4 h-4 text-pink-400" /> DEVICE BREAKDOWN
+              </h3>
+              {(devices || []).length === 0 ? (
+                <p className="text-xs text-slate-500">No device data yet</p>
+              ) : (
+                <div className="h-[200px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={(devices || []).map((d: any) => ({ name: d.device || "Unknown", value: d.count }))}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={40}
+                        outerRadius={70}
+                        paddingAngle={3}
+                        dataKey="value"
+                      >
+                        {(devices || []).map((_: any, index: number) => (
+                          <Cell key={`cell-${index}`} fill={DEVICE_COLORS[index % DEVICE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }} />
+                      <Legend formatter={(value: string) => <span className="text-xs text-slate-300">{value}</span>} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="p-5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08]">
+              <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2 mb-4">
+                <Globe className="w-4 h-4 text-violet-400" /> BROWSER BREAKDOWN
+              </h3>
+              <div className="space-y-2 max-h-[240px] overflow-y-auto">
+                {(browsers || []).length === 0 ? (
+                  <p className="text-xs text-slate-500">No browser data yet</p>
+                ) : (
+                  (browsers || []).map((b: any, i: number) => (
+                    <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                      <span className="text-sm text-white">{b.browser || "Unknown"}</span>
+                      <span className="text-xs font-mono text-violet-400">{b.count}</span>
+                    </div>
+                  ))
+                )}
               </div>
-            </BentoCard>
-          </BentoGrid>
+            </motion.div>
+          </div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="p-6 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08]">
+            <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2 mb-4">
+              <Globe className="w-4 h-4 text-emerald-400" /> GEOGRAPHIC DISTRIBUTION
+            </h3>
+            <div className="h-[220px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={(geo || []).slice(0, 15)}>
+                  <XAxis dataKey="country" tick={{ fill: '#94a3b8', fontSize: 11 }} tickLine={false} axisLine={false} />
+                  <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} tickLine={false} axisLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }} />
+                  <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]}>
+                    {(geo || []).slice(0, 15).map((_: any, index: number) => (
+                      <Cell key={`geo-${index}`} fillOpacity={0.4 + Math.min(index * 0.08, 0.6)} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
         </TabsContent>
 
         <TabsContent value="system" className="space-y-6" data-testid="content-system">
@@ -459,25 +869,26 @@ export default function DeveloperDashboard() {
               
               <div className="h-[250px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={usageData}>
+                  <AreaChart data={traffic || []}>
                     <defs>
                       <linearGradient id="colorReq" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
                         <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <XAxis dataKey="time" hide />
+                    <XAxis dataKey="date" hide />
                     <Tooltip 
                       contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '4px', fontFamily: 'monospace' }}
                       itemStyle={{ color: '#10b981' }}
                     />
                     <Area 
                       type="monotone" 
-                      dataKey="requests" 
+                      dataKey="pageViews" 
                       stroke="#10b981" 
                       fillOpacity={1} 
                       fill="url(#colorReq)" 
                       strokeWidth={2}
+                      name="Page Views"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -543,20 +954,19 @@ export default function DeveloperDashboard() {
               <h3 className="font-mono text-sm text-muted-foreground mb-4">ACTIVE NODES</h3>
               <div className="h-40 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={geoData}>
-                    <Bar dataKey="users" fill="#3b82f6" radius={[4, 4, 0, 0]}>
-                      {geoData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fillOpacity={0.4 + (index * 0.15)} />
+                  <BarChart data={(geo || []).slice(0, 6)}>
+                    <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]}>
+                      {(geo || []).slice(0, 6).map((_: any, index: number) => (
+                        <Cell key={`cell-${index}`} fillOpacity={0.4 + (index * 0.1)} />
                       ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
               <div className="flex justify-between text-xs font-mono mt-2 opacity-50">
-                <span>NA</span>
-                <span>EU</span>
-                <span>ASIA</span>
-                <span>SA</span>
+                {(geo || []).slice(0, 6).map((g: any, i: number) => (
+                  <span key={i}>{g.country || "—"}</span>
+                ))}
               </div>
             </BentoCard>
 
@@ -689,6 +1099,10 @@ export default function DeveloperDashboard() {
                   </div>
                 ))}
               </div>
+            </BentoCard>
+
+            <BentoCard colSpan={3} className="bg-gradient-to-br from-emerald-500/5 to-cyan-500/5 border-emerald-500/20">
+              <SeoManager />
             </BentoCard>
           </BentoGrid>
         </TabsContent>

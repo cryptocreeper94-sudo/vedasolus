@@ -23,7 +23,9 @@ import Messages from "@/pages/Messages";
 import HealthRecords from "@/pages/HealthRecords";
 import BusinessPlan from "@/pages/BusinessPlan";
 import Partner from "@/pages/Partner";
+import CommandCenter from "@/pages/CommandCenter";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 function Router() {
   return (
@@ -47,12 +49,14 @@ function Router() {
       <Route path="/records" component={HealthRecords} />
       <Route path="/business-plan" component={BusinessPlan} />
       <Route path="/partner" component={Partner} />
+      <Route path="/command-center" component={CommandCenter} />
       <Route component={NotFound} />
     </Switch>
   );
 }
 
 function App() {
+  useAnalytics();
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
