@@ -314,5 +314,275 @@ export const insertMedicalDisclaimerSchema = createInsertSchema(medicalDisclaime
 export type InsertMedicalDisclaimer = z.infer<typeof insertMedicalDisclaimerSchema>;
 export type MedicalDisclaimer = typeof medicalDisclaimers.$inferSelect;
 
+// Analytics Sessions
+export const analyticsSessions = pgTable("analytics_sessions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  visitorId: varchar("visitor_id").notNull(),
+  userAgent: text("user_agent"),
+  referrer: text("referrer"),
+  landingPage: text("landing_page"),
+  device: text("device"),
+  browser: text("browser"),
+  os: text("os"),
+  country: text("country"),
+  city: text("city"),
+  utmSource: text("utm_source"),
+  utmMedium: text("utm_medium"),
+  utmCampaign: text("utm_campaign"),
+  startedAt: timestamp("started_at").defaultNow(),
+  endedAt: timestamp("ended_at"),
+});
+
+export const insertAnalyticsSessionSchema = createInsertSchema(analyticsSessions).omit({
+  id: true,
+  startedAt: true,
+});
+
+export type InsertAnalyticsSession = z.infer<typeof insertAnalyticsSessionSchema>;
+export type AnalyticsSession = typeof analyticsSessions.$inferSelect;
+
+// Analytics Page Views
+export const analyticsPageViews = pgTable("analytics_page_views", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sessionId: varchar("session_id").notNull(),
+  visitorId: varchar("visitor_id").notNull(),
+  route: text("route").notNull(),
+  title: text("title"),
+  referrer: text("referrer"),
+  timeSpent: integer("time_spent"),
+  viewedAt: timestamp("viewed_at").defaultNow(),
+});
+
+export const insertAnalyticsPageViewSchema = createInsertSchema(analyticsPageViews).omit({
+  id: true,
+  viewedAt: true,
+});
+
+export type InsertAnalyticsPageView = z.infer<typeof insertAnalyticsPageViewSchema>;
+export type AnalyticsPageView = typeof analyticsPageViews.$inferSelect;
+
+// Analytics Events
+export const analyticsEvents = pgTable("analytics_events", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sessionId: varchar("session_id"),
+  visitorId: varchar("visitor_id"),
+  eventName: text("event_name").notNull(),
+  eventCategory: text("event_category"),
+  eventLabel: text("event_label"),
+  eventValue: integer("event_value"),
+  route: text("route"),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertAnalyticsEventSchema = createInsertSchema(analyticsEvents).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertAnalyticsEvent = z.infer<typeof insertAnalyticsEventSchema>;
+export type AnalyticsEvent = typeof analyticsEvents.$inferSelect;
+
+// SEO Pages
+export const seoPages = pgTable("seo_pages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  route: text("route").notNull().unique(),
+  title: text("title"),
+  description: text("description"),
+  keywords: text("keywords"),
+  ogTitle: text("og_title"),
+  ogDescription: text("og_description"),
+  ogImage: text("og_image"),
+  twitterTitle: text("twitter_title"),
+  twitterDescription: text("twitter_description"),
+  twitterImage: text("twitter_image"),
+  canonicalUrl: text("canonical_url"),
+  robots: text("robots"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertSeoPageSchema = createInsertSchema(seoPages).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertSeoPage = z.infer<typeof insertSeoPageSchema>;
+export type SeoPage = typeof seoPages.$inferSelect;
+
+// Marketing Posts
+export const marketingPosts = pgTable("marketing_posts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  content: text("content").notNull(),
+  platform: text("platform").default("facebook"),
+  hashtags: text("hashtags").array(),
+  targetSite: text("target_site"),
+  category: text("category"),
+  tone: text("tone"),
+  cta: text("cta"),
+  season: text("season"),
+  isActive: boolean("is_active").default(true),
+  usageCount: integer("usage_count").default(0),
+  lastUsedAt: timestamp("last_used_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertMarketingPostSchema = createInsertSchema(marketingPosts).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertMarketingPost = z.infer<typeof insertMarketingPostSchema>;
+export type MarketingPost = typeof marketingPosts.$inferSelect;
+
+// Marketing Images
+export const marketingImages = pgTable("marketing_images", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  filename: text("filename").notNull(),
+  filePath: text("file_path"),
+  category: text("category"),
+  subject: text("subject"),
+  style: text("style"),
+  season: text("season"),
+  quality: text("quality"),
+  altText: text("alt_text"),
+  isActive: boolean("is_active").default(true),
+  usageCount: integer("usage_count").default(0),
+  lastUsedAt: timestamp("last_used_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertMarketingImageSchema = createInsertSchema(marketingImages).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertMarketingImage = z.infer<typeof insertMarketingImageSchema>;
+export type MarketingImage = typeof marketingImages.$inferSelect;
+
+// Social Integrations
+export const socialIntegrations = pgTable("social_integrations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  facebookPageId: text("facebook_page_id"),
+  facebookPageAccessToken: text("facebook_page_access_token"),
+  facebookConnected: boolean("facebook_connected").default(false),
+  facebookPageName: text("facebook_page_name"),
+  instagramAccountId: text("instagram_account_id"),
+  instagramConnected: boolean("instagram_connected").default(false),
+  instagramUsername: text("instagram_username"),
+  twitterConnected: boolean("twitter_connected").default(false),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertSocialIntegrationSchema = createInsertSchema(socialIntegrations).omit({
+  id: true,
+  updatedAt: true,
+});
+
+export type InsertSocialIntegration = z.infer<typeof insertSocialIntegrationSchema>;
+export type SocialIntegration = typeof socialIntegrations.$inferSelect;
+
+// Scheduled Posts
+export const scheduledPosts = pgTable("scheduled_posts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  platform: text("platform").notNull(),
+  content: text("content").notNull(),
+  status: text("status").default("pending"),
+  externalPostId: text("external_post_id"),
+  error: text("error"),
+  marketingPostId: varchar("marketing_post_id"),
+  postedAt: timestamp("posted_at"),
+  impressions: integer("impressions").default(0),
+  reach: integer("reach").default(0),
+  clicks: integer("clicks").default(0),
+  likes: integer("likes").default(0),
+  comments: integer("comments").default(0),
+  shares: integer("shares").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertScheduledPostSchema = createInsertSchema(scheduledPosts).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertScheduledPost = z.infer<typeof insertScheduledPostSchema>;
+export type ScheduledPost = typeof scheduledPosts.$inferSelect;
+
+// Content Bundles
+export const contentBundles = pgTable("content_bundles", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  imageId: varchar("image_id"),
+  messageId: varchar("message_id"),
+  imageUrl: text("image_url"),
+  message: text("message"),
+  platform: text("platform"),
+  status: text("status").default("draft"),
+  postType: text("post_type"),
+  targetAudience: text("target_audience"),
+  budgetRange: text("budget_range"),
+  ctaButton: text("cta_button"),
+  scheduledDate: timestamp("scheduled_date"),
+  postedAt: timestamp("posted_at"),
+  impressions: integer("impressions").default(0),
+  reach: integer("reach").default(0),
+  clicks: integer("clicks").default(0),
+  likes: integer("likes").default(0),
+  comments: integer("comments").default(0),
+  shares: integer("shares").default(0),
+  saves: integer("saves").default(0),
+  leads: integer("leads").default(0),
+  conversions: integer("conversions").default(0),
+  spend: integer("spend").default(0),
+  revenue: integer("revenue").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertContentBundleSchema = createInsertSchema(contentBundles).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertContentBundle = z.infer<typeof insertContentBundleSchema>;
+export type ContentBundle = typeof contentBundles.$inferSelect;
+
+// Ad Campaigns
+export const adCampaigns = pgTable("ad_campaigns", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  objective: text("objective"),
+  status: text("status").default("draft"),
+  dailyBudget: integer("daily_budget"),
+  totalBudget: integer("total_budget"),
+  targeting: jsonb("targeting"),
+  creativeImageUrl: text("creative_image_url"),
+  creativeText: text("creative_text"),
+  headline: text("headline"),
+  ctaType: text("cta_type"),
+  metaCampaignId: text("meta_campaign_id"),
+  metaAdSetId: text("meta_ad_set_id"),
+  metaAdId: text("meta_ad_id"),
+  impressions: integer("impressions").default(0),
+  reach: integer("reach").default(0),
+  clicks: integer("clicks").default(0),
+  spend: integer("spend").default(0),
+  conversions: integer("conversions").default(0),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertAdCampaignSchema = createInsertSchema(adCampaigns).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertAdCampaign = z.infer<typeof insertAdCampaignSchema>;
+export type AdCampaign = typeof adCampaigns.$inferSelect;
+
 // Import users from auth models for references
 import { users } from "./models/auth";
