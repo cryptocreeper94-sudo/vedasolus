@@ -316,9 +316,9 @@ export default function PartnerDashboard() {
       {/* Quick Stats */}
       <div className="grid md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: "Active Users", value: "1,247", change: "+12%", icon: Users, color: "cyan" },
-          { label: "Monthly Revenue", value: "$4,890", change: "+8%", icon: DollarSign, color: "emerald" },
-          { label: "Your Royalty", value: "$2,445", change: "50%", icon: TrendingUp, color: "pink" },
+          { label: "Active Users", value: "0", change: "—", icon: Users, color: "cyan" },
+          { label: "Monthly Revenue", value: "$0.00", change: "—", icon: DollarSign, color: "emerald" },
+          { label: "Your Share", value: "100%", change: "Sole Owner", icon: TrendingUp, color: "pink" },
           { label: "Orbit Status", value: orbitStatus?.connected ? "Connected" : "Checking...", icon: Building2, color: "violet" },
         ].map((stat, i) => (
           <motion.div
@@ -364,19 +364,19 @@ export default function PartnerDashboard() {
           <div className="space-y-4">
             <div className="flex justify-between items-center p-3 rounded-xl bg-white/5">
               <span className="text-slate-300">Total Subscribers</span>
-              <span className="font-bold text-white">892</span>
+              <span className="font-bold text-white">0</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-xl bg-white/5">
-              <span className="text-slate-300">Conversion Rate</span>
-              <span className="font-bold text-emerald-400">12.5%</span>
+              <span className="text-slate-300">Revenue Owner</span>
+              <span className="font-bold text-emerald-400">Jason Andrews</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-xl bg-white/5">
-              <span className="text-slate-300">Avg Revenue/User</span>
-              <span className="font-bold text-cyan-400">$5.48</span>
+              <span className="text-slate-300">Revenue Share</span>
+              <span className="font-bold text-cyan-400">100%</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-xl bg-white/5">
-              <span className="text-slate-300">Churn Rate</span>
-              <span className="font-bold text-orange-400">2.3%</span>
+              <span className="text-slate-300">Pricing Managed By</span>
+              <span className="font-bold text-violet-400">Orbit Staffing</span>
             </div>
           </div>
         </BentoCard>
@@ -395,7 +395,7 @@ export default function PartnerDashboard() {
               <span className="font-mono text-cyan-400">100%</span>
             </div>
             <div className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <p className="text-xs text-emerald-300">All revenue from VedaSolus flows directly to Jason Andrews via Orbit Financial Hub.</p>
+              <p className="text-xs text-emerald-300">100% of all VedaSolus revenue flows directly to Jason Andrews. All pricing is managed through Orbit Staffing.</p>
             </div>
           </div>
         </BentoCard>
@@ -465,19 +465,19 @@ export default function PartnerDashboard() {
           </h3>
           <div className="grid md:grid-cols-4 gap-4">
             <div className="p-4 rounded-xl bg-white/5 text-center">
-              <p className="text-3xl font-bold text-orange-400">892</p>
+              <p className="text-3xl font-bold text-orange-400">0</p>
               <p className="text-xs text-slate-400">Total Conversations</p>
             </div>
             <div className="p-4 rounded-xl bg-white/5 text-center">
-              <p className="text-3xl font-bold text-cyan-400">94%</p>
+              <p className="text-3xl font-bold text-cyan-400">—</p>
               <p className="text-xs text-slate-400">Satisfaction Rate</p>
             </div>
             <div className="p-4 rounded-xl bg-white/5 text-center">
-              <p className="text-3xl font-bold text-emerald-400">4.2</p>
+              <p className="text-3xl font-bold text-emerald-400">—</p>
               <p className="text-xs text-slate-400">Avg Messages/Session</p>
             </div>
             <div className="p-4 rounded-xl bg-white/5 text-center">
-              <p className="text-3xl font-bold text-pink-400">78%</p>
+              <p className="text-3xl font-bold text-pink-400">—</p>
               <p className="text-xs text-slate-400">Voice Enabled</p>
             </div>
           </div>

@@ -42,7 +42,7 @@ export async function syncSubscriptionRevenue(params: {
   customerId?: string;
 }): Promise<any> {
   return orbitRequest('/api/financial-hub/ingest', {
-    sourceSystem: 'DarkWave Health',
+    sourceSystem: 'VedaSolus',
     sourceAppId: 'dw_app_darkwavehealth',
     eventType: 'revenue',
     grossAmount: params.amount,
@@ -50,47 +50,30 @@ export async function syncSubscriptionRevenue(params: {
     description: params.description,
     productCode: params.productCode,
     externalRef: params.stripeSubscriptionId,
-    idempotencyKey: `darkwavehealth_${params.stripeSubscriptionId}_${Date.now()}`,
+    idempotencyKey: `vedasolus_${params.stripeSubscriptionId}_${Date.now()}`,
     metadata: { customerId: params.customerId },
   });
 }
 
-export async function syncFranchiseFee(params: {
-  franchiseId: string;
+export async function syncPractitionerRevenue(params: {
+  practitionerId: string;
   amount: number;
-  territory: string;
+  description: string;
+  paymentType: string;
 }): Promise<any> {
   return orbitRequest('/api/financial-hub/ingest', {
-    sourceSystem: 'DarkWave Health',
+    sourceSystem: 'VedaSolus',
     sourceAppId: 'dw_app_darkwavehealth',
     eventType: 'revenue',
     grossAmount: params.amount,
     netAmount: params.amount,
-    description: `DarkWave Health Franchise Fee - ${params.territory}`,
-    productCode: 'darkwavehealth_franchise_fee',
-    externalRef: params.franchiseId,
-    idempotencyKey: `darkwavehealth_franchise_${params.franchiseId}`,
-  });
-}
-
-export async function syncFranchiseRoyalty(params: {
-  franchiseId: string;
-  amount: number;
-  territory: string;
-  period: string;
-}): Promise<any> {
-  return orbitRequest('/api/financial-hub/ingest', {
-    sourceSystem: 'DarkWave Health',
-    sourceAppId: 'dw_app_darkwavehealth',
-    eventType: 'revenue',
-    grossAmount: params.amount,
-    netAmount: params.amount,
-    description: `Monthly Franchise Royalty - ${params.territory}`,
-    productCode: 'darkwavehealth_franchise_royalty',
-    externalRef: `royalty_${params.franchiseId}_${params.period}`,
+    description: params.description,
+    productCode: `vedasolus_${params.paymentType}`,
+    externalRef: params.practitionerId,
+    idempotencyKey: `vedasolus_practitioner_${params.practitionerId}_${Date.now()}`,
     metadata: {
-      franchiseId: params.franchiseId,
-      period: params.period,
+      owner: 'Jason Andrews',
+      revenueShare: '100%',
     },
   });
 }
@@ -276,7 +259,7 @@ export async function handleStripeSubscriptionWebhook(event: any): Promise<void>
     const productCode = getProductCodeFromPlan(invoice);
     await syncSubscriptionRevenue({
       amount: invoice.amount_paid / 100,
-      description: `DarkWave Health Subscription - ${invoice.customer_email}`,
+      description: `VedaSolus Subscription - ${invoice.customer_email}`,
       productCode,
       stripeSubscriptionId: invoice.subscription,
       customerId: invoice.customer,
@@ -286,7 +269,8 @@ export async function handleStripeSubscriptionWebhook(event: any): Promise<void>
 
 function getProductCodeFromPlan(invoice: any): string {
   const amount = invoice.amount_paid / 100;
-  if (amount >= 39.99) return 'darkwavehealth_enterprise_monthly';
-  if (amount >= 19.99) return 'darkwavehealth_pro_monthly';
-  return 'darkwavehealth_starter_monthly';
+  if (amount >= 39.99) return 'vedasolus_masters_journey_monthly';
+  if (amount >= 19.99) return 'vedasolus_healers_circle_monthly';
+  if (amount >= 9.99) return 'vedasolus_practitioner_path_monthly';
+  return 'vedasolus_seeker_free';
 }

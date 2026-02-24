@@ -31,14 +31,14 @@ export const partnerOnboardingSlides: OnboardingSlide[] = [
   {
     title: "Revenue & Growth",
     subtitle: "Financial Hub",
-    content: "All revenue flows through Orbit's Financial Hub with automatic royalty calculations. You have full visibility into MRR, subscriber counts, and partner payouts directly from this dashboard.",
+    content: "100% of all revenue belongs to Jason Andrews. All pricing is managed through Orbit Staffing, and revenue syncs automatically to Orbit Financial Hub. Full visibility into MRR and subscriber metrics from this dashboard.",
     iconName: "DollarSign",
     color: "pink",
   },
   {
     title: "Your Access",
     subtitle: "Full Visibility",
-    content: "As a partner, you can view all metrics, user data, Orbit staffing, and business analytics. Code changes and pricing adjustments are reserved for the development team.",
+    content: "As the owner, you have full access to all metrics, user data, Orbit Staffing integrations, and business analytics. Pricing adjustments flow through Orbit Staffing.",
     iconName: "Shield",
     color: "orange",
   },
