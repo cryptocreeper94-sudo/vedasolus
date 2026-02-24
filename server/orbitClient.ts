@@ -1,8 +1,12 @@
 import crypto from 'crypto';
 
-const ORBIT_BASE_URL = process.env.ORBIT_BASE_URL || 'https://orbitstaffing.replit.app';
+const ORBIT_BASE_URL = process.env.ORBIT_BASE_URL || 'https://orbitstaffing.io';
 const ORBIT_API_KEY = 'dw_app_darkwavehealth';
 const ORBIT_SECRET = process.env.DARKWAVEHEALTH_WEBHOOK_SECRET!;
+const APP_NAME = 'VedaSolus';
+const APP_CALLBACK_URL = process.env.REPLIT_DEV_DOMAIN 
+  ? `https://${process.env.REPLIT_DEV_DOMAIN}/api/orbit/callback`
+  : 'https://vedasolus.replit.app/api/orbit/callback';
 
 function generateSignature(payload: string): string {
   return crypto.createHmac('sha256', ORBIT_SECRET).update(payload).digest('hex');
@@ -210,6 +214,60 @@ export async function getFinancialHubStatus(): Promise<any> {
     },
   });
   return response.json();
+}
+
+export async function registerEcosystemApp(params?: {
+  appName?: string;
+  appDescription?: string;
+  callbackUrl?: string;
+  capabilities?: string[];
+}): Promise<any> {
+  return orbitRequest('/api/admin/ecosystem/register-app', {
+    appId: ORBIT_API_KEY,
+    appName: params?.appName || APP_NAME,
+    appDescription: params?.appDescription || 'Holistic health platform bridging Ayurveda, TCM, and Western science',
+    callbackUrl: params?.callbackUrl || APP_CALLBACK_URL,
+    capabilities: params?.capabilities || [
+      'health_tracking',
+      'practitioner_marketplace',
+      'ai_wellness_coach',
+      'subscription_billing',
+      'dosha_analysis',
+    ],
+    sourceSystem: 'VedaSolus',
+    version: '2.1',
+  });
+}
+
+export async function ecosystemSSOLogin(params: {
+  email: string;
+  token?: string;
+  returnUrl?: string;
+}): Promise<any> {
+  return orbitRequest('/api/auth/ecosystem-login', {
+    appId: ORBIT_API_KEY,
+    email: params.email,
+    token: params.token,
+    returnUrl: params.returnUrl || APP_CALLBACK_URL,
+    sourceSystem: 'VedaSolus',
+  });
+}
+
+export async function registerTrustLayer(params: {
+  userId: string;
+  email: string;
+  displayName: string;
+  role?: string;
+}): Promise<any> {
+  return orbitRequest('/api/chat/auth/register', {
+    appId: ORBIT_API_KEY,
+    userId: params.userId,
+    email: params.email,
+    displayName: params.displayName,
+    role: params.role || 'user',
+    sourceSystem: 'VedaSolus',
+    permissions: ['chat', 'read'],
+  });
 }
 
 export async function handleStripeSubscriptionWebhook(event: any): Promise<void> {

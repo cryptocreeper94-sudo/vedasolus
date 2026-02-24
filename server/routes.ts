@@ -413,6 +413,53 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/orbit/ecosystem/register", isAuthenticated, async (req: any, res) => {
+    try {
+      const { registerEcosystemApp } = await import("./orbitClient");
+      const result = await registerEcosystemApp(req.body);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error registering with Orbit ecosystem:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/orbit/ecosystem/sso-login", isAuthenticated, async (req: any, res) => {
+    try {
+      const { ecosystemSSOLogin } = await import("./orbitClient");
+      const result = await ecosystemSSOLogin(req.body);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error with Orbit SSO login:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/orbit/ecosystem/trust-register", isAuthenticated, async (req: any, res) => {
+    try {
+      const { registerTrustLayer } = await import("./orbitClient");
+      const result = await registerTrustLayer(req.body);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error registering with Orbit Trust Layer:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/orbit/callback", async (req, res) => {
+    try {
+      const { token, status } = req.query;
+      if (status === 'success' && token) {
+        res.redirect(`/?orbit_auth=${token}`);
+      } else {
+        res.redirect('/?orbit_auth=failed');
+      }
+    } catch (error: any) {
+      console.error("Error handling Orbit callback:", error);
+      res.redirect('/?orbit_auth=error');
+    }
+  });
+
   // Stripe webhook handler for automatic revenue sync
   // Note: For production, configure express.raw() middleware for this route
   // and use Stripe.webhooks.constructEvent() with STRIPE_WEBHOOK_SECRET

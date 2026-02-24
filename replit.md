@@ -75,6 +75,12 @@ VedaSolus is a holistic health tracking application that integrates Eastern heal
 
 ### HR & Payroll
 - Orbit Staffing (for practitioner management, payroll, timesheets, and revenue syncing)
+  - Base URL: `https://orbitstaffing.io`
+  - Ecosystem Registration: `/api/admin/ecosystem/register-app`
+  - SSO Login (Trust Layer): `/api/auth/ecosystem-login`
+  - Trust Layer Chat Register: `/api/chat/auth/register`
+  - Financial Hub Revenue Sync: `/api/financial-hub/ingest`
+  - Worker/Timesheet/1099/W2/Certification Sync: `/api/ecosystem/sync/*`
 
 ### Key npm Packages
 - `drizzle-orm`, `drizzle-zod`

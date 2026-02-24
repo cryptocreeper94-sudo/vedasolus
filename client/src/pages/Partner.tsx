@@ -402,9 +402,9 @@ export default function PartnerDashboard() {
 
         <BentoCard colSpan={2} className="bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border-cyan-500/20">
           <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <Building2 className="w-5 h-5 text-cyan-400" /> Orbit Staffing Status
+            <Building2 className="w-5 h-5 text-cyan-400" /> Orbit Staffing Ecosystem
           </h3>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4 mb-4">
             <div className="p-4 rounded-xl bg-white/5 text-center">
               <CheckCircle className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
               <p className="text-sm text-white">Financial Hub</p>
@@ -412,13 +412,29 @@ export default function PartnerDashboard() {
             </div>
             <div className="p-4 rounded-xl bg-white/5 text-center">
               <CheckCircle className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-              <p className="text-sm text-white">Ecosystem Hub</p>
-              <p className="text-xs text-emerald-400">Synced</p>
+              <p className="text-sm text-white">Ecosystem Registration</p>
+              <p className="text-xs text-emerald-400">Integrated</p>
             </div>
             <div className="p-4 rounded-xl bg-white/5 text-center">
               <CheckCircle className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
               <p className="text-sm text-white">Payroll</p>
               <p className="text-xs text-emerald-400">Active</p>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+              <div className="flex items-center gap-2 mb-1">
+                <Shield className="w-4 h-4 text-cyan-400" />
+                <p className="text-xs font-medium text-cyan-300">SSO Login</p>
+              </div>
+              <p className="text-[10px] text-slate-400">Cross-app authentication via Orbit Trust Layer</p>
+            </div>
+            <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
+              <div className="flex items-center gap-2 mb-1">
+                <Lock className="w-4 h-4 text-violet-400" />
+                <p className="text-xs font-medium text-violet-300">Trust Layer</p>
+              </div>
+              <p className="text-[10px] text-slate-400">Secure chat registration and permissions</p>
             </div>
           </div>
         </BentoCard>

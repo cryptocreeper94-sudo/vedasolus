@@ -178,7 +178,7 @@ const externalResources = [
     { name: "Firebase Console", url: "https://console.firebase.google.com", desc: "Auth & notifications" },
     { name: "OpenAI Platform", url: "https://platform.openai.com", desc: "AI wellness coach API" },
     { name: "ElevenLabs", url: "https://elevenlabs.io", desc: "Voice synthesis" },
-    { name: "Orbit Staffing", url: "https://orbitstaffing.replit.app", desc: "Payroll & invoicing" },
+    { name: "Orbit Staffing", url: "https://orbitstaffing.io", desc: "Payroll & invoicing" },
   ]},
   { category: "Compliance", items: [
     { name: "HIPAA Guidelines", url: "https://www.hhs.gov/hipaa", desc: "Health data privacy" },

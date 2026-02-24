@@ -94,7 +94,7 @@ const categories: Category[] = [
     cards: [
       { title: "Subscription Tiers", description: "Manage pricing plans and features", icon: CreditCard, path: "/settings" },
       { title: "Stripe Dashboard", description: "Payment processing and invoices", icon: DollarSign, external: "https://dashboard.stripe.com" },
-      { title: "Orbit Financial", description: "Payroll, invoicing, and financial hub", icon: Building2, external: "https://orbitstaffing.replit.app" },
+      { title: "Orbit Financial", description: "Payroll, invoicing, and financial hub", icon: Building2, external: "https://orbitstaffing.io" },
     ],
   },
   {
