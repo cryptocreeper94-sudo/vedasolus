@@ -96,6 +96,14 @@ app.use((req, res, next) => {
   
   await registerRoutes(httpServer, app);
 
+  // Seed Trust Layer genesis hallmark on first boot
+  try {
+    const { seedGenesisHallmark } = await import("./hallmark");
+    await seedGenesisHallmark();
+  } catch (err) {
+    console.error("Failed to seed genesis hallmark:", err);
+  }
+
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";

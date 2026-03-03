@@ -70,6 +70,7 @@ const navGroups = [
       { href: "/marketplace", icon: Store, label: "The Bazaar" },
       { href: "/community", icon: Users, label: "Tribes" },
       { href: "/messages", icon: MessageCircle, label: "Messages" },
+      { href: "/affiliate", icon: Wallet, label: "Share & Earn" },
     ]
   },
   {

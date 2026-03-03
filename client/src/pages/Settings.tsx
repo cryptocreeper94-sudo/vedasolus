@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { User, Bell, Shield, Wallet, CreditCard } from "lucide-react";
+import { User, Bell, Shield, Wallet, CreditCard, Share2 } from "lucide-react";
 import { SubscriptionTiers } from "@/components/ui/subscription-tiers";
+import { GenesisHallmarkBadge } from "@/components/ui/genesis-hallmark-badge";
 import { motion } from "framer-motion";
 import { useProfile } from "@/hooks/use-profile";
 import { useNotificationPreferences } from "@/hooks/use-notifications";
 import { useAuth } from "@/hooks/use-auth";
+import { Link } from "wouter";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -360,6 +362,44 @@ export default function Settings() {
                </div>
             </motion.div>
           )}
+
+          {/* Affiliate & Trust Layer Section - Always visible */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="space-y-6 mt-8"
+          >
+            {isAuthenticated && (
+              <div className="p-6 rounded-3xl glass-card border border-white/10">
+                <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
+                  <Share2 className="w-5 h-5 text-cyan-400" /> Affiliate Program
+                </h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Earn SIG commission by sharing VedaSolus across the 32-app Trust Layer ecosystem.
+                </p>
+                <Link href="/affiliate">
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-violet-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-all cursor-pointer flex items-center justify-between" data-testid="link-affiliate-dashboard">
+                    <div>
+                      <p className="text-sm font-medium text-white">Share & Earn Dashboard</p>
+                      <p className="text-xs text-slate-400">View your referrals, commissions, and payout status</p>
+                    </div>
+                    <Share2 className="w-5 h-5 text-cyan-400" />
+                  </div>
+                </Link>
+              </div>
+            )}
+
+            <div className="p-6 rounded-3xl glass-card border border-white/10">
+              <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-violet-400" /> Trust Layer
+              </h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                VedaSolus is app #25 in the Trust Layer 32-app ecosystem, verified on the Trust Layer Blockchain.
+              </p>
+              <GenesisHallmarkBadge />
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>

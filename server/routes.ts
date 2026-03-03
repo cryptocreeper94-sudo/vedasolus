@@ -239,6 +239,11 @@ export async function registerRoutes(
         successUrl,
         cancelUrl
       );
+
+      try {
+        const { createTrustStamp } = await import("./hallmark");
+        await createTrustStamp({ userId, category: "subscription-start", data: { planId: tier, amount: billingCycle, interval: billingCycle } });
+      } catch (e) { /* non-critical */ }
       
       res.json({ url: checkoutUrl });
     } catch (error: any) {
@@ -483,6 +488,18 @@ export async function registerRoutes(
       const { handleStripeSubscriptionWebhook } = await import("./orbitClient");
       await handleStripeSubscriptionWebhook(req.body);
       console.log("Revenue synced to Orbit Financial Hub successfully");
+
+      // Create affiliate commission if this user was referred
+      if (req.body.type === "invoice.paid") {
+        try {
+          const invoice = req.body.data?.object;
+          if (invoice?.customer) {
+            const { createCommissionForPurchase } = await import("./affiliate");
+            await createCommissionForPurchase(invoice.customer, (invoice.amount_paid || 0) / 100);
+          }
+        } catch (e) { /* non-critical */ }
+      }
+
       res.json({ received: true });
     } catch (error: any) {
       console.error("Error processing Stripe webhook:", error);
@@ -532,6 +549,90 @@ export async function registerRoutes(
     } catch (error: any) {
       console.error("Error updating inquiry status:", error);
       res.status(500).json({ message: "Failed to update inquiry" });
+    }
+  });
+
+  // ============ TRUST LAYER HALLMARK SYSTEM ============
+
+  app.get("/api/hallmark/genesis", async (_req, res) => {
+    try {
+      const { getGenesisHallmark } = await import("./hallmark");
+      const genesis = await getGenesisHallmark();
+      if (!genesis) return res.status(404).json({ error: "Genesis hallmark not yet created" });
+      res.json(genesis);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/hallmark/:id/verify", async (req, res) => {
+    try {
+      const { getHallmarkById } = await import("./hallmark");
+      const hallmark = await getHallmarkById(req.params.id);
+      if (!hallmark) return res.status(404).json({ verified: false, error: "Hallmark not found" });
+      res.json({
+        verified: true,
+        hallmark: {
+          thId: hallmark.thId,
+          appName: hallmark.appName,
+          productName: hallmark.productName,
+          releaseType: hallmark.releaseType,
+          dataHash: hallmark.dataHash,
+          txHash: hallmark.txHash,
+          blockHeight: hallmark.blockHeight,
+          createdAt: hallmark.createdAt,
+        },
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // ============ AFFILIATE & REFERRAL SYSTEM ============
+
+  app.get("/api/affiliate/dashboard", isAuthenticated, async (req: any, res) => {
+    try {
+      const { getAffiliateDashboard } = await import("./affiliate");
+      const dashboard = await getAffiliateDashboard(req.user.id);
+      res.json(dashboard);
+    } catch (error: any) {
+      console.error("Error fetching affiliate dashboard:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/affiliate/link", isAuthenticated, async (req: any, res) => {
+    try {
+      const { getAffiliateLink } = await import("./affiliate");
+      const links = await getAffiliateLink(req.user.id);
+      res.json(links);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/affiliate/track", async (req, res) => {
+    try {
+      const { referralHash, platform } = req.body;
+      if (!referralHash) return res.status(400).json({ message: "referralHash is required" });
+      const { trackReferral } = await import("./affiliate");
+      const result = await trackReferral(referralHash, platform || "vedasolus");
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error tracking referral:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/affiliate/request-payout", isAuthenticated, async (req: any, res) => {
+    try {
+      const { requestPayout } = await import("./affiliate");
+      const result = await requestPayout(req.user.id);
+      if (!result.success) return res.status(400).json(result);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error requesting payout:", error);
+      res.status(500).json({ message: error.message });
     }
   });
 
