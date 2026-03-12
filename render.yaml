@@ -1,9 +1,3 @@
-databases:
-  - name: vedasolus-db
-    plan: free
-    databaseName: vedasolus
-    user: vedasolus
-
 services:
   - type: web
     name: vedasolus
@@ -19,9 +13,7 @@ services:
       - key: APP_DOMAIN
         value: vedasolus.io
       - key: DATABASE_URL
-        fromDatabase:
-          name: vedasolus-db
-          property: connectionString
+        sync: false
       - key: SESSION_SECRET
         sync: false
       - key: OPENAI_API_KEY
