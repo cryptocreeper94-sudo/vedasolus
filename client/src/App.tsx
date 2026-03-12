@@ -24,6 +24,8 @@ import HealthRecords from "@/pages/HealthRecords";
 import BusinessPlan from "@/pages/BusinessPlan";
 import Partner from "@/pages/Partner";
 import CommandCenter from "@/pages/CommandCenter";
+import Affiliate from "@/pages/Affiliate";
+import ReferralLanding from "@/pages/ReferralLanding";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
@@ -50,6 +52,8 @@ function Router() {
       <Route path="/business-plan" component={BusinessPlan} />
       <Route path="/partner" component={Partner} />
       <Route path="/command-center" component={CommandCenter} />
+      <Route path="/affiliate" component={Affiliate} />
+      <Route path="/ref/:hash" component={ReferralLanding} />
       <Route component={NotFound} />
     </Switch>
   );

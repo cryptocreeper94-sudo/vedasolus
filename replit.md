@@ -34,7 +34,7 @@ VedaSolus is a holistic health tracking application that integrates Eastern heal
 - **Database**: PostgreSQL
 - **ORM**: Drizzle ORM with `drizzle-zod` for validation
 - **Schema**: `shared/schema.ts`
-- **Key Tables**: `users`, `sessions`, `user_profiles`, `sleep_logs`, `diet_logs`, `exercise_logs`, `notification_preferences`, `analytics_sessions`, `analytics_page_views`, `analytics_events`, `seo_pages`, `medical_disclaimers`
+- **Key Tables**: `users`, `sessions`, `user_profiles`, `sleep_logs`, `diet_logs`, `exercise_logs`, `notification_preferences`, `analytics_sessions`, `analytics_page_views`, `analytics_events`, `seo_pages`, `medical_disclaimers`, `hallmarks`, `trust_stamps`, `hallmark_counter`, `affiliate_referrals`, `affiliate_commissions`
 
 ### Core Features
 - **Personal Health Tracking**: Sleep, diet, exercise, heart rate logging.
@@ -45,6 +45,8 @@ VedaSolus is a holistic health tracking application that integrates Eastern heal
 - **SEO Management**: CRUD for per-route SEO configurations via admin dashboard.
 - **PWA**: Configured with manifest and icons for installability.
 - **Command Center**: PIN-gated admin dashboard for various platform controls.
+- **Trust Layer Hallmark System**: App #25 (prefix `VS`), genesis hallmark `VS-00000001`, SHA-256 hashed audit trail with simulated blockchain records. Trust stamps on auth, subscription, and financial events.
+- **Affiliate Program**: 5-tier commission system (Base 10% → Diamond 20%), cross-app referral links via `uniqueHash`, SIG payouts, full dashboard with tier progress.
 
 ### Project Structure
 - `client/`: Frontend React application.
@@ -81,6 +83,15 @@ VedaSolus is a holistic health tracking application that integrates Eastern heal
   - Trust Layer Chat Register: `/api/chat/auth/register`
   - Financial Hub Revenue Sync: `/api/financial-hub/ingest`
   - Worker/Timesheet/1099/W2/Certification Sync: `/api/ecosystem/sync/*`
+
+### Trust Layer Ecosystem
+- App #25 in 32-app ecosystem
+- Prefix: `VS`, Genesis: `VS-00000001`
+- Domain: `vedasolus.tlid.io`
+- Parent Genesis: `TH-00000001` (Trust Layer Hub)
+- Server modules: `server/hallmark.ts`, `server/affiliate.ts`
+- Public endpoints: `GET /api/hallmark/genesis`, `GET /api/hallmark/:id/verify`
+- Affiliate endpoints: `GET /api/affiliate/dashboard`, `GET /api/affiliate/link`, `POST /api/affiliate/track`, `POST /api/affiliate/request-payout`
 
 ### Key npm Packages
 - `drizzle-orm`, `drizzle-zod`

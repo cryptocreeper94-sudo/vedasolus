@@ -27,6 +27,7 @@ export const users = pgTable("users", {
   emailVerified: boolean("email_verified").default(false),
   verificationCode: varchar("verification_code"),
   verificationExpires: timestamp("verification_expires"),
+  uniqueHash: varchar("unique_hash").unique(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

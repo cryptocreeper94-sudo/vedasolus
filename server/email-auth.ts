@@ -70,6 +70,10 @@ export function setupEmailAuth(app: Express) {
       const hashedCode = await hashVerificationCode(code);
       const expires = new Date(Date.now() + 15 * 60 * 1000);
       
+      // Generate unique affiliate hash
+      const { generateUniqueHash } = await import("./affiliate");
+      const uniqueHash = generateUniqueHash();
+
       // Create user with hashed verification code
       const [newUser] = await db.insert(users).values({
         email: validated.email,
@@ -79,10 +83,17 @@ export function setupEmailAuth(app: Express) {
         emailVerified: false,
         verificationCode: hashedCode,
         verificationExpires: expires,
+        uniqueHash,
       }).returning();
       
       // Send verification email
       await sendVerificationEmail(validated.email, code, validated.firstName);
+
+      // Trust Layer stamp
+      try {
+        const { createTrustStamp } = await import("./hallmark");
+        await createTrustStamp({ userId: newUser.id, category: "auth-register", data: { email: validated.email } });
+      } catch (e) { /* non-critical */ }
       
       res.json({ message: "Account created. Please check your email to verify.", email: validated.email });
     } catch (error: any) {
@@ -126,6 +137,15 @@ export function setupEmailAuth(app: Express) {
         verificationExpires: null,
         updatedAt: new Date(),
       }).where(eq(users.email, validated.email));
+
+      // Convert any pending affiliate referral for this user
+      try {
+        const referralHash = req.body.referralHash;
+        if (referralHash) {
+          const { convertReferral } = await import("./affiliate");
+          await convertReferral(user.id, referralHash);
+        }
+      } catch (e) { /* non-critical */ }
       
       // Create session
       (req.session as any).userId = user.id;
@@ -223,6 +243,12 @@ export function setupEmailAuth(app: Express) {
       
       // Create session
       (req.session as any).userId = user.id;
+
+      // Trust Layer stamp
+      try {
+        const { createTrustStamp } = await import("./hallmark");
+        await createTrustStamp({ userId: user.id, category: "auth-login", data: { email: user.email, device: req.headers["user-agent"] || "unknown" } });
+      } catch (e) { /* non-critical */ }
       
       res.json({
         user: {
