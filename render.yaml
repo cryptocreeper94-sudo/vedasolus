@@ -1,0 +1,54 @@
+databases:
+  - name: vedasolus-db
+    plan: free
+    databaseName: vedasolus
+    user: vedasolus
+
+services:
+  - type: web
+    name: vedasolus
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "5000"
+      - key: APP_DOMAIN
+        value: vedasolus.io
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vedasolus-db
+          property: connectionString
+      - key: SESSION_SECRET
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GIT_ACCESS_TOKEN
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: DARKWAVEHEALTH_WEBHOOK_SECRET
+        sync: false
+      - key: ORBIT_BASE_URL
+        value: https://orbitstaffing.io
+      - key: VITE_FIREBASE_APP_ID
+        value: "1:41307406912:web:37b3bebeb47a73522a55a5"
+      - key: VITE_FIREBASE_AUTH_DOMAIN
+        value: darkwave-auth.firebaseapp.com
+      - key: VITE_FIREBASE_MEASUREMENT_ID
+        value: G-KCYD3E2XE5
+      - key: VITE_FIREBASE_MESSAGING_SENDER_ID
+        value: "41307406912"
+      - key: VITE_FIREBASE_PROJECT_ID
+        value: darkwave-auth
+      - key: VITE_FIREBASE_STORAGE_BUCKET
+        value: darkwave-auth.firebasestorage.app
