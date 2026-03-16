@@ -6,7 +6,7 @@ const ORBIT_SECRET = process.env.DARKWAVEHEALTH_WEBHOOK_SECRET!;
 const APP_NAME = 'VedaSolus';
 const APP_CALLBACK_URL = process.env.REPLIT_DEV_DOMAIN 
   ? `https://${process.env.REPLIT_DEV_DOMAIN}/api/orbit/callback`
-  : 'https://vedasolus.replit.app/api/orbit/callback';
+  : 'https://vedasolus.io/api/orbit/callback';
 
 function generateSignature(payload: string): string {
   return crypto.createHmac('sha256', ORBIT_SECRET).update(payload).digest('hex');

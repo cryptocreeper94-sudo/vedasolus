@@ -80,8 +80,8 @@ const DigitalIDCard = () => {
             <p className="text-[10px] sm:text-xs opacity-50 mt-0.5">VedaSolus 2025</p>
           </div>
           <div className="p-1.5 sm:p-2 bg-white rounded-lg shadow-lg shrink-0">
-            <QRCodeSVG value="https://vedasolus.replit.app/passport/0x71C" size={48} className="sm:hidden" />
-            <QRCodeSVG value="https://vedasolus.replit.app/passport/0x71C" size={56} className="hidden sm:block" />
+            <QRCodeSVG value="https://vedasolus.io/passport/0x71C" size={48} className="sm:hidden" />
+            <QRCodeSVG value="https://vedasolus.io/passport/0x71C" size={56} className="hidden sm:block" />
           </div>
           <div className="text-right shrink-0">
             <p className="text-[9px] sm:text-[10px] text-emerald-400 font-medium">Verified</p>
