@@ -28,6 +28,7 @@ import Affiliate from "@/pages/Affiliate";
 import ReferralLanding from "@/pages/ReferralLanding";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { DWSCFooterBadge } from "@/components/DWSCFooterBadge";
 
 function Router() {
   return (
@@ -67,6 +68,7 @@ function App() {
         <Toaster />
         <DisclaimerModal />
         <Router />
+        <DWSCFooterBadge />
       </TooltipProvider>
     </QueryClientProvider>
   );
