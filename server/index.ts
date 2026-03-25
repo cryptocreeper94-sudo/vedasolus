@@ -6,6 +6,7 @@ import { setupEmailAuth } from "./email-auth";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import { Pool } from "@neondatabase/serverless";
+import { registerTrustLayerSSO } from './trustLayerSSO';
 
 const app = express();
 const httpServer = createServer(app);
@@ -95,6 +96,8 @@ app.use((req, res, next) => {
   setupEmailAuth(app);
   
   await registerRoutes(httpServer, app);
+  // Trust Layer SSO consumer endpoints
+  registerTrustLayerSSO(app);
 
   // Seed Trust Layer genesis hallmark on first boot
   try {
@@ -138,3 +141,4 @@ app.use((req, res, next) => {
     },
   );
 })();
+
