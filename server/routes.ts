@@ -466,33 +466,40 @@ export async function registerRoutes(
   });
 
   // Stripe webhook handler for automatic revenue sync
-  // Note: For production, configure express.raw() middleware for this route
-  // and use Stripe.webhooks.constructEvent() with STRIPE_WEBHOOK_SECRET
   app.post("/api/webhooks/stripe", async (req, res) => {
     try {
       const signature = req.headers['stripe-signature'];
       const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
       
       if (!webhookSecret) {
-        console.warn("STRIPE_WEBHOOK_SECRET not configured - webhook validation skipped");
-      } else if (!signature) {
-        console.error("Missing Stripe signature header");
+        console.warn("[Stripe] STRIPE_WEBHOOK_SECRET not configured — rejecting webhook");
+        return res.status(500).json({ message: "Webhook secret not configured" });
+      }
+
+      if (!signature) {
+        console.error("[Stripe] Missing stripe-signature header");
         return res.status(400).json({ message: "Missing Stripe signature" });
-      } else {
-        // In production with raw body middleware, use:
-        // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-        // const event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
-        console.log("Stripe webhook received with signature validation");
+      }
+
+      // Validate the webhook signature
+      const Stripe = (await import("stripe")).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+      let event;
+      try {
+        event = stripe.webhooks.constructEvent(req.body, signature as string, webhookSecret);
+      } catch (err: any) {
+        console.error("[Stripe] Webhook signature verification failed:", err.message);
+        return res.status(400).json({ message: "Webhook signature verification failed" });
       }
       
       const { handleStripeSubscriptionWebhook } = await import("./orbitClient");
-      await handleStripeSubscriptionWebhook(req.body);
-      console.log("Revenue synced to Orbit Financial Hub successfully");
+      await handleStripeSubscriptionWebhook(event);
+      console.log("[Stripe] Webhook processed:", event.type);
 
       // Create affiliate commission if this user was referred
-      if (req.body.type === "invoice.paid") {
+      if (event.type === "invoice.paid") {
         try {
-          const invoice = req.body.data?.object;
+          const invoice = event.data?.object as any;
           if (invoice?.customer) {
             const { createCommissionForPurchase } = await import("./affiliate");
             await createCommissionForPurchase(invoice.customer, (invoice.amount_paid || 0) / 100);
