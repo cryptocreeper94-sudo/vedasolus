@@ -29,10 +29,12 @@ import ReferralLanding from "@/pages/ReferralLanding";
 import { DisclaimerModal } from "@/components/ui/disclaimer-modal";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { DWSCFooterBadge } from "@/components/DWSCFooterBadge";
+import { FloatingThemeToggle } from "@/components/theme-toggle";
 
 function Router() {
   return (
     <Switch>
+      <FloatingThemeToggle />
       <Route path="/" component={Home} />
       <Route path="/ayurveda" component={Ayurveda} />
       <Route path="/passport" component={Passport} />
