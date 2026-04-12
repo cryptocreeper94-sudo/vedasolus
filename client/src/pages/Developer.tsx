@@ -62,7 +62,7 @@ const roadmapPhases = [
     progress: 100,
     color: "emerald",
     milestones: [
-      { name: "User Authentication (Replit Auth)", status: "done" },
+      { name: "User Authentication (Trust Layer Auth)", status: "done" },
       { name: "Health Tracking (Sleep, Diet, Exercise)", status: "done" },
       { name: "Stripe Payment Integration", status: "done" },
       { name: "AI Wellness Coach (OpenAI + ElevenLabs)", status: "done" },

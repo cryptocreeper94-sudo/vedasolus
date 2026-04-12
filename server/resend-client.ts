@@ -4,15 +4,15 @@ import { Resend } from 'resend';
 let connectionSettings: any;
 
 async function getCredentials() {
-  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
-  const xReplitToken = process.env.REPL_IDENTITY 
-    ? 'repl ' + process.env.REPL_IDENTITY 
+  const hostname = process.env.SERVICE_CONNECTORS_HOSTNAME;
+  const xrenderToken = process.env.APP_IDENTITY 
+    ? 'repl ' + process.env.APP_IDENTITY 
     : process.env.WEB_REPL_RENEWAL 
     ? 'depl ' + process.env.WEB_REPL_RENEWAL 
     : null;
 
-  if (!xReplitToken) {
-    throw new Error('X_REPLIT_TOKEN not found for repl/depl');
+  if (!xrenderToken) {
+    throw new Error('X_SERVICE_TOKEN not found for repl/depl');
   }
 
   connectionSettings = await fetch(
@@ -20,7 +20,7 @@ async function getCredentials() {
     {
       headers: {
         'Accept': 'application/json',
-        'X_REPLIT_TOKEN': xReplitToken
+        'X_SERVICE_TOKEN': xrenderToken
       }
     }
   ).then(res => res.json()).then(data => data.items?.[0]);

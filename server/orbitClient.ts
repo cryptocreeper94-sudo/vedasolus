@@ -4,8 +4,8 @@ const ORBIT_BASE_URL = process.env.ORBIT_BASE_URL || 'https://orbitstaffing.io';
 const ORBIT_API_KEY = 'dw_app_darkwavehealth';
 const ORBIT_SECRET = process.env.DARKWAVEHEALTH_WEBHOOK_SECRET!;
 const APP_NAME = 'VedaSolus';
-const APP_CALLBACK_URL = process.env.REPLIT_DEV_DOMAIN 
-  ? `https://${process.env.REPLIT_DEV_DOMAIN}/api/orbit/callback`
+const APP_CALLBACK_URL = process.env.APP_DOMAIN 
+  ? `https://${process.env.APP_DOMAIN}/api/orbit/callback`
   : 'https://vedasolus.io/api/orbit/callback';
 
 function generateSignature(payload: string): string {

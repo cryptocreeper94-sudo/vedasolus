@@ -227,7 +227,7 @@ export async function registerRoutes(
       const userId = req.user.claims.sub;
       const { tier, billingCycle } = req.body;
       
-      const origin = req.headers.origin || req.headers.referer?.replace(/\/$/, '') || `https://${process.env.REPLIT_DEV_DOMAIN}`;
+      const origin = req.headers.origin || req.headers.referer?.replace(/\/$/, '') || `https://${process.env.APP_DOMAIN}`;
       
       const successUrl = `${origin}/settings?payment=success`;
       const cancelUrl = `${origin}/settings?payment=cancelled`;
@@ -258,7 +258,7 @@ export async function registerRoutes(
       const userId = req.user.claims.sub;
       const { practitionerId, amount, description } = req.body;
       
-      const origin = req.headers.origin || req.headers.referer?.replace(/\/$/, '') || `https://${process.env.REPLIT_DEV_DOMAIN}`;
+      const origin = req.headers.origin || req.headers.referer?.replace(/\/$/, '') || `https://${process.env.APP_DOMAIN}`;
       
       const successUrl = `${origin}/marketplace?payment=success`;
       const cancelUrl = `${origin}/marketplace?payment=cancelled`;

@@ -3,7 +3,7 @@ import { pgTable, text, varchar, integer, serial, date, boolean, timestamp, json
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Export auth models (required for Replit Auth integration)
+// Export auth models (required for OIDC Auth integration)
 export * from "./models/auth";
 
 // User Profiles - Extended health data
