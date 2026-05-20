@@ -194,7 +194,7 @@ function StatusBadge({ status }: { status: string }) {
     in_progress: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
     pending: "bg-slate-500/20 text-slate-400 border-slate-500/30",
     completed: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-    upcoming: "bg-violet-500/20 text-violet-400 border-violet-500/30",
+    upcoming: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
   };
   
   const icons: Record<string, any> = {
@@ -558,7 +558,7 @@ export default function DeveloperDashboard() {
     return `${(seconds / 60).toFixed(1)} min`;
   };
 
-  const DEVICE_COLORS = ["#06b6d4", "#ec4899", "#10b981", "#8b5cf6", "#f59e0b"];
+  const DEVICE_COLORS = ["#06b6d4", "#ec4899", "#10b981", "#0ea5e9", "#f59e0b"];
   
   const handleDevAction = (action: string) => {
     toast({
@@ -576,7 +576,7 @@ export default function DeveloperDashboard() {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center border border-cyan-500/30">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
               <Code className="w-6 h-6 text-cyan-400" />
             </div>
             <div>
@@ -604,7 +604,7 @@ export default function DeveloperDashboard() {
           <TabsTrigger value="system" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400" data-testid="tab-system">
             <Server className="w-4 h-4 mr-2" /> System
           </TabsTrigger>
-          <TabsTrigger value="docs" className="data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400" data-testid="tab-docs">
+          <TabsTrigger value="docs" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400" data-testid="tab-docs">
             <FileText className="w-4 h-4 mr-2" /> Documentation
           </TabsTrigger>
           <TabsTrigger value="subscribers" className="data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400" data-testid="tab-subscribers">
@@ -617,7 +617,7 @@ export default function DeveloperDashboard() {
 
         <TabsContent value="roadmap" className="space-y-6" data-testid="content-roadmap">
           <BentoGrid>
-            <BentoCard colSpan={3} className="bg-gradient-to-br from-cyan-500/5 to-violet-500/5 border-cyan-500/20">
+            <BentoCard colSpan={3} className="bg-gradient-to-br from-cyan-500/5 to-cyan-500/5 border-cyan-500/20">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold text-white flex items-center gap-2">
                   <GitBranch className="w-5 h-5 text-cyan-400" /> Product Roadmap
@@ -643,7 +643,7 @@ export default function DeveloperDashboard() {
                           phase.color === "emerald" ? "bg-emerald-500/20" :
                           phase.color === "cyan" ? "bg-cyan-500/20" :
                           phase.color === "pink" ? "bg-pink-500/20" :
-                          "bg-violet-500/20"
+                          "bg-cyan-500/20"
                         }`}>
                           <span className="text-lg font-bold text-white">{index + 1}</span>
                         </div>
@@ -725,7 +725,7 @@ export default function DeveloperDashboard() {
               <p className="text-2xl font-bold text-white" data-testid="text-unique-visitors">{(summary?.uniqueVisitors || 0).toLocaleString()}</p>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="p-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hover:border-violet-500/30 transition-all">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="p-4 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hover:border-cyan-500/30 transition-all">
               <span className="text-xs text-slate-400 uppercase tracking-wider block mb-2">Sessions</span>
               <p className="text-2xl font-bold text-white" data-testid="text-sessions">{(summary?.totalSessions || 0).toLocaleString()}</p>
             </motion.div>
@@ -823,7 +823,7 @@ export default function DeveloperDashboard() {
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="p-5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08]">
               <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2 mb-4">
-                <Globe className="w-4 h-4 text-violet-400" /> BROWSER BREAKDOWN
+                <Globe className="w-4 h-4 text-cyan-400" /> BROWSER BREAKDOWN
               </h3>
               <div className="space-y-2 max-h-[240px] overflow-y-auto">
                 {(browsers || []).length === 0 ? (
@@ -832,7 +832,7 @@ export default function DeveloperDashboard() {
                   (browsers || []).map((b: any, i: number) => (
                     <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                       <span className="text-sm text-white">{b.browser || "Unknown"}</span>
-                      <span className="text-xs font-mono text-violet-400">{b.count}</span>
+                      <span className="text-xs font-mono text-cyan-400">{b.count}</span>
                     </div>
                   ))
                 )}
@@ -912,10 +912,10 @@ export default function DeveloperDashboard() {
                   </div>
                 </div>
                 <div className="p-4 rounded-xl bg-black/20 flex flex-col justify-between">
-                  <Database className="w-5 h-5 text-purple-400 mb-2" />
+                  <Database className="w-5 h-5 text-sky-400 mb-2" />
                   <div>
                     <span className="text-xs text-muted-foreground block">DB Conn</span>
-                    <span className="text-xl font-mono text-purple-400">842</span>
+                    <span className="text-xl font-mono text-sky-400">842</span>
                   </div>
                 </div>
                 <div className="p-4 rounded-xl bg-black/20 flex flex-col justify-between">
@@ -1005,9 +1005,9 @@ export default function DeveloperDashboard() {
 
         <TabsContent value="docs" className="space-y-6" data-testid="content-docs">
           <BentoGrid>
-            <BentoCard colSpan={3} className="bg-gradient-to-br from-violet-500/5 to-cyan-500/5 border-violet-500/20">
+            <BentoCard colSpan={3} className="bg-gradient-to-br from-cyan-500/5 to-cyan-500/5 border-cyan-500/20">
               <h2 className="text-xl font-semibold text-white flex items-center gap-2 mb-6">
-                <FileText className="w-5 h-5 text-violet-400" /> Documentation Hub
+                <FileText className="w-5 h-5 text-cyan-400" /> Documentation Hub
               </h2>
               
               <div className="grid md:grid-cols-2 gap-4">
@@ -1028,7 +1028,7 @@ export default function DeveloperDashboard() {
                         doc.color === "cyan" ? "bg-cyan-500/5 border-cyan-500/20 hover:border-cyan-500/40" :
                         doc.color === "emerald" ? "bg-emerald-500/5 border-emerald-500/20 hover:border-emerald-500/40" :
                         doc.color === "pink" ? "bg-pink-500/5 border-pink-500/20 hover:border-pink-500/40" :
-                        doc.color === "violet" ? "bg-violet-500/5 border-violet-500/20 hover:border-violet-500/40" :
+                        doc.color === "violet" ? "bg-cyan-500/5 border-cyan-500/20 hover:border-cyan-500/40" :
                         doc.color === "orange" ? "bg-orange-500/5 border-orange-500/20 hover:border-orange-500/40" :
                         "bg-slate-500/5 border-slate-500/20 hover:border-slate-500/40"
                       }`}
@@ -1039,7 +1039,7 @@ export default function DeveloperDashboard() {
                           doc.color === "cyan" ? "bg-cyan-500/20" :
                           doc.color === "emerald" ? "bg-emerald-500/20" :
                           doc.color === "pink" ? "bg-pink-500/20" :
-                          doc.color === "violet" ? "bg-violet-500/20" :
+                          doc.color === "violet" ? "bg-cyan-500/20" :
                           doc.color === "orange" ? "bg-orange-500/20" :
                           "bg-slate-500/20"
                         }`}>
@@ -1047,7 +1047,7 @@ export default function DeveloperDashboard() {
                             doc.color === "cyan" ? "text-cyan-400" :
                             doc.color === "emerald" ? "text-emerald-400" :
                             doc.color === "pink" ? "text-pink-400" :
-                            doc.color === "violet" ? "text-violet-400" :
+                            doc.color === "violet" ? "text-cyan-400" :
                             doc.color === "orange" ? "text-orange-400" :
                             "text-slate-400"
                           }`} />

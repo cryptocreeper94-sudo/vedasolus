@@ -42,7 +42,7 @@ export const BentoCard = ({
     cyan: "from-cyan-500/20 to-cyan-500/5",
     pink: "from-pink-500/20 to-pink-500/5",
     emerald: "from-emerald-500/20 to-emerald-500/5",
-    violet: "from-violet-500/20 to-violet-500/5",
+    violet: "from-cyan-500/20 to-cyan-500/5",
     orange: "from-orange-500/20 to-orange-500/5",
   };
 
@@ -50,7 +50,7 @@ export const BentoCard = ({
     cyan: "bg-cyan-500/30",
     pink: "bg-pink-500/30",
     emerald: "bg-emerald-500/30",
-    violet: "bg-violet-500/30",
+    violet: "bg-cyan-500/30",
     orange: "bg-orange-500/30",
   };
 

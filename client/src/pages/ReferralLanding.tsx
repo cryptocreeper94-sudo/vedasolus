@@ -24,14 +24,14 @@ export default function ReferralLanding() {
   }, [params.hash, tracked]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-cyan-950/20 to-slate-950 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md text-center"
       >
         <div className="p-8 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-6 border border-cyan-500/30">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-6 border border-cyan-500/30">
             <Sparkles className="w-10 h-10 text-cyan-400" />
           </div>
 
@@ -49,7 +49,7 @@ export default function ReferralLanding() {
           <div className="space-y-3">
             <Button
               onClick={() => navigate("/")}
-              className="w-full h-12 bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-600 hover:to-violet-600"
+              className="w-full h-12 bg-gradient-to-r from-cyan-500 to-cyan-500 hover:from-cyan-600 hover:to-cyan-600"
               data-testid="button-explore-app"
             >
               Explore VedaSolus

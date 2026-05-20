@@ -63,12 +63,12 @@ export default function Sleep() {
 
       <BentoGrid>
         {/* Hypnogram */}
-        <BentoCard colSpan={2} rowSpan={2} className="bg-gradient-to-b from-indigo-950/50 to-purple-950/20">
+        <BentoCard colSpan={2} rowSpan={2} className="bg-gradient-to-b from-indigo-950/50 to-sky-950/20">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-medium flex items-center gap-2">
-              <Moon className="w-5 h-5 text-purple-400" /> Hypnogram
+              <Moon className="w-5 h-5 text-sky-400" /> Hypnogram
             </h3>
-            <span className="text-2xl font-serif font-bold text-purple-200">{averageQuality * 20 + 10} Sleep Score</span>
+            <span className="text-2xl font-serif font-bold text-sky-200">{averageQuality * 20 + 10} Sleep Score</span>
           </div>
           <div className="h-[250px] w-full -ml-4">
             <ResponsiveContainer width="100%" height="100%">
@@ -80,7 +80,7 @@ export default function Sleep() {
                 <Line 
                   type="stepAfter" 
                   dataKey="depth" 
-                  stroke="#a78bfa" 
+                  stroke="#38bdf8" 
                   strokeWidth={3} 
                   dot={false}
                 />
@@ -96,10 +96,10 @@ export default function Sleep() {
         </BentoCard>
 
         {/* Sleep Stats */}
-        <BentoCard className="bg-gradient-to-br from-purple-900/30 to-indigo-900/30">
+        <BentoCard className="bg-gradient-to-br from-sky-900/30 to-indigo-900/30">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-purple-500/20 rounded-full">
-              <TrendingUp className="w-6 h-6 text-purple-400" />
+            <div className="p-3 bg-sky-500/20 rounded-full">
+              <TrendingUp className="w-6 h-6 text-sky-400" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Average Sleep</p>
@@ -118,11 +118,11 @@ export default function Sleep() {
              <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-purple-300">Deep Sleep</span>
+                    <span className="text-sky-300">Deep Sleep</span>
                     <span>~{Math.round((averageSleep !== "--" ? parseFloat(averageSleep) : 0) * 0.2 * 10) / 10}h</span>
                   </div>
                   <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                     <div className="h-full bg-purple-500 w-[20%]" />
+                     <div className="h-full bg-sky-500 w-[20%]" />
                   </div>
                 </div>
                 <div>
@@ -155,7 +155,7 @@ export default function Sleep() {
         {sleepLogs.length > 0 && (
           <BentoCard colSpan={2}>
             <h3 className="font-medium mb-4 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-purple-400" /> Recent Sleep Logs
+              <Calendar className="w-4 h-4 text-sky-400" /> Recent Sleep Logs
             </h3>
             <div className="space-y-3 max-h-48 overflow-y-auto">
               {sleepLogs.slice(0, 5).map((log) => (
@@ -165,10 +165,10 @@ export default function Sleep() {
                     {log.notes && <p className="text-xs text-muted-foreground truncate max-w-[200px]">{log.notes}</p>}
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-purple-300">{log.hoursSlept}h</p>
+                    <p className="font-bold text-sky-300">{log.hoursSlept}h</p>
                     <div className="flex gap-0.5">
                       {[1,2,3,4,5].map(i => (
-                        <div key={i} className={`w-1.5 h-1.5 rounded-full ${i <= (log.quality || 0) ? 'bg-purple-400' : 'bg-white/20'}`} />
+                        <div key={i} className={`w-1.5 h-1.5 rounded-full ${i <= (log.quality || 0) ? 'bg-sky-400' : 'bg-white/20'}`} />
                       ))}
                     </div>
                   </div>
@@ -216,7 +216,7 @@ export default function Sleep() {
                  <p className="text-xs text-muted-foreground mt-1">Avoid blue light after this time.</p>
               </div>
               <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                 <div className="flex items-center gap-2 text-purple-300 mb-2">
+                 <div className="flex items-center gap-2 text-sky-300 mb-2">
                    <Moon className="w-4 h-4" />
                    <span className="text-sm font-medium">Bedtime</span>
                  </div>

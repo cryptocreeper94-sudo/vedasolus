@@ -30,7 +30,7 @@ const tierColors: Record<string, { bg: string; text: string; border: string; ico
   silver: { bg: "bg-zinc-400/20", text: "text-zinc-300", border: "border-zinc-400/30", icon: Award },
   gold: { bg: "bg-amber-500/20", text: "text-amber-300", border: "border-amber-500/30", icon: TrendingUp },
   platinum: { bg: "bg-cyan-500/20", text: "text-cyan-300", border: "border-cyan-500/30", icon: Gem },
-  diamond: { bg: "bg-violet-500/20", text: "text-violet-300", border: "border-violet-500/30", icon: Crown },
+  diamond: { bg: "bg-cyan-500/20", text: "text-cyan-300", border: "border-cyan-500/30", icon: Crown },
 };
 
 export default function AffiliateDashboard() {
@@ -144,12 +144,12 @@ export default function AffiliateDashboard() {
             <div className={`p-2 rounded-xl w-fit mb-3 ${
               stat.color === "cyan" ? "bg-cyan-500/20" :
               stat.color === "emerald" ? "bg-emerald-500/20" :
-              stat.color === "pink" ? "bg-pink-500/20" : "bg-violet-500/20"
+              stat.color === "pink" ? "bg-pink-500/20" : "bg-cyan-500/20"
             }`}>
               <stat.icon className={`w-5 h-5 ${
                 stat.color === "cyan" ? "text-cyan-400" :
                 stat.color === "emerald" ? "text-emerald-400" :
-                stat.color === "pink" ? "text-pink-400" : "text-violet-400"
+                stat.color === "pink" ? "text-pink-400" : "text-cyan-400"
               }`} />
             </div>
             <p className="text-2xl font-bold text-white">{stat.value}</p>
@@ -179,7 +179,7 @@ export default function AffiliateDashboard() {
             </Button>
             <Button
               onClick={shareLink}
-              className="flex-1 bg-violet-500/20 hover:bg-violet-500/30 border border-violet-500/30"
+              className="flex-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30"
               data-testid="button-share-link"
             >
               <Share2 className="w-4 h-4 mr-2" /> Share
@@ -188,7 +188,7 @@ export default function AffiliateDashboard() {
           <p className="text-xs text-slate-500 mt-3">Your link works across all 32 Trust Layer ecosystem apps</p>
         </BentoCard>
 
-        <BentoCard className={`bg-gradient-to-br ${tier === "diamond" ? "from-violet-500/10 to-pink-500/5 border-violet-500/20" : "from-emerald-500/10 to-cyan-500/5 border-emerald-500/20"}`}>
+        <BentoCard className={`bg-gradient-to-br ${tier === "diamond" ? "from-cyan-500/10 to-pink-500/5 border-cyan-500/20" : "from-emerald-500/10 to-cyan-500/5 border-emerald-500/20"}`}>
           <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
             <TierIcon className={`w-5 h-5 ${tierStyle.text}`} /> Your Tier
           </h3>
@@ -205,7 +205,7 @@ export default function AffiliateDashboard() {
               </div>
               <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 transition-all"
+                  className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-cyan-500 transition-all"
                   style={{
                     width: `${Math.min(100, (dashboard.stats.convertedReferrals / (dashboard.stats.convertedReferrals + dashboard.nextTier.referralsNeeded)) * 100)}%`,
                   }}
@@ -242,9 +242,9 @@ export default function AffiliateDashboard() {
           </div>
         </BentoCard>
 
-        <BentoCard colSpan={2} className="bg-gradient-to-br from-violet-500/10 to-indigo-500/5 border-violet-500/20">
+        <BentoCard colSpan={2} className="bg-gradient-to-br from-cyan-500/10 to-indigo-500/5 border-cyan-500/20">
           <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <Users className="w-5 h-5 text-violet-400" /> Recent Referrals
+            <Users className="w-5 h-5 text-cyan-400" /> Recent Referrals
           </h3>
           {(!dashboard?.referrals || dashboard.referrals.length === 0) ? (
             <div className="text-center py-8">

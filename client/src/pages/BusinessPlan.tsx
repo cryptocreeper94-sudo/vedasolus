@@ -116,14 +116,14 @@ export default function BusinessPlan() {
           </div>
         </BentoCard>
 
-        <BentoCard className="bg-gradient-to-br from-violet-500/10 to-purple-500/5 border-violet-500/20">
+        <BentoCard className="bg-gradient-to-br from-cyan-500/10 to-sky-500/5 border-cyan-500/20">
           <h3 className="font-semibold text-white flex items-center gap-2 mb-4">
-            <Globe className="w-5 h-5 text-violet-400" /> Market Opportunity
+            <Globe className="w-5 h-5 text-cyan-400" /> Market Opportunity
           </h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-xs text-slate-400">TAM (Global Wellness)</span>
-              <span className="text-lg font-bold text-violet-400">{marketData.tam}</span>
+              <span className="text-lg font-bold text-cyan-400">{marketData.tam}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-xs text-slate-400">SAM (Digital Health)</span>
@@ -295,7 +295,7 @@ export default function BusinessPlan() {
               </p>
             </div>
             <div>
-              <h4 className="text-sm font-medium text-violet-400 mb-2">vs. Teladoc</h4>
+              <h4 className="text-sm font-medium text-cyan-400 mb-2">vs. Teladoc</h4>
               <p className="text-xs text-slate-400">
                 We focus on holistic and preventive care with verified alternative 
                 medicine practitioners, not just Western doctors.

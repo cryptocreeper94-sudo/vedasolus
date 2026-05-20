@@ -39,7 +39,7 @@ export function GenesisHallmarkBadge() {
         <DialogContent className="w-[calc(100vw-2rem)] max-w-lg bg-slate-950/95 backdrop-blur-xl border-white/10 p-0 overflow-hidden">
           <div className="p-6">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-500/30">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-500/30">
                 <Shield className="w-8 h-8 text-cyan-400" />
               </div>
               <h2 className="text-xl font-serif font-bold text-white mb-1">Genesis Hallmark</h2>
@@ -74,7 +74,7 @@ export function GenesisHallmarkBadge() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-slate-400">Tx Hash</span>
-                    <span className="text-xs font-mono text-violet-400/70 truncate max-w-[200px]">{genesis.txHash}</span>
+                    <span className="text-xs font-mono text-cyan-400/70 truncate max-w-[200px]">{genesis.txHash}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-slate-400">Block Height</span>
@@ -108,7 +108,7 @@ export function GenesisHallmarkBadge() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-slate-400">Parent Genesis</span>
-                    <span className="text-sm font-mono text-violet-400">{metadata.parentGenesis || "TH-00000001"}</span>
+                    <span className="text-sm font-mono text-cyan-400">{metadata.parentGenesis || "TH-00000001"}</span>
                   </div>
                 </div>
               </div>

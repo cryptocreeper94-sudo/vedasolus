@@ -379,7 +379,7 @@ export default function Settings() {
                   Earn SIG commission by sharing VedaSolus across the 32-app Trust Layer ecosystem.
                 </p>
                 <Link href="/affiliate">
-                  <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-violet-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-all cursor-pointer flex items-center justify-between" data-testid="link-affiliate-dashboard">
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-cyan-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-all cursor-pointer flex items-center justify-between" data-testid="link-affiliate-dashboard">
                     <div>
                       <p className="text-sm font-medium text-white">Share & Earn Dashboard</p>
                       <p className="text-xs text-slate-400">View your referrals, commissions, and payout status</p>
@@ -392,7 +392,7 @@ export default function Settings() {
 
             <div className="p-6 rounded-3xl glass-card border border-white/10">
               <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-violet-400" /> Trust Layer
+                <Shield className="w-5 h-5 text-cyan-400" /> Trust Layer
               </h2>
               <p className="text-sm text-muted-foreground mb-4">
                 VedaSolus is app #25 in the Trust Layer 32-app ecosystem, verified on the Trust Layer Blockchain.

@@ -113,7 +113,7 @@ export default function PartnerDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-cyan-950/20 to-slate-950 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -121,7 +121,7 @@ export default function PartnerDashboard() {
         >
           <div className="p-8 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-500/30">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-500/30">
                 <Lock className="w-8 h-8 text-cyan-400" />
               </div>
               <h1 className="text-2xl font-serif font-bold text-white mb-2">Partner Access</h1>
@@ -146,7 +146,7 @@ export default function PartnerDashboard() {
 
               <Button 
                 onClick={handleLogin} 
-                className="w-full h-12 bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-600 hover:to-violet-600"
+                className="w-full h-12 bg-gradient-to-r from-cyan-500 to-cyan-500 hover:from-cyan-600 hover:to-cyan-600"
                 data-testid="button-partner-login"
               >
                 Access Dashboard
@@ -175,7 +175,7 @@ export default function PartnerDashboard() {
               <div className="text-center mb-6">
                 <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl mx-auto mb-4 flex items-center justify-center border ${
                   onboardingSlides[currentSlide].color === "cyan" ? "bg-cyan-500/20 border-cyan-500/30" :
-                  onboardingSlides[currentSlide].color === "violet" ? "bg-violet-500/20 border-violet-500/30" :
+                  onboardingSlides[currentSlide].color === "violet" ? "bg-cyan-500/20 border-cyan-500/30" :
                   onboardingSlides[currentSlide].color === "emerald" ? "bg-emerald-500/20 border-emerald-500/30" :
                   onboardingSlides[currentSlide].color === "pink" ? "bg-pink-500/20 border-pink-500/30" :
                   "bg-orange-500/20 border-orange-500/30"
@@ -184,7 +184,7 @@ export default function PartnerDashboard() {
                     const Icon = onboardingSlides[currentSlide].icon;
                     return <Icon className={`w-8 h-8 sm:w-10 sm:h-10 ${
                       onboardingSlides[currentSlide].color === "cyan" ? "text-cyan-400" :
-                      onboardingSlides[currentSlide].color === "violet" ? "text-violet-400" :
+                      onboardingSlides[currentSlide].color === "violet" ? "text-cyan-400" :
                       onboardingSlides[currentSlide].color === "emerald" ? "text-emerald-400" :
                       onboardingSlides[currentSlide].color === "pink" ? "text-pink-400" :
                       "text-orange-400"
@@ -229,7 +229,7 @@ export default function PartnerDashboard() {
                 {currentSlide === onboardingSlides.length - 1 ? (
                   <Button
                     onClick={handleCloseOnboarding}
-                    className="bg-gradient-to-r from-cyan-500 to-violet-500 text-sm px-3 sm:px-4"
+                    className="bg-gradient-to-r from-cyan-500 to-cyan-500 text-sm px-3 sm:px-4"
                     data-testid="button-start-dashboard"
                   >
                     Enter Dashboard <ArrowRight className="w-4 h-4 ml-1" />
@@ -293,12 +293,12 @@ export default function PartnerDashboard() {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center text-2xl font-bold text-white">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-pink-500 flex items-center justify-center text-2xl font-bold text-white">
               {partnerInfo?.name.charAt(0)}
             </div>
             <div>
               <h1 className="text-3xl font-serif font-bold text-white">Welcome, {partnerInfo?.name}</h1>
-              <p className="text-violet-300/70">{partnerInfo?.role} • Partner Dashboard</p>
+              <p className="text-cyan-300/70">{partnerInfo?.role} • Partner Dashboard</p>
             </div>
           </div>
           <Button
@@ -334,13 +334,13 @@ export default function PartnerDashboard() {
                 stat.color === "cyan" ? "bg-cyan-500/20" :
                 stat.color === "emerald" ? "bg-emerald-500/20" :
                 stat.color === "pink" ? "bg-pink-500/20" :
-                "bg-violet-500/20"
+                "bg-cyan-500/20"
               }`}>
                 <stat.icon className={`w-5 h-5 ${
                   stat.color === "cyan" ? "text-cyan-400" :
                   stat.color === "emerald" ? "text-emerald-400" :
                   stat.color === "pink" ? "text-pink-400" :
-                  "text-violet-400"
+                  "text-cyan-400"
                 }`} />
               </div>
               {stat.change && (
@@ -357,9 +357,9 @@ export default function PartnerDashboard() {
 
       {/* Main Dashboard Grid */}
       <BentoGrid>
-        <BentoCard colSpan={2} className="bg-gradient-to-br from-violet-500/10 to-pink-500/5 border-violet-500/20">
+        <BentoCard colSpan={2} className="bg-gradient-to-br from-cyan-500/10 to-pink-500/5 border-cyan-500/20">
           <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
-            <Activity className="w-5 h-5 text-violet-400" /> Business Overview
+            <Activity className="w-5 h-5 text-cyan-400" /> Business Overview
           </h3>
           <div className="space-y-4">
             <div className="flex justify-between items-center p-3 rounded-xl bg-white/5">
@@ -376,7 +376,7 @@ export default function PartnerDashboard() {
             </div>
             <div className="flex justify-between items-center p-3 rounded-xl bg-white/5">
               <span className="text-slate-300">Pricing Managed By</span>
-              <span className="font-bold text-violet-400">Orbit Staffing</span>
+              <span className="font-bold text-cyan-400">Orbit Staffing</span>
             </div>
           </div>
         </BentoCard>
@@ -429,10 +429,10 @@ export default function PartnerDashboard() {
               </div>
               <p className="text-[10px] text-slate-400">Cross-app authentication via Orbit Trust Layer</p>
             </div>
-            <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
+            <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
               <div className="flex items-center gap-2 mb-1">
-                <Lock className="w-4 h-4 text-violet-400" />
-                <p className="text-xs font-medium text-violet-300">Trust Layer</p>
+                <Lock className="w-4 h-4 text-cyan-400" />
+                <p className="text-xs font-medium text-cyan-300">Trust Layer</p>
               </div>
               <p className="text-[10px] text-slate-400">Secure chat registration and permissions</p>
             </div>

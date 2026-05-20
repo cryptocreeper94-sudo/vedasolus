@@ -29,8 +29,8 @@ const tribes = [
     members: "0",
     desc: "Daily silent meditation practice and Dhamma discussion.",
     active: true,
-    color: "text-purple-400",
-    bg: "bg-purple-500/20"
+    color: "text-sky-400",
+    bg: "bg-sky-500/20"
   },
   {
     name: "Biohacker Collective",

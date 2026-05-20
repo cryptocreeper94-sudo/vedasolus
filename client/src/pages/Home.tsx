@@ -335,7 +335,7 @@ export default function Home() {
               {/* Today's Focus */}
               <Link href="/meditation" className="flex-none w-full">
                 <div className="flex flex-col items-center justify-center py-4 cursor-pointer group">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500/30 to-purple-500/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500/30 to-sky-500/30 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                     <Target className="w-6 h-6 text-pink-300" />
                   </div>
                   <p className="text-sm font-medium text-white">Today's Focus</p>
@@ -450,9 +450,9 @@ export default function Home() {
               <BentoCard glow="violet" backgroundImage={sleepBg} className="cursor-pointer h-[180px] sm:h-[200px]" data-testid="card-sleep">
                 <div className="flex justify-between items-start">
                   <h3 className="text-white/90 font-medium flex items-center gap-2">
-                    <Moon className="w-4 h-4 text-purple-300" /> Sleep
+                    <Moon className="w-4 h-4 text-sky-300" /> Sleep
                   </h3>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/30 text-purple-100">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-sky-500/30 text-sky-100">
                     {latestSleep ? `${latestSleep.quality}/5` : "--"}
                   </span>
                 </div>

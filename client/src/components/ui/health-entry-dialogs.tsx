@@ -32,7 +32,7 @@ export function SleepEntryDialog({ onSubmit, isLoading, trigger }: SleepEntryDia
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             data-testid="button-add-sleep"
-            className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl font-medium flex items-center gap-2 shadow-lg shadow-purple-500/20"
+            className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-sky-500 text-white rounded-2xl font-medium flex items-center gap-2 shadow-lg shadow-sky-500/20"
           >
             <Plus className="w-5 h-5" /> Log Sleep
           </motion.button>
@@ -41,7 +41,7 @@ export function SleepEntryDialog({ onSubmit, isLoading, trigger }: SleepEntryDia
       <DialogContent className="bg-black/90 backdrop-blur-2xl border-white/10 max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl font-serif">
-            <Moon className="w-5 h-5 text-purple-400" /> Log Sleep
+            <Moon className="w-5 h-5 text-sky-400" /> Log Sleep
           </DialogTitle>
         </DialogHeader>
         
@@ -53,7 +53,7 @@ export function SleepEntryDialog({ onSubmit, isLoading, trigger }: SleepEntryDia
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
               data-testid="input-sleep-date"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 text-white"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500/50 text-white"
             />
           </div>
           
@@ -67,9 +67,9 @@ export function SleepEntryDialog({ onSubmit, isLoading, trigger }: SleepEntryDia
                 step="0.5"
                 value={form.hoursSlept}
                 onChange={(e) => setForm({ ...form, hoursSlept: parseFloat(e.target.value) })}
-                className="flex-1 accent-purple-500"
+                className="flex-1 accent-sky-500"
               />
-              <span className="text-2xl font-bold text-purple-300 w-16 text-right">{form.hoursSlept}h</span>
+              <span className="text-2xl font-bold text-sky-300 w-16 text-right">{form.hoursSlept}h</span>
             </div>
           </div>
           
@@ -83,7 +83,7 @@ export function SleepEntryDialog({ onSubmit, isLoading, trigger }: SleepEntryDia
                   data-testid={`button-quality-${q}`}
                   className={`flex-1 py-3 rounded-xl font-medium transition-all ${
                     form.quality === q 
-                      ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30" 
+                      ? "bg-sky-500 text-white shadow-lg shadow-sky-500/30" 
                       : "bg-white/5 text-muted-foreground hover:bg-white/10"
                   }`}
                 >
@@ -104,7 +104,7 @@ export function SleepEntryDialog({ onSubmit, isLoading, trigger }: SleepEntryDia
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               placeholder="How did you feel? Any dreams?"
               data-testid="input-sleep-notes"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50 h-20 resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-sky-500/50 h-20 resize-none"
             />
           </div>
         </div>
@@ -113,7 +113,7 @@ export function SleepEntryDialog({ onSubmit, isLoading, trigger }: SleepEntryDia
           onClick={handleSubmit}
           disabled={isLoading}
           data-testid="button-save-sleep"
-          className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="w-full py-3 bg-gradient-to-r from-indigo-500 to-sky-500 text-white rounded-xl font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {isLoading ? "Saving..." : "Save Sleep Log"}
         </button>

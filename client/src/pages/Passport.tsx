@@ -162,7 +162,7 @@ export default function HealthPassport() {
              icon={FileText}
              title="Request Release"
              desc="Generate a formal HIPAA digital request to send to any provider to release records to your wallet."
-             color="from-purple-500/20 to-pink-500/20"
+             color="from-sky-500/20 to-pink-500/20"
            />
         </div>
 

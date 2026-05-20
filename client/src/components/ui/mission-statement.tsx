@@ -61,8 +61,8 @@ export function MissionStatement({ onClose }: MissionStatementProps) {
                       <span><strong className="text-emerald-300">Authenticity</strong> — Real practitioners, real results</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-                      <span><strong className="text-violet-300">Community</strong> — Healing together in tribes</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                      <span><strong className="text-cyan-300">Community</strong> — Healing together in tribes</span>
                     </li>
                   </ul>
                 </div>
@@ -85,10 +85,10 @@ export function MissionStatement({ onClose }: MissionStatementProps) {
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-xl border border-violet-500/20">
+            <div className="glass-panel p-6 rounded-xl border border-cyan-500/20">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
-                  <Globe className="w-5 h-5 text-violet-400" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-sky-500/20 flex items-center justify-center flex-shrink-0">
+                  <Globe className="w-5 h-5 text-cyan-400" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Our Solution</h3>
@@ -106,7 +106,7 @@ export function MissionStatement({ onClose }: MissionStatementProps) {
                       <span>Verified practitioner marketplace for holistic care</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-violet-400" />
+                      <Globe className="w-4 h-4 text-cyan-400" />
                       <span>Blockchain-verified health passport & records</span>
                     </li>
                   </ul>
@@ -134,8 +134,8 @@ export function MissionStatement({ onClose }: MissionStatementProps) {
                       <p className="text-xs text-pink-400 mb-1">Healer's Circle</p>
                       <p className="text-lg font-bold text-white">$19.99<span className="text-xs text-slate-400">/mo</span></p>
                     </div>
-                    <div className="bg-gradient-to-br from-violet-500/10 to-cyan-500/10 rounded-lg p-3 text-center border border-violet-500/20">
-                      <p className="text-xs text-violet-400 mb-1">Master's Journey</p>
+                    <div className="bg-gradient-to-br from-cyan-500/10 to-cyan-500/10 rounded-lg p-3 text-center border border-cyan-500/20">
+                      <p className="text-xs text-cyan-400 mb-1">Master's Journey</p>
                       <p className="text-lg font-bold text-white">$39.99<span className="text-xs text-slate-400">/mo</span></p>
                     </div>
                   </div>

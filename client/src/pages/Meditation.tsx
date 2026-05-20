@@ -55,7 +55,7 @@ const meditationSessions: MeditationSession[] = [
     duration: 20,
     category: "Mindfulness",
     icon: Brain,
-    gradient: "from-purple-500/20 to-indigo-500/20",
+    gradient: "from-sky-500/20 to-indigo-500/20",
     tradition: "Eastern"
   },
   {
@@ -65,7 +65,7 @@ const meditationSessions: MeditationSession[] = [
     duration: 15,
     category: "Sleep",
     icon: Moon,
-    gradient: "from-indigo-500/20 to-purple-500/20",
+    gradient: "from-indigo-500/20 to-sky-500/20",
     tradition: "Both"
   },
   {
@@ -274,7 +274,7 @@ export default function Meditation() {
                     ? "bg-amber-500/20 text-amber-300"
                     : session.tradition === "Western"
                     ? "bg-blue-500/20 text-blue-300"
-                    : "bg-purple-500/20 text-purple-300"
+                    : "bg-sky-500/20 text-sky-300"
                 }`}>
                   {session.tradition}
                 </span>

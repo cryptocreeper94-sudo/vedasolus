@@ -75,8 +75,8 @@ const categories: Category[] = [
     title: "Marketing & Growth",
     description: "Campaigns, newsletters, and social presence",
     icon: Megaphone,
-    gradient: "from-purple-500 to-pink-500",
-    cardGradient: "from-purple-500/15 to-pink-500/10",
+    gradient: "from-sky-500 to-pink-500",
+    cardGradient: "from-sky-500/15 to-pink-500/10",
     glowColor: "purple",
     cards: [
       { title: "Marketing Hub", description: "Campaign management and analytics", icon: Megaphone, toast: "Planned" },
@@ -182,7 +182,7 @@ function PinGate({ onUnlock }: { onUnlock: () => void }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950/20 to-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-cyan-950/20 to-slate-950 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -191,7 +191,7 @@ function PinGate({ onUnlock }: { onUnlock: () => void }) {
         <div className="p-8 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl" data-testid="card-pin-gate">
           <div className="text-center mb-8">
             <img src={logoImage} alt="VedaSolus" className="h-20 w-auto mx-auto mb-4 object-contain" />
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-500/30">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-4 border border-cyan-500/30">
               <LayoutDashboard className="w-8 h-8 text-cyan-400" />
             </div>
             <h1 className="text-2xl font-serif font-bold text-white mb-2" data-testid="text-pin-title">Command Center</h1>
@@ -229,7 +229,7 @@ function PinGate({ onUnlock }: { onUnlock: () => void }) {
 
             <button
               onClick={handleSubmit}
-              className="w-full h-12 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-600 hover:to-violet-600 text-white font-semibold transition-all"
+              className="w-full h-12 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-500 hover:from-cyan-600 hover:to-cyan-600 text-white font-semibold transition-all"
               data-testid="button-access-command"
             >
               Access Command Center
@@ -246,7 +246,7 @@ function FeatureCard({ card, glowColor }: { card: CardItem; glowColor: string; c
 
   const glowMap: Record<string, string> = {
     cyan: "hover:shadow-cyan-500/20 hover:border-cyan-500/30",
-    purple: "hover:shadow-purple-500/20 hover:border-purple-500/30",
+    purple: "hover:shadow-sky-500/20 hover:border-sky-500/30",
     emerald: "hover:shadow-emerald-500/20 hover:border-emerald-500/30",
     orange: "hover:shadow-orange-500/20 hover:border-orange-500/30",
     blue: "hover:shadow-blue-500/20 hover:border-blue-500/30",
@@ -257,7 +257,7 @@ function FeatureCard({ card, glowColor }: { card: CardItem; glowColor: string; c
 
   const iconColorMap: Record<string, string> = {
     cyan: "text-cyan-400",
-    purple: "text-purple-400",
+    purple: "text-sky-400",
     emerald: "text-emerald-400",
     orange: "text-orange-400",
     blue: "text-blue-400",
@@ -338,7 +338,7 @@ export default function CommandCenter() {
             </button>
           </Link>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-violet-500 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-cyan-500 flex items-center justify-center">
               <LayoutDashboard className="w-4 h-4 text-white" />
             </div>
             <h1 className="text-lg font-bold text-white hidden sm:block" data-testid="text-command-center-title">Command Center</h1>

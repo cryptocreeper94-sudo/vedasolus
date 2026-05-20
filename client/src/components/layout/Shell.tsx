@@ -291,7 +291,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
               <Link href="/partner">
                 <button 
-                  className="p-2 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 hover:bg-violet-500/20 transition-colors"
+                  className="p-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/20 transition-colors"
                   data-testid="button-partners"
                 >
                   <Handshake className="w-4 h-4" />

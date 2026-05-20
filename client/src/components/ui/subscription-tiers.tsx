@@ -77,7 +77,7 @@ const tiers: Tier[] = [
       "Family sharing (up to 5)",
     ],
     icon: Crown,
-    gradient: "from-pink-500/20 to-purple-500/10",
+    gradient: "from-pink-500/20 to-sky-500/10",
   },
 ];
 

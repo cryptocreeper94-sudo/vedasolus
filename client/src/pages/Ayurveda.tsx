@@ -126,7 +126,7 @@ export default function Ayurveda() {
         </BentoCard>
 
         {/* Agni (Digestive Fire) Status */}
-        <BentoCard className="bg-gradient-to-br from-pink-900/20 to-purple-900/20 border-pink-500/20">
+        <BentoCard className="bg-gradient-to-br from-pink-900/20 to-sky-900/20 border-pink-500/20">
            <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-pink-500/20 rounded-lg">
                 <Flame className="w-5 h-5 text-pink-400" />

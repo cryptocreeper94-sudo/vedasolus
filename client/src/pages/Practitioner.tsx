@@ -53,7 +53,7 @@ export default function PractitionerDashboard() {
 
          <div className="p-6 rounded-3xl glass-card border border-white/10">
             <div className="flex justify-between items-start mb-4">
-               <div className="p-3 bg-purple-500/20 rounded-xl text-purple-400">
+               <div className="p-3 bg-sky-500/20 rounded-xl text-sky-400">
                  <Calendar className="w-6 h-6" />
                </div>
             </div>
@@ -87,8 +87,8 @@ export default function PractitionerDashboard() {
          <div className="lg:col-span-8 p-6 rounded-3xl glass-panel border border-white/10 overflow-y-auto">
             <h3 className="font-medium text-lg mb-6">Today's Schedule</h3>
             <div className="flex flex-col items-center justify-center h-[calc(100%-3rem)] text-center">
-              <div className="p-4 bg-purple-500/10 rounded-2xl mb-4">
-                <Calendar className="w-10 h-10 text-purple-400/60" />
+              <div className="p-4 bg-sky-500/10 rounded-2xl mb-4">
+                <Calendar className="w-10 h-10 text-sky-400/60" />
               </div>
               <p className="text-muted-foreground text-sm">No appointments scheduled today</p>
             </div>
@@ -128,7 +128,7 @@ export default function PractitionerDashboard() {
       >
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center border border-cyan-500/30">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/20 flex items-center justify-center border border-cyan-500/30">
               <Building2 className="w-5 h-5 text-cyan-400" />
             </div>
             <div>
@@ -151,7 +151,7 @@ export default function PractitionerDashboard() {
             <TabsTrigger value="staff" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400">
               <Users className="w-4 h-4 mr-2" /> Staff
             </TabsTrigger>
-            <TabsTrigger value="timesheets" className="data-[state=active]:bg-violet-500/20 data-[state=active]:text-violet-400">
+            <TabsTrigger value="timesheets" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400">
               <FileText className="w-4 h-4 mr-2" /> Timesheets
             </TabsTrigger>
             <TabsTrigger value="payroll" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
@@ -200,7 +200,7 @@ export default function PractitionerDashboard() {
           <TabsContent value="timesheets" className="space-y-4" data-testid="content-timesheets">
             <div className="flex justify-between items-center mb-4">
               <p className="text-sm text-slate-400">Track hours worked and sync with Orbit payroll</p>
-              <Button size="sm" className="bg-violet-500 hover:bg-violet-600" data-testid="button-add-timesheet">
+              <Button size="sm" className="bg-cyan-500 hover:bg-cyan-600" data-testid="button-add-timesheet">
                 <Clock className="w-4 h-4 mr-2" /> Log Hours
               </Button>
             </div>
@@ -219,8 +219,8 @@ export default function PractitionerDashboard() {
                   <tr>
                     <td colSpan={5} className="p-12">
                       <div className="flex flex-col items-center justify-center text-center">
-                        <div className="p-4 bg-violet-500/10 rounded-2xl mb-4">
-                          <Clock className="w-10 h-10 text-violet-400/60" />
+                        <div className="p-4 bg-cyan-500/10 rounded-2xl mb-4">
+                          <Clock className="w-10 h-10 text-cyan-400/60" />
                         </div>
                         <p className="text-muted-foreground text-sm">No timesheets recorded yet.</p>
                       </div>
@@ -238,9 +238,9 @@ export default function PractitionerDashboard() {
                 <p className="text-3xl font-bold text-emerald-400">$0</p>
                 <p className="text-xs text-slate-400 mt-1">No pay period active</p>
               </div>
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-violet-500/10 to-pink-500/5 border border-violet-500/20">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-pink-500/5 border border-cyan-500/20">
                 <p className="text-xs text-slate-400 uppercase tracking-wider mb-2">Total Hours</p>
-                <p className="text-3xl font-bold text-violet-400">0h</p>
+                <p className="text-3xl font-bold text-cyan-400">0h</p>
                 <p className="text-xs text-slate-400 mt-1">No hours logged</p>
               </div>
               <div className="p-6 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20">
@@ -263,7 +263,7 @@ export default function PractitionerDashboard() {
                   </div>
                 </Button>
                 <Button variant="outline" className="justify-start h-auto p-4 border-white/10" data-testid="button-view-reports">
-                  <FileText className="w-5 h-5 mr-3 text-violet-400" />
+                  <FileText className="w-5 h-5 mr-3 text-cyan-400" />
                   <div className="text-left">
                     <p className="font-medium">Payroll Reports</p>
                     <p className="text-xs text-slate-400">View history and exports</p>
